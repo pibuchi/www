@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PersonaSync™ Dashboard</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="./index.html" class="logo">PersonaSync™</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="./index.html" class="active">대시보드</a></li>
+                <li class="nav-item"><a href="./pages/persona-create.html">페르소나 생성</a></li>
+                <li class="nav-item"><a href="./pages/analytics.html">분석</a></li>
+                <li class="nav-item"><a href="./pages/reports.html">리포트</a></li>
+            </ul>
+            <div class="user-info">
+                <!-- 동적으로 로드됨 -->
+            </div>
+        </nav>
+
+        <!-- Main Dashboard Content -->
+        <div class="grid-2 mb-20">
+            <!-- Key Insights Panel -->
+            <div class="card animate-fade-in">
+                <div class="card-header">
+                    <h2 class="card-title">📊 실시간 인사이트</h2>
+                    <p class="card-subtitle">핵심 지표 모니터링</p>
+                </div>
+                
+                <div class="insight-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 15px;">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px; opacity: 0.9;">데이터 정확도</div>
+                    <div class="insight-value" style="font-size: 32px; font-weight: bold; margin-bottom: 8px;">87.3%</div>
+                    <div style="font-size: 14px; opacity: 0.8;">목표 대비 +2.3% 향상</div>
+                </div>
+
+                <div class="insight-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 15px;">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px; opacity: 0.9;">활성 페르소나</div>
+                    <div style="font-size: 32px; font-weight: bold; margin-bottom: 8px;" data-metric="personas">12개</div>
+                    <div style="font-size: 14px; opacity: 0.8;">갤럭시 S25 런칭 대응</div>
+                </div>
+
+                <div class="insight-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); color: white; padding: 25px; border-radius: 15px;">
+                    <div style="font-size: 16px; font-weight: 600; margin-bottom: 10px; opacity: 0.9;">예측 성공률</div>
+                    <div style="font-size: 32px; font-weight: bold; margin-bottom: 8px;" data-metric="success">92.1%</div>
+                    <div style="font-size: 14px; opacity: 0.8;">지난 달 캠페인 성과</div>
+                </div>
+            </div>
+
+            <!-- Data Integration Status -->
+            <div class="card animate-fade-in">
+                <div class="card-header">
+                    <h2 class="card-title">🔗 데이터 통합 현황</h2>
+                    <p class="card-subtitle">"우리 데이터 + 시장 데이터" 융합 상태</p>
+                </div>
+
+                <div class="data-source-list">
+                    <div class="data-source">
+                        <div class="source-info">
+                            <span style="font-size: 20px;">💾</span>
+                            <div>
+                                <h4>Samsung CRM</h4>
+                                <p>고객 구매 이력 • 2.3M 레코드</p>
+                            </div>
+                        </div>
+                        <span class="status-badge status-connected">연결됨</span>
+                    </div>
+
+                    <div class="data-source">
+                        <div class="source-info">
+                            <span style="font-size: 20px;">🛒</span>
+                            <div>
+                                <h4>온라인몰 DMP</h4>
+                                <p>웹 행동 데이터 • 실시간</p>
+                            </div>
+                        </div>
+                        <span class="status-badge status-connected">연결됨</span>
+                    </div>
+
+                    <div class="data-source">
+                        <div class="source-info">
+                            <span style="font-size: 20px;">🔍</span>
+                            <div>
+                                <h4>아이노유 시장 데이터</h4>
+                                <p>에스노그라피 • 7.2만 건</p>
+                            </div>
+                        </div>
+                        <span class="status-badge status-syncing">동기화중<span class="loading-dots"></span></span>
+                    </div>
+
+                    <div class="data-source">
+                        <div class="source-info">
+                            <span style="font-size: 20px;">📱</span>
+                            <div>
+                                <h4>소셜 리스닝</h4>
+                                <p>브랜드 멘션 분석 • 일간</p>
+                            </div>
+                        </div>
+                        <span class="status-badge status-connected">연결됨</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Bar -->
+        <div class="flex flex-center gap-20 mb-20">
+            <button class="btn btn-primary" onclick="createPersona()">
+                ➕ 새 페르소나 생성
+            </button>
+            <button class="btn btn-secondary" onclick="showAnalytics()">
+                📈 상세 분석 보기
+            </button>
+            <button class="btn btn-secondary" onclick="exportReport()">
+                📄 리포트 내보내기
+            </button>
+        </div>
+
+        <!-- Persona Overview Grid -->
+        <div class="grid-3">
+            <!-- Persona Card 1 -->
+            <div class="persona-card animate-fade-in" onclick="openPersonaDetail('early-adopter')">
+                <div class="persona-header">
+                    <div class="persona-avatar">김</div>
+                    <div class="persona-basic">
+                        <div class="persona-name">김얼리 (얼리어답터)</div>
+                        <div class="persona-tag">프리미엄 세그먼트</div>
+                    </div>
+                </div>
+                
+                <div class="persona-metrics">
+                    <div class="metric">
+                        <div class="metric-value">34%</div>
+                        <div class="metric-label">시장 점유율</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">89%</div>
+                        <div class="metric-label">예측 정확도</div>
+                    </div>
+                </div>
+
+                <div class="persona-insights">
+                    <div class="insight-item">
+                        <span class="insight-icon">🎯</span>
+                        <span>신제품 출시 1주 내 구매 확률 높음</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon">💡</span>
+                        <span>기술 스펙보다 디자인 혁신에 민감</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon">📱</span>
+                        <span>인스타그램/유튜브 통한 정보 수집</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Persona Card 2 -->
+            <div class="persona-card animate-fade-in" onclick="openPersonaDetail('practical')">
+                <div class="persona-header">
+                    <div class="persona-avatar">박</div>
+                    <div class="persona-basic">
+                        <div class="persona-name">박실용 (실용주의자)</div>
+                        <div class="persona-tag">메인스트림</div>
+                    </div>
+                </div>
+                
+                <div class="persona-metrics">
+                    <div class="metric">
+                        <div class="metric-value">52%</div>
+                        <div class="metric-label">시장 점유율</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">91%</div>
+                        <div class="metric-label">예측 정확도</div>
+                    </div>
+                </div>
+
+                <div class="persona-insights">
+                    <div class="insight-item">
+                        <span class="insight-icon">💰</span>
+                        <span>가성비 중심의 의사결정</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon">⭐</span>
+                        <span>리뷰와 추천에 크게 의존</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon">🛒</span>
+                        <span>할인 이벤트 시 구매 집중</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Persona Card 3 -->
+            <div class="persona-card animate-fade-in" onclick="openPersonaDetail('senior')">
+                <div class="persona-header">
+                    <div class="persona-avatar">이</div>
+                    <div class="persona-basic">
+                        <div class="persona-name">이시니어 (시니어)</div>
+                        <div class="persona-tag">신규 타깃</div>
+                    </div>
+                </div>
+                
+                <div class="persona-metrics">
+                    <div class="metric">
+                        <div class="metric-value">14%</div>
+                        <div class="metric-label">시장 점유율</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">76%</div>
+                        <div class="metric-label">예측 정확도</div>
+                    </div>
+                </div>
+
+                <div class="persona-insights">
+                    <div class="insight-item">
+                        <span class="insight-icon">👨‍👩‍👧‍👦</span>
+                        <span>가족과의 소통 기능 중시</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon">🏪</span>
+                        <span>오프라인 매장 경험 선호</span>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon">📞</span>
+                        <span>전화 상담 및 AS 서비스 중요</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="card mt-20">
+            <div class="card-header">
+                <h2 class="card-title">⚡ 빠른 작업</h2>
+            </div>
+            <div class="grid-4">
+                <button class="btn btn-primary" onclick="createPersona()">
+                    🎯 타깃 세그먼트 분석
+                </button>
+                <button class="btn btn-secondary" onclick="showAnalytics()">
+                    📊 트렌드 변화 추적
+                </button>
+                <button class="btn btn-success" onclick="window.personaSync.showNotification('캠페인 성과 분석을 시작합니다.', 'success')">
+                    📈 캠페인 성과 분석
+                </button>
+                <button class="btn btn-warning" onclick="exportReport()">
+                    📄 임원진 보고서 생성
+                </button>
+            </div>
+        </div>
+
+        <!-- Status Footer -->
+        <div class="text-center mt-20" style="color: #b8bcc8; font-size: 12px;">
+            <p>📡 실시간 데이터 연결 상태: <span style="color: #4CAF50;">정상</span> | 마지막 업데이트: <span id="last-update">로딩중...</span></p>
+        </div>
+    </div>
+
+    <script src="./js/common.js"></script>
+    <script>
+        // 페이지 로드 완료 후 시간 표시
+        document.addEventListener('DOMContentLoaded', function() {
+            const updateTimeElement = document.getElementById('last-update');
+            if (updateTimeElement) {
+                const now = new Date();
+                updateTimeElement.textContent = now.toLocaleTimeString('ko-KR');
+                
+                // 매분마다 업데이트
+                setInterval(() => {
+                    const currentTime = new Date();
+                    updateTimeElement.textContent = currentTime.toLocaleTimeString('ko-KR');
+                }, 60000);
+            }
+        });
+    </script>
+</body>
+</html>

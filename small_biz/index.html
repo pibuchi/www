@@ -1,0 +1,1635 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="소상공인을 위한 AI 기반 고객분석 서비스. 페르소나 분석으로 매출 증대 전략을 제공합니다.">
+    <meta name="keywords" content="소상공인, 고객분석, AI, 페르소나, 마케팅, 매출증대">
+    <meta name="author" content="소상공인시장진흥공단">
+    
+    <title>소상공인 고객분석 서비스</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        /* 화면 전환 */
+        .screen {
+            display: none;
+            padding: 2rem;
+            min-height: 100vh;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 헤더 */
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* 진행바 */
+        .progress-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            margin-bottom: 3rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        /* 선택 그리드 */
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .selection-grid.two-col {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .selection-item {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .selection-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+
+        .selection-item.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+        }
+
+        .selection-item .icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .selection-item .title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .selection-item .desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        /* 입력 필드 */
+        .input-group {
+            margin-bottom: 2rem;
+        }
+
+        .input-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* 버튼 */
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #545b62;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 3rem;
+        }
+
+        /* 로딩 화면 */
+        .loading-screen {
+            text-align: center;
+            padding: 4rem 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+        }
+
+        .loading-icon {
+            width: 80px;
+            height: 80px;
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .loading-desc {
+            color: #666;
+            margin-bottom: 2rem;
+        }
+
+        .analysis-progress .progress-bar {
+            width: 300px;
+            margin: 0 auto 1rem;
+        }
+
+        .analysis-steps {
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        /* 대시보드 */
+        .dashboard {
+            display: flex;
+            min-height: 100vh;
+            background: #f8f9fa;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: white;
+            border-right: 1px solid #e9ecef;
+            padding: 2rem 0;
+        }
+
+        .sidebar-header {
+            padding: 0 1.5rem 2rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .sidebar-header h2 {
+            color: #333;
+            font-size: 1.3rem;
+        }
+
+        .sidebar-nav {
+            padding-top: 1rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .nav-item:hover {
+            background: #f8f9fa;
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            border-right: 3px solid #667eea;
+        }
+
+        .nav-icon {
+            margin-right: 0.75rem;
+            font-size: 1.2rem;
+        }
+
+        .nav-text {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+
+        .dash-header {
+            margin-bottom: 2rem;
+        }
+
+        .dash-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .dash-subtitle {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* 탭 네비게이션 (모바일) */
+        .tab-nav {
+            display: flex;
+            background: white;
+            border-radius: 12px;
+            padding: 0.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .tab-item {
+            flex: 1;
+            text-align: center;
+            padding: 0.75rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .tab-item.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        /* 탭 콘텐츠 */
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .content-header {
+            margin-bottom: 2rem;
+        }
+
+        .content-header h3 {
+            font-size: 1.8rem;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+
+        /* 고객 카드 */
+        .customers-grid {
+            display: grid;
+            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        }
+
+        .customer-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .customer-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .customer-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .customer-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .customer-ratio {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .customer-desc {
+            color: #666;
+            margin-bottom: 1.5rem;
+            line-height: 1.5;
+        }
+
+        .customer-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .customer-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .tag.high {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .tag.medium {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .tag.low {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.75rem;
+            border: 1px solid #e9ecef;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #f8f9fa;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+        }
+
+        .action-btn.primary:hover {
+            transform: translateY(-2px);
+        }
+
+        /* 카드 스타일 */
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f8f9fa;
+        }
+
+        .highlight-card {
+            border: 2px solid #667eea;
+            background: linear-gradient(135deg, #667eea05, #764ba205);
+        }
+
+        /* 반응형 디자인 */
+        .desktop-only {
+            display: block;
+        }
+
+        .mobile-only {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .desktop-only {
+                display: none;
+            }
+
+            .mobile-only {
+                display: block;
+            }
+
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+                order: 2;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .screen {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .selection-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .customers-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .customer-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* 하단 네비게이션 (모바일) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            padding: 0.5rem 0;
+            z-index: 1000;
+        }
+
+        .bottom-nav .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 0.5rem;
+            cursor: pointer;
+        }
+
+        .bottom-nav .nav-icon {
+            font-size: 1.2rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .bottom-nav .nav-text {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .bottom-nav .nav-item.active .nav-text {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* 추가 스타일들 */
+        .strategy-content, .trends-content, .tips-content {
+            space-y: 2rem;
+        }
+
+        .target-info {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .target-main {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .target-condition {
+            color: #666;
+            font-style: italic;
+        }
+
+        .strategy-actions h4 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .action-list {
+            margin-bottom: 1.5rem;
+        }
+
+        .action-item {
+            padding: 0.5rem 0;
+            color: #28a745;
+            font-weight: 500;
+        }
+
+        .form-section {
+            space-y: 2rem;
+        }
+
+        .time-strategy {
+            margin-top: 2rem;
+        }
+
+        .time-slots {
+            space-y: 1rem;
+        }
+
+        .time-slot {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .time-period {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .time-details {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .trend-items {
+            space-y: 1rem;
+        }
+
+        .trend-item {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .trend-icon {
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+
+        .trend-content {
+            flex: 1;
+        }
+
+        .trend-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.25rem;
+        }
+
+        .trend-desc {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .weather-analysis {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .weather-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .weather-effects {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .weather-alert {
+            background: #fff3cd;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .tip-card {
+            background: linear-gradient(135deg, #667eea10, #764ba210);
+            border: 1px solid #667eea;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .tip-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .tip-content {
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .satisfaction-meter {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .satisfaction-score {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #28a745;
+        }
+
+        .satisfaction-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .satisfaction-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #28a745, #20c997);
+            transition: width 0.5s ease;
+        }
+
+        .satisfaction-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .points-title {
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .points-list {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .missions-list {
+            space-y: 1rem;
+        }
+
+        .mission-item {
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .mission-checkbox {
+            display: flex;
+            align-items: flex-start;
+            cursor: pointer;
+            margin-bottom: 0.5rem;
+        }
+
+        .mission-checkbox input {
+            margin-right: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        .mission-text {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .mission-reward {
+            color: #28a745;
+            font-size: 0.9rem;
+            font-style: italic;
+        }
+
+        .mission-progress {
+            text-align: center;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            color: #666;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 1. 업종 선택 화면 -->
+        <div class="screen active" id="step1">
+            <div class="header">
+                <h1>🏪 어떤 사업을 하고 계신가요?</h1>
+                <p>업종을 선택해주세요</p>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 20%"></div>
+            </div>
+            
+            <div class="selection-grid">
+                <div class="selection-item" onclick="selectBusiness('cafe')">
+                    <div class="icon">☕</div>
+                    <div class="title">카페/음료</div>
+                    <div class="desc">커피전문점, 디저트카페</div>
+                </div>
+                <div class="selection-item" onclick="selectBusiness('restaurant')">
+                    <div class="icon">🍽️</div>
+                    <div class="title">음식점</div>
+                    <div class="desc">한식, 양식, 분식</div>
+                </div>
+                <div class="selection-item" onclick="selectBusiness('retail')">
+                    <div class="icon">👕</div>
+                    <div class="title">의류/잡화</div>
+                    <div class="desc">옷, 액세서리, 신발</div>
+                </div>
+                <div class="selection-item" onclick="selectBusiness('beauty')">
+                    <div class="icon">💄</div>
+                    <div class="title">뷰티/헬스</div>
+                    <div class="desc">미용실, 네일, 마사지</div>
+                </div>
+                <div class="selection-item" onclick="selectBusiness('education')">
+                    <div class="icon">📚</div>
+                    <div class="title">교육/학원</div>
+                    <div class="desc">영어, 수학, 예체능</div>
+                </div>
+                <div class="selection-item" onclick="selectBusiness('service')">
+                    <div class="icon">🔧</div>
+                    <div class="title">서비스업</div>
+                    <div class="desc">수리, 청소, 배달</div>
+                </div>
+            </div>
+            
+            <button class="btn btn-primary" onclick="nextStep()" id="step1-next" disabled>다음 단계</button>
+        </div>
+        
+        <!-- 2. 지역 선택 화면 -->
+        <div class="screen" id="step2">
+            <div class="header">
+                <h1>📍 매장 위치를 알려주세요</h1>
+                <p>지역을 선택해주세요</p>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 40%"></div>
+            </div>
+            
+            <div class="input-group">
+                <label class="input-label">지역 검색</label>
+                <input type="text" class="input-field" placeholder="예: 강남구 역삼동" id="location-input">
+            </div>
+            
+            <div class="selection-grid">
+                <div class="selection-item" onclick="selectLocation('gangnam')">
+                    <div class="title">강남구 역삼동</div>
+                    <div class="desc">오피스 밀집 지역</div>
+                </div>
+                <div class="selection-item" onclick="selectLocation('hongdae')">
+                    <div class="title">마포구 홍대입구</div>
+                    <div class="desc">젊은층 문화 거리</div>
+                </div>
+                <div class="selection-item" onclick="selectLocation('jamsil')">
+                    <div class="title">송파구 잠실동</div>
+                    <div class="desc">주거 밀집 지역</div>
+                </div>
+                <div class="selection-item" onclick="selectLocation('myeongdong')">
+                    <div class="title">중구 명동</div>
+                    <div class="desc">관광/쇼핑 지역</div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevStep()">이전</button>
+                <button class="btn btn-primary" onclick="nextStep()" id="step2-next" disabled>다음 단계</button>
+            </div>
+        </div>
+        
+        <!-- 3. 매장 정보 화면 -->
+        <div class="screen" id="step3">
+            <div class="header">
+                <h1>🏠 매장 정보를 알려주세요</h1>
+                <p>운영 현황을 선택해주세요</p>
+            </div>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 60%"></div>
+            </div>
+            
+            <div class="form-section">
+                <div class="input-group">
+                    <label class="input-label">매장 이름</label>
+                    <input type="text" class="input-field" placeholder="예: 행복한 카페" id="store-name">
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">운영 인원</label>
+                    <div class="selection-grid two-col">
+                        <div class="selection-item" onclick="selectStaff('1')">
+                            <div class="title">1인 운영</div>
+                            <div class="desc">혼자 운영</div>
+                        </div>
+                        <div class="selection-item" onclick="selectStaff('2-3')">
+                            <div class="title">2-3인 운영</div>
+                            <div class="desc">가족/지인과</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">매장 규모</label>
+                    <div class="selection-grid two-col">
+                        <div class="selection-item" onclick="selectSize('small')">
+                            <div class="title">10평 미만</div>
+                            <div class="desc">테이크아웃 위주</div>
+                        </div>
+                        <div class="selection-item" onclick="selectSize('medium')">
+                            <div class="title">10-20평</div>
+                            <div class="desc">테이블 5-8개</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="button-group">
+                <button class="btn btn-secondary" onclick="prevStep()">이전</button>
+                <button class="btn btn-primary" onclick="nextStep()">분석 시작</button>
+            </div>
+        </div>
+        
+        <!-- 4. 로딩 화면 -->
+        <div class="screen" id="loading">
+            <div class="loading-screen">
+                <div class="loading-icon"></div>
+                <div class="loading-text">AI가 분석 중입니다...</div>
+                <div class="loading-desc">잠시만 기다려주세요</div>
+                
+                <div class="analysis-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="analysis-progress" style="width: 0%"></div>
+                    </div>
+                    <div class="analysis-steps">
+                        <div id="analysis-step">✅ 지역 상권 분석 완료</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 5. 메인 대시보드 -->
+        <div class="screen" id="dashboard">
+            <div class="dashboard">
+                <!-- 데스크탑용 사이드바 -->
+                <div class="sidebar desktop-only">
+                    <div class="sidebar-header">
+                        <h2>📊 고객분석</h2>
+                    </div>
+                    <nav class="sidebar-nav">
+                        <div class="nav-item active" onclick="switchSidebarTab('customers')">
+                            <span class="nav-icon">👥</span>
+                            <span class="nav-text">우리고객</span>
+                        </div>
+                        <div class="nav-item" onclick="switchSidebarTab('strategy')">
+                            <span class="nav-icon">🎯</span>
+                            <span class="nav-text">공략법</span>
+                        </div>
+                        <div class="nav-item" onclick="switchSidebarTab('trends')">
+                            <span class="nav-icon">📈</span>
+                            <span class="nav-text">트렌드</span>
+                        </div>
+                        <div class="nav-item" onclick="switchSidebarTab('tips')">
+                            <span class="nav-icon">💡</span>
+                            <span class="nav-text">오늘팁</span>
+                        </div>
+                    </nav>
+                </div>
+                
+                <!-- 메인 콘텐츠 영역 -->
+                <div class="main-content">
+                    <div class="dash-header">
+                        <div class="dash-title" id="store-title">행복한 카페</div>
+                        <div class="dash-subtitle" id="store-info">강남구 역삼동 • 10-20평 • 2-3인 운영</div>
+                    </div>
+                    
+                    <div class="dash-content">
+                        <!-- 모바일용 탭 네비게이션 -->
+                        <div class="tab-nav mobile-only">
+                            <div class="tab-item active" onclick="switchTab('customers')">우리고객</div>
+                            <div class="tab-item" onclick="switchTab('strategy')">공략법</div>
+                            <div class="tab-item" onclick="switchTab('trends')">트렌드</div>
+                            <div class="tab-item" onclick="switchTab('tips')">오늘팁</div>
+                        </div>
+                        
+                        <!-- 우리고객 탭 -->
+                        <div class="tab-content active" id="customers-tab">
+                            <div class="content-header">
+                                <h3>👥 우리 매장 핵심 고객층</h3>
+                                <p>AI가 분석한 주요 타겟 고객 3그룹입니다</p>
+                            </div>
+                            
+                            <div class="customers-grid">
+                                <div class="customer-card">
+                                    <div class="customer-header">
+                                        <div class="customer-name">💼 바쁜 직장인 (김대리)</div>
+                                        <div class="customer-ratio">42%</div>
+                                    </div>
+                                    <div class="customer-desc">33세 대기업 과장, 테이크아웃 선호, 속도 중시</div>
+                                    <div class="customer-stats">
+                                        <div class="stat-item">
+                                            <div class="stat-label">방문빈도</div>
+                                            <div class="stat-value">주 3.2회</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-label">평균구매</div>
+                                            <div class="stat-value">5,500원</div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-tags">
+                                        <span class="tag high">편의성↑</span>
+                                        <span class="tag medium">가격민감</span>
+                                        <span class="tag low">브랜드</span>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <button class="action-btn">상세보기</button>
+                                        <button class="action-btn primary">공략법</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="customer-card">
+                                    <div class="customer-header">
+                                        <div class="customer-name">👩‍👧 육아맘 (박주부)</div>
+                                        <div class="customer-ratio">28%</div>
+                                    </div>
+                                    <div class="customer-desc">37세 전업주부, 아이 동반, 안전한 공간 선호</div>
+                                    <div class="customer-stats">
+                                        <div class="stat-item">
+                                            <div class="stat-label">방문빈도</div>
+                                            <div class="stat-value">주 1.8회</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-label">평균구매</div>
+                                            <div class="stat-value">12,000원</div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-tags">
+                                        <span class="tag high">품질↑</span>
+                                        <span class="tag high">응대↑</span>
+                                        <span class="tag medium">가격민감</span>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <button class="action-btn">상세보기</button>
+                                        <button class="action-btn primary">공략법</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="customer-card">
+                                    <div class="customer-header">
+                                        <div class="customer-name">🎓 대학생 (이학생)</div>
+                                        <div class="customer-ratio">19%</div>
+                                    </div>
+                                    <div class="customer-desc">22세 대학생, 가격 민감, 긴 체류 선호</div>
+                                    <div class="customer-stats">
+                                        <div class="stat-item">
+                                            <div class="stat-label">방문빈도</div>
+                                            <div class="stat-value">주 2.1회</div>
+                                        </div>
+                                        <div class="stat-item">
+                                            <div class="stat-label">평균구매</div>
+                                            <div class="stat-value">4,200원</div>
+                                        </div>
+                                    </div>
+                                    <div class="customer-tags">
+                                        <span class="tag high">가격↑</span>
+                                        <span class="tag medium">편의성</span>
+                                        <span class="tag low">브랜드</span>
+                                    </div>
+                                    <div class="action-buttons">
+                                        <button class="action-btn">상세보기</button>
+                                        <button class="action-btn primary">공략법</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 공략법 탭 -->
+                        <div class="tab-content" id="strategy-tab">
+                            <div class="content-header">
+                                <h3>🎯 오늘의 고객 공략 전략</h3>
+                                <p>날씨와 요일을 고려한 맞춤 전략을 제안합니다</p>
+                            </div>
+                            
+                            <div class="strategy-content">
+                                <div class="card highlight-card">
+                                    <div class="card-header">🎯 오늘의 주력 타겟</div>
+                                    <div class="target-info">
+                                        <div class="target-main">💼 바쁜 직장인 (42%)</div>
+                                        <div class="target-condition">목요일 + 흐린 날씨 = 따뜻한 음료 선호 +35%</div>
+                                    </div>
+                                    
+                                    <div class="strategy-actions">
+                                        <h4>💡 오늘의 공략법</h4>
+                                        <div class="action-list">
+                                            <div class="action-item">✅ 따뜻한 라떼류 전면 진열</div>
+                                            <div class="action-item">✅ "목요일 힘내세요" 메시지 팝업</div>
+                                            <div class="action-item">✅ 달콤한 디저트와 세트 추천</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="action-buttons">
+                                        <button class="action-btn">시간대별 전략</button>
+                                        <button class="action-btn primary">날씨별 대응</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="time-strategy">
+                                    <div class="card">
+                                        <div class="card-header">⏰ 시간대별 고객 특성</div>
+                                        <div class="time-slots">
+                                            <div class="time-slot">
+                                                <div class="time-period">🌅 오전 7-9시: 직장인 러시 (78%)</div>
+                                                <div class="time-details">
+                                                    • 인기: 아메리카노, 샌드위치<br>
+                                                    • 포인트: 속도가 생명! 5분 내 서빙
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="time-slot">
+                                                <div class="time-period">☀️ 오전 10-12시: 여유 시간 (65%)</div>
+                                                <div class="time-details">
+                                                    • 인기: 라떼, 머핀, 브런치<br>
+                                                    • 포인트: 편안한 분위기, 친절 응대
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="time-slot">
+                                                <div class="time-period">🍽️ 점심 12-2시: 직장인 점심 (71%)</div>
+                                                <div class="time-details">
+                                                    • 인기: 든든한 식사류<br>
+                                                    • 포인트: 빠른 회전율, 테이크아웃
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 트렌드 탭 -->
+                        <div class="tab-content" id="trends-tab">
+                            <div class="content-header">
+                                <h3>📈 고객 트렌드 분석</h3>
+                                <p>이번 주 고객 행동 변화와 시장 트렌드를 분석합니다</p>
+                            </div>
+                            
+                            <div class="trends-content">
+                                <div class="card">
+                                    <div class="card-header">📊 이번 주 고객 트렌드 변화</div>
+                                    
+                                    <div class="trend-items">
+                                        <div class="trend-item trend-up">
+                                            <div class="trend-icon">🔥</div>
+                                            <div class="trend-content">
+                                                <div class="trend-title">급상승: 식물성 음료 +67%</div>
+                                                <div class="trend-desc">오트밀크, 아몬드밀크 문의 증가</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="trend-item trend-down">
+                                            <div class="trend-icon">📉</div>
+                                            <div class="trend-content">
+                                                <div class="trend-title">하락: 아이스 음료 -23%</div>
+                                                <div class="trend-desc">날씨 추워지면서 자연스러운 현상</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="trend-item trend-new">
+                                            <div class="trend-icon">🆕</div>
+                                            <div class="trend-content">
+                                                <div class="trend-title">발견: 오후 3-4시 고객 +31%</div>
+                                                <div class="trend-desc">재택근무 증가로 여유 시간 늘어남</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="action-buttons">
+                                        <button class="action-btn">월별 트렌드</button>
+                                        <button class="action-btn primary">대응 전략</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <div class="card-header">🌦️ 날씨별 고객 행동 분석</div>
+                                    <div class="weather-analysis">
+                                        <div class="weather-today">
+                                            <div class="weather-title">☁️ 오늘: 흐리고 쌀쌀함 (12℃)</div>
+                                            <div class="weather-effects">
+                                                • 따뜻한 음료 선호도 +35%<br>
+                                                • 매장 체류시간 +20% 증가<br>
+                                                • 달콤한 디저트 수요 +25%
+                                            </div>
+                                            <div class="weather-alert">
+                                                <strong>⚠️ 오후 4시부터 비 예보</strong><br>
+                                                → 테이크아웃 포장재 넉넉히 준비
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 오늘팁 탭 -->
+                        <div class="tab-content" id="tips-tab">
+                            <div class="content-header">
+                                <h3>💡 오늘의 운영 가이드</h3>
+                                <p>고객 서비스 팁과 일일 미션을 확인하세요</p>
+                            </div>
+                            
+                            <div class="tips-content">
+                                <div class="tip-card">
+                                    <div class="tip-title">💡 오늘의 고객 서비스 팁</div>
+                                    <div class="tip-content">
+                                        <strong>🎯 "고객 유형별 대화법"</strong><br><br>
+                                        💼 바쁜 직장인이 오면...<br>
+                                        ❌ "어떤 걸로 드릴까요?"<br>
+                                        ✅ "평소처럼 아메리카노 톨사이즈로 준비해드릴까요?"<br>
+                                        → 단골임을 인정받는 느낌!
+                                    </div>
+                                </div>
+                                
+                                <div class="satisfaction-card">
+                                    <div class="card">
+                                        <div class="card-header">⭐ 고객 만족도 현황</div>
+                                        <div class="satisfaction-meter">
+                                            <div class="satisfaction-score">
+                                                <span class="score-label">만족 고객</span>
+                                                <span class="score-value">89%</span>
+                                            </div>
+                                            <div class="satisfaction-bar">
+                                                <div class="satisfaction-fill" style="width: 89%"></div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="satisfaction-details">
+                                            <div class="good-points">
+                                                <div class="points-title">🏆 잘하고 있는 점</div>
+                                                <div class="points-list">
+                                                    ✅ 친절한 서비스 (95% 만족)<br>
+                                                    ✅ 음료 맛 (92% 만족)
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="improve-points">
+                                                <div class="points-title">⚠️ 개선할 점</div>
+                                                <div class="points-list">
+                                                    📶 와이파이 속도 (73% 만족)<br>
+                                                    💡 간단 개선: 공유기 위치 변경
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="action-buttons">
+                                            <button class="action-btn">고객 의견</button>
+                                            <button class="action-btn primary">개선 계획</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="missions-card">
+                                    <div class="card">
+                                        <div class="card-header">🎮 오늘의 미션</div>
+                                        <div class="missions-list">
+                                            <div class="mission-item">
+                                                <label class="mission-checkbox">
+                                                    <input type="checkbox" onchange="updateMissionProgress()">
+                                                    <span class="checkmark"></span>
+                                                    <span class="mission-text">점심시간 "빠른 주문" 팝업 부착</span>
+                                                </label>
+                                                <div class="mission-reward">예상 효과: +8명 고객, +32,000원</div>
+                                            </div>
+                                            
+                                            <div class="mission-item">
+                                                <label class="mission-checkbox">
+                                                    <input type="checkbox" onchange="updateMissionProgress()">
+                                                    <span class="checkmark"></span>
+                                                    <span class="mission-text">김대리님께 신메뉴 추천하기</span>
+                                                </label>
+                                                <div class="mission-reward">"오늘 오시면 말씀드려보세요!"</div>
+                                            </div>
+                                            
+                                            <div class="mission-item">
+                                                <label class="mission-checkbox">
+                                                    <input type="checkbox" onchange="updateMissionProgress()">
+                                                    <span class="checkmark"></span>
+                                                    <span class="mission-text">SNS에 오늘의 메뉴 사진 올리기</span>
+                                                </label>
+                                                <div class="mission-reward">예상 신규고객: +3명</div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mission-progress">
+                                            완료: <span id="mission-completed">0</span>/3 | 어제 완료율: 2/3
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 모바일용 하단 네비게이션 -->
+            <div class="bottom-nav mobile-only">
+                <div class="nav-item active">
+                    <div class="nav-icon">🏠</div>
+                    <div class="nav-text">홈</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">👥</div>
+                    <div class="nav-text">고객</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">📊</div>
+                    <div class="nav-text">분석</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">💡</div>
+                    <div class="nav-text">팁</div>
+                </div>
+                <div class="nav-item">
+                    <div class="nav-icon">⚙️</div>
+                    <div class="nav-text">설정</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let currentStep = 1;
+        let selectedBusiness = '';
+        let selectedLocation = '';
+        let selectedStaff = '';
+        let selectedSize = '';
+        let storeName = '';
+
+        // 단계별 네비게이션
+        function nextStep() {
+            if (currentStep < 4) {
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                currentStep++;
+                
+                if (currentStep === 4) {
+                    // 로딩 화면 시작
+                    document.getElementById('loading').classList.add('active');
+                    startAnalysis();
+                } else {
+                    document.getElementById(`step${currentStep}`).classList.add('active');
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                currentStep--;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+            }
+        }
+
+        // 업종 선택
+        function selectBusiness(business) {
+            selectedBusiness = business;
+            
+            // 이전 선택 제거
+            document.querySelectorAll('#step1 .selection-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // 현재 선택 추가
+            event.target.closest('.selection-item').classList.add('selected');
+            
+            // 다음 버튼 활성화
+            document.getElementById('step1-next').disabled = false;
+        }
+
+        // 지역 선택
+        function selectLocation(location) {
+            selectedLocation = location;
+            
+            // 이전 선택 제거
+            document.querySelectorAll('#step2 .selection-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // 현재 선택 추가
+            event.target.closest('.selection-item').classList.add('selected');
+            
+            // 다음 버튼 활성화
+            document.getElementById('step2-next').disabled = false;
+        }
+
+        // 운영 인원 선택
+        function selectStaff(staff) {
+            selectedStaff = staff;
+            
+            // 이전 선택 제거
+            document.querySelectorAll('#step3 .selection-grid.two-col:first-of-type .selection-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // 현재 선택 추가
+            event.target.closest('.selection-item').classList.add('selected');
+        }
+
+        // 매장 규모 선택
+        function selectSize(size) {
+            selectedSize = size;
+            
+            // 이전 선택 제거
+            document.querySelectorAll('#step3 .selection-grid.two-col:last-of-type .selection-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            
+            // 현재 선택 추가
+            event.target.closest('.selection-item').classList.add('selected');
+        }
+
+        // 분석 시작 (로딩 시뮬레이션)
+        function startAnalysis() {
+            const progressBar = document.getElementById('analysis-progress');
+            const stepText = document.getElementById('analysis-step');
+            
+            const steps = [
+                "✅ 지역 상권 분석 완료",
+                "✅ 고객 데이터 수집 완료", 
+                "✅ AI 페르소나 생성 완료",
+                "✅ 맞춤 전략 수립 완료"
+            ];
+            
+            let currentStepIndex = 0;
+            let progress = 0;
+            
+            const interval = setInterval(() => {
+                progress += 25;
+                progressBar.style.width = progress + '%';
+                
+                if (currentStepIndex < steps.length) {
+                    stepText.textContent = steps[currentStepIndex];
+                    currentStepIndex++;
+                }
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        showDashboard();
+                    }, 1000);
+                }
+            }, 800);
+        }
+
+        // 대시보드 표시
+        function showDashboard() {
+            document.getElementById('loading').classList.remove('active');
+            document.getElementById('dashboard').classList.add('active');
+            
+            // 매장 정보 업데이트
+            const storeNameInput = document.getElementById('store-name').value;
+            if (storeNameInput) {
+                document.getElementById('store-title').textContent = storeNameInput;
+            }
+            
+            // 선택된 정보에 따라 매장 정보 업데이트
+            updateStoreInfo();
+        }
+
+        // 매장 정보 업데이트
+        function updateStoreInfo() {
+            const locationMap = {
+                'gangnam': '강남구 역삼동',
+                'hongdae': '마포구 홍대입구', 
+                'jamsil': '송파구 잠실동',
+                'myeongdong': '중구 명동'
+            };
+            
+            const sizeMap = {
+                'small': '10평 미만',
+                'medium': '10-20평'
+            };
+            
+            const staffMap = {
+                '1': '1인 운영',
+                '2-3': '2-3인 운영'
+            };
+            
+            const locationText = locationMap[selectedLocation] || '강남구 역삼동';
+            const sizeText = sizeMap[selectedSize] || '10-20평';
+            const staffText = staffMap[selectedStaff] || '2-3인 운영';
+            
+            document.getElementById('store-info').textContent = 
+                `${locationText} • ${sizeText} • ${staffText}`;
+        }
+
+        // 탭 전환 (모바일)
+        function switchTab(tabName) {
+            // 탭 네비게이션 업데이트
+            document.querySelectorAll('.tab-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // 탭 콘텐츠 업데이트
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // 사이드바 탭 전환 (데스크탑)
+        function switchSidebarTab(tabName) {
+            // 사이드바 네비게이션 업데이트
+            document.querySelectorAll('.sidebar .nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // 탭 콘텐츠 업데이트
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${tabName}-tab`).classList.add('active');
+        }
+
+        // 미션 진행률 업데이트
+        function updateMissionProgress() {
+            const checkboxes = document.querySelectorAll('.mission-checkbox input[type="checkbox"]');
+            const completedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            document.getElementById('mission-completed').textContent = completedCount;
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 지역 검색 입력 필드 이벤트
+            const locationInput = document.getElementById('location-input');
+            locationInput.addEventListener('input', function() {
+                if (this.value.length > 0) {
+                    document.getElementById('step2-next').disabled = false;
+                } else if (!selectedLocation) {
+                    document.getElementById('step2-next').disabled = true;
+                }
+            });
+            
+            // 매장 이름 입력 필드 이벤트
+            const storeNameInput = document.getElementById('store-name');
+            storeNameInput.addEventListener('input', function() {
+                storeName = this.value;
+            });
+        });
+    </script>
+</body>
+</html>

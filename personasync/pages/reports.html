@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>리포트 관리 - PersonaSync™</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="../index.html" class="logo">PersonaSync™</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="../index.html">대시보드</a></li>
+                <li class="nav-item"><a href="./persona-create.html">페르소나 생성</a></li>
+                <li class="nav-item"><a href="./analytics.html">분석</a></li>
+                <li class="nav-item"><a href="./reports.html" class="active">리포트</a></li>
+            </ul>
+            <div class="user-info"></div>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="card mb-20">
+            <div class="card-header">
+                <h1 class="card-title">📄 리포트 관리</h1>
+                <p class="card-subtitle">페르소나 분석 결과를 다양한 형태의 리포트로 생성하고 관리하세요</p>
+            </div>
+        </div>
+
+        <!-- Quick Templates -->
+        <div class="card mb-20">
+            <div class="card-header">
+                <h2 class="card-title">⚡ 빠른 리포트 템플릿</h2>
+            </div>
+            <div class="grid-4">
+                <div class="template-card" onclick="generateReport('executive')">
+                    <div class="template-icon">👔</div>
+                    <h3>임원진 요약 보고서</h3>
+                    <p>핵심 인사이트와 비즈니스 임팩트 중심</p>
+                </div>
+
+                <div class="template-card" onclick="generateReport('marketing')">
+                    <div class="template-icon">📈</div>
+                    <h3>마케팅 전략 리포트</h3>
+                    <p>캠페인 최적화 및 타깃팅 전략</p>
+                </div>
+
+                <div class="template-card" onclick="generateReport('persona')">
+                    <div class="template-icon">👥</div>
+                    <h3>페르소나 상세 분석</h3>
+                    <p>개별 페르소나의 깊이 있는 분석</p>
+                </div>
+
+                <div class="template-card" onclick="generateReport('competitive')">
+                    <div class="template-icon">⚔️</div>
+                    <h3>경쟁사 비교 분석</h3>
+                    <p>시장 포지셔닝 및 경쟁 우위 분석</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Reports -->
+        <div class="card mb-20">
+            <div class="card-header">
+                <h2 class="card-title">📋 최근 생성된 리포트</h2>
+            </div>
+            
+            <div class="report-list">
+                <div class="report-item">
+                    <div class="report-info">
+                        <h4>갤럭시 S25 페르소나 분석 - 임원진 요약</h4>
+                        <div class="report-meta">
+                            <span>2025.07.08 14:30</span>
+                            <span>4.2MB</span>
+                            <span class="status-generated">생성완료</span>
+                        </div>
+                        <p>주요 타깃 3개 페르소나 분석 결과 및 프리오더 전략 권장사항 포함</p>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn btn-primary btn-sm" onclick="downloadReport()">📥 다운로드</button>
+                        <button class="btn btn-secondary btn-sm" onclick="shareReport()">🔗 공유</button>
+                    </div>
+                </div>
+
+                <div class="report-item">
+                    <div class="report-info">
+                        <h4>MZ세대 타깃 마케팅 전략 리포트</h4>
+                        <div class="report-meta">
+                            <span>2025.07.07 09:15</span>
+                            <span>8.7MB</span>
+                            <span class="status-generated">생성완료</span>
+                        </div>
+                        <p>MZ세대 페르소나 기반 소셜 미디어 캠페인 전략 및 인플루언서 협업 방안</p>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn btn-primary btn-sm" onclick="downloadReport()">📥 다운로드</button>
+                        <button class="btn btn-secondary btn-sm" onclick="shareReport()">🔗 공유</button>
+                    </div>
+                </div>
+
+                <div class="report-item">
+                    <div class="report-info">
+                        <h4>Q2 캠페인 성과 분석 리포트</h4>
+                        <div class="report-meta">
+                            <span>2025.07.05 11:20</span>
+                            <span>6.3MB</span>
+                            <span class="status-generated">생성완료</span>
+                        </div>
+                        <p>Q2 마케팅 캠페인 페르소나별 반응률 분석 및 ROI 측정 결과</p>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn btn-primary btn-sm" onclick="downloadReport()">📥 다운로드</button>
+                        <button class="btn btn-secondary btn-sm" onclick="shareReport()">🔗 공유</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-20">
+            <button class="btn btn-secondary" onclick="goHome()">🏠 대시보드로 돌아가기</button>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script>
+        function generateReport(type) {
+            const reports = {
+                'executive': '임원진 요약 보고서',
+                'marketing': '마케팅 전략 리포트',
+                'persona': '페르소나 상세 분석',
+                'competitive': '경쟁사 비교 분석'
+            };
+            
+            window.personaSync?.showNotification(`${reports[type]} 생성을 시작합니다...`, 'info');
+            
+            setTimeout(() => {
+                window.personaSync?.showNotification(`${reports[type]}가 성공적으로 생성되었습니다!`, 'success');
+                // 새 리포트를 목록에 추가하는 로직은 여기에 구현
+            }, 3000);
+        }
+
+        function downloadReport() {
+            window.personaSync?.showNotification('리포트 다운로드를 시작합니다...', 'info');
+        }
+
+        function shareReport() {
+            const shareUrl = window.location.href + '#shared-report';
+            navigator.clipboard.writeText(shareUrl).then(() => {
+                window.personaSync?.showNotification('공유 링크가 클립보드에 복사되었습니다!', 'success');
+            });
+        }
+
+        function goHome() {
+            window.location.href = '../index.html';
+        }
+    </script>
+
+    <style>
+        .template-card {
+            background: rgba(42, 45, 62, 0.6);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid #4a5074;
+        }
+
+        .template-card:hover {
+            background: rgba(74, 80, 116, 0.5);
+            border-color: #667eea;
+            transform: translateY(-5px);
+        }
+
+        .template-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .template-card h3 {
+            color: #ffffff;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .template-card p {
+            color: #b8bcc8;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        .report-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .report-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 20px;
+            background: rgba(42, 45, 62, 0.6);
+            border-radius: 12px;
+            border: 1px solid #4a5074;
+        }
+
+        .report-info {
+            flex: 1;
+        }
+
+        .report-info h4 {
+            color: #ffffff;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .report-meta {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 8px;
+            font-size: 12px;
+            color: #b8bcc8;
+        }
+
+        .status-generated {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4CAF50;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .report-info p {
+            color: #b8bcc8;
+            font-size: 13px;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .btn-sm {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .report-item {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .report-actions {
+                align-self: stretch;
+            }
+
+            .report-actions .btn {
+                flex: 1;
+            }
+        }
+    </style>
+</body>
+</html>

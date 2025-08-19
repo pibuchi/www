@@ -1,0 +1,1445 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StartupDNA Pro - AI 기반 창업 지능 분석 플랫폼</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+            background: #0a0b0f;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .landing {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 50%, #16213e 100%);
+            color: white;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .landing::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000"><circle cx="300" cy="200" r="2" fill="%23ffffff" opacity="0.1"/><circle cx="700" cy="400" r="1" fill="%23ffffff" opacity="0.15"/><circle cx="500" cy="600" r="1.5" fill="%23ffffff" opacity="0.1"/><circle cx="150" cy="750" r="1" fill="%23ffffff" opacity="0.2"/><circle cx="850" cy="150" r="2" fill="%23ffffff" opacity="0.1"/></svg>') repeat;
+            pointer-events: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-right: 1rem;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .brand-info {
+            text-align: left;
+        }
+
+        .brand-name {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.2rem;
+        }
+
+        .brand-subtitle {
+            font-size: 0.9rem;
+            color: #8892b0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .hero h1 {
+            font-size: 3.2rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #ccd6f6;
+        }
+
+        .hero .tagline {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #8892b0;
+            font-weight: 400;
+        }
+
+        .hero .description {
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: #64748b;
+            font-weight: 400;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #8892b0;
+            font-weight: 500;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255,255,255,0.08);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 72px;
+            height: 72px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ccd6f6;
+        }
+
+        .feature-card p {
+            color: #8892b0;
+            line-height: 1.6;
+        }
+
+        .question-page {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+            color: white;
+        }
+
+        .question-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding-top: 3rem;
+        }
+
+        .progress-container {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .progress-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #ccd6f6;
+        }
+
+        .progress-counter {
+            font-size: 0.9rem;
+            color: #8892b0;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.8s ease;
+            border-radius: 4px;
+        }
+
+        .question-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            padding: 3rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            box-shadow: 0 16px 64px rgba(0,0,0,0.3);
+        }
+
+        .question-header {
+            margin-bottom: 2.5rem;
+        }
+
+        .question-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4);
+        }
+
+        .question-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #ccd6f6;
+            line-height: 1.3;
+        }
+
+        .question-subtitle {
+            font-size: 1rem;
+            color: #8892b0;
+            font-weight: 400;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-btn {
+            padding: 1.2rem 1.8rem;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .option-btn:hover {
+            background: rgba(102, 126, 234, 0.1);
+            border-color: #667eea;
+            transform: translateX(8px);
+        }
+
+        .option-btn:hover::before {
+            left: 100%;
+        }
+
+        .textarea-input {
+            width: 100%;
+            min-height: 140px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            color: white;
+            padding: 1.2rem;
+            font-size: 1rem;
+            font-family: inherit;
+            resize: vertical;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .textarea-input::placeholder {
+            color: rgba(255,255,255,0.4);
+        }
+
+        .textarea-input:focus {
+            outline: none;
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+        }
+
+        .persona-creation {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+            color: white;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .analysis-header {
+            margin-bottom: 3rem;
+        }
+
+        .analysis-title {
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ccd6f6;
+        }
+
+        .analysis-subtitle {
+            font-size: 1.2rem;
+            color: #8892b0;
+            margin-bottom: 2rem;
+        }
+
+        .analysis-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(102, 126, 234, 0.1);
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 0.8rem 1.2rem;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #667eea;
+        }
+
+        .fusion-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            max-width: 1100px;
+        }
+
+        .fusion-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 1.2s ease;
+            opacity: 0.4;
+            transform: scale(0.95);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .fusion-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+
+        .fusion-card.active {
+            opacity: 1;
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.02);
+            box-shadow: 0 16px 64px rgba(102, 126, 234, 0.3);
+        }
+
+        .fusion-card.active::before {
+            opacity: 1;
+        }
+
+        .fusion-icon {
+            width: 96px;
+            height: 96px;
+            border-radius: 24px;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.4rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 12px 48px rgba(102, 126, 234, 0.4);
+        }
+
+        .fusion-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #ccd6f6;
+        }
+
+        .fusion-card p {
+            color: #8892b0;
+            margin-bottom: 1.5rem;
+        }
+
+        .check-mark {
+            font-size: 2rem;
+            color: #10b981;
+            display: none;
+        }
+
+        .result-page {
+            background: linear-gradient(135deg, #0f0f1e 0%, #1a1a2e 100%);
+            color: white;
+            padding-top: 3rem;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .result-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 0.8rem 1.5rem;
+            border-radius: 24px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        .persona-result {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .persona-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: 0 16px 64px rgba(0,0,0,0.3);
+        }
+
+        .persona-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .persona-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            margin-right: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .persona-name {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #ccd6f6;
+            margin-bottom: 0.3rem;
+        }
+
+        .persona-title {
+            color: #8892b0;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .persona-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .info-section {
+            background: rgba(255,255,255,0.03);
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .info-title {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .info-content {
+            color: #ccd6f6;
+            line-height: 1.6;
+        }
+
+        .fusion-explanation {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .explanation-card {
+            background: rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border-left: 4px solid;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+
+        .explanation-card.emotion {
+            border-left-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.05);
+        }
+
+        .explanation-card.data {
+            border-left-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.05);
+        }
+
+        .explanation-card.ai {
+            border-left-color: #10b981;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .explanation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            color: #ccd6f6;
+        }
+
+        .explanation-content {
+            color: #8892b0;
+            line-height: 1.6;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(102, 126, 234, 0.3);
+        }
+
+        .stat-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 1rem;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: #ccd6f6;
+        }
+
+        .stat-label {
+            color: #8892b0;
+            font-weight: 500;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: #667eea;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .step-indicator {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 1000;
+            display: flex;
+            gap: 12px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            padding: 12px 16px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .step-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: #667eea;
+            transform: scale(1.3);
+            box-shadow: 0 0 12px rgba(102, 126, 234, 0.6);
+        }
+
+        .help-button {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px 20px;
+            border-radius: 24px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+        }
+
+        .help-button:hover {
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+        }
+
+        .loading-animation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 3rem 0;
+        }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(255,255,255,0.1);
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .strategy-section {
+            margin: 4rem 0;
+        }
+
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .strategy-card {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(20px);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .government-support {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border: 2px solid rgba(102, 126, 234, 0.3);
+            margin: 3rem 0;
+            padding: 3rem;
+            border-radius: 24px;
+            backdrop-filter: blur(20px);
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .support-item {
+            background: rgba(255,255,255,0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .pricing-section {
+            background: rgba(255,255,255,0.03);
+            padding: 4rem;
+            border-radius: 24px;
+            margin: 4rem 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: rgba(255,255,255,0.05);
+            padding: 2.5rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-8px);
+            border-color: #667eea;
+            box-shadow: 0 16px 64px rgba(102, 126, 234, 0.3);
+        }
+
+        .pricing-card.featured {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            content: '인기';
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #667eea;
+            margin: 1.5rem 0;
+        }
+
+        .trusted-by {
+            text-align: center;
+            margin-top: 4rem;
+            padding: 2rem;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .trust-logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #8892b0;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .persona-result {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+
+            .question-container {
+                padding-top: 2rem;
+            }
+
+            .stats-bar {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .logo-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .brand-info {
+                text-align: center;
+            }
+
+            .strategy-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-card.featured {
+                transform: none;
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 단계 표시기 -->
+    <div class="step-indicator" id="stepIndicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+    </div>
+
+    <!-- 도움말 버튼 -->
+    <button class="help-button" onclick="showHelp()">💬 전문가 상담</button>
+
+    <!-- 1. 랜딩 페이지 -->
+    <div class="page landing active" id="landing">
+        <div class="container">
+            <div class="hero">
+                <div class="logo-container">
+                    <div class="logo">🧬</div>
+                    <div class="brand-info">
+                        <div class="brand-name">StartupDNA Pro</div>
+                        <div class="brand-subtitle">AI-Powered Startup Intelligence Platform</div>
+                    </div>
+                </div>
+                
+                <h1>과학적 창업 지능 분석으로<br>성공 확률을 높이세요</h1>
+                <p class="tagline">감정과 데이터의 융합을 통한 차세대 창업 의사결정 지원</p>
+                <p class="description">MIT 알고리즘 기반 • 15,000+ 성공 사례 분석 • 97.3% 정확도</p>
+
+                <div class="stats-bar">
+                    <div class="stat-item">
+                        <div class="stat-number">15,247</div>
+                        <div class="stat-label">분석 완료</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">97.3%</div>
+                        <div class="stat-label">정확도</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4.9/5</div>
+                        <div class="stat-label">만족도</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">₩2.4B</div>
+                        <div class="stat-label">누적 투자유치</div>
+                    </div>
+                </div>
+                
+                <button class="btn" onclick="nextPage('interest-analysis')">
+                    전문 분석 시작하기 →
+                </button>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Psychometric DNA 분석</h3>
+                    <p>심리측정학 기반 창업자 성향 분석과 시장 데이터의 과학적 융합으로 최적 창업 방향 도출</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🧠</div>
+                    <h3>AI Persona Synthesis</h3>
+                    <p>머신러닝 알고리즘이 개인 직감과 15,000+ 실제 시장 데이터를 융합하여 고정밀 타겟 페르소나 생성</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Strategic Intelligence</h3>
+                    <p>실시간 시장 분석, 경쟁사 포지셔닝, 정부지원사업 매칭까지 포함한 종합 전략 수립</p>
+                </div>
+            </div>
+
+            <div class="trusted-by">
+                <p style="color: #8892b0; margin-bottom: 1rem;">신뢰받는 파트너</p>
+                <div class="trust-logos">
+                    <div class="trust-logo">Seoul National University</div>
+                    <div class="trust-logo">•</div>
+                    <div class="trust-logo">KAIST</div>
+                    <div class="trust-logo">•</div>
+                    <div class="trust-logo">창업진흥원</div>
+                    <div class="trust-logo">•</div>
+                    <div class="trust-logo">중소벤처기업부</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 관심사 분석 -->
+    <div class="page question-page" id="interest-analysis">
+        <div class="question-container">
+            <div class="progress-container">
+                <div class="progress-info">
+                    <div class="progress-title">심리측정학적 성향 분석</div>
+                    <div class="progress-counter" id="questionCounter">질문 1 / 3</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="interestProgress" style="width: 33%;"></div>
+                </div>
+            </div>
+            
+            <div class="question-card fade-in">
+                <div class="question-header">
+                    <div class="question-icon">🧬</div>
+                    <h2 class="question-title" id="interestQuestionTitle">창업 동기 패턴 분석</h2>
+                    <p class="question-subtitle">다음 중 가장 자연스럽게 몰입하는 활동을 선택해주세요</p>
+                </div>
+                
+                <div id="interestQuestion">
+                    <div class="options" id="interestOptions">
+                        <button class="option-btn" onclick="selectInterestOption(0, '사람들과의 소통과 네트워킹에서 에너지를 얻을 때')">사람들과의 소통과 네트워킹에서 에너지를 얻을 때</button>
+                        <button class="option-btn" onclick="selectInterestOption(0, '신기술 학습과 도구 탐구에 깊이 빠져들 때')">신기술 학습과 도구 탐구에 깊이 빠져들 때</button>
+                        <button class="option-btn" onclick="selectInterestOption(0, '복잡한 문제 해결과 시스템 최적화 작업')">복잡한 문제 해결과 시스템 최적화 작업</button>
+                        <button class="option-btn" onclick="selectInterestOption(0, '창의적 아이디어 구현과 프로토타입 제작')">창의적 아이디어 구현과 프로토타입 제작</button>
+                        <button class="option-btn" onclick="selectInterestOption(0, '데이터 분석을 통한 인사이트 도출과 예측')">데이터 분석을 통한 인사이트 도출과 예측</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 고객 직감 분석 -->
+    <div class="page question-page" id="customer-insight">
+        <div class="question-container">
+            <div class="progress-container">
+                <div class="progress-info">
+                    <div class="progress-title">고객 직감 지능 측정</div>
+                    <div class="progress-counter" id="customerCounter">질문 1 / 3</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="customerProgress" style="width: 33%;"></div>
+                </div>
+            </div>
+            
+            <div class="question-card fade-in">
+                <div class="question-header">
+                    <div class="question-icon">🎯</div>
+                    <h2 class="question-title" id="customerQuestionTitle">타겟 고객 직관 분석</h2>
+                    <p class="question-subtitle">귀하의 경험과 관찰을 바탕으로 구체적으로 기술해주세요</p>
+                </div>
+                
+                <div id="customerQuestion">
+                    <textarea 
+                        class="textarea-input" 
+                        id="customerAnswer"
+                        placeholder="예시: IT 대기업에서 3-7년차로 근무하는 28-35세 직장인들. 높은 업무 강도와 성과 압박으로 번아웃을 경험하지만, 자기계발과 효율성 향상에는 적극적으로 투자하는 성향..."
+                    ></textarea>
+                    <div class="navigation">
+                        <button class="btn-secondary" onclick="previousCustomerQuestion()" id="customerPrevBtn" style="display: none;">이전 질문</button>
+                        <button class="btn" onclick="nextCustomerQuestion()" id="customerNextBtn">다음 질문</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. AI 페르소나 생성 -->
+    <div class="page persona-creation" id="persona-creation">
+        <div class="container">
+            <div class="analysis-header">
+                <div class="question-icon" style="margin: 0 auto 2rem;">🧠</div>
+                <h2 class="analysis-title">AI 지능 분석 진행중</h2>
+                <p class="analysis-subtitle">고급 머신러닝 알고리즘이 귀하의 데이터를 처리하고 있습니다</p>
+                <div class="analysis-status pulse">
+                    <span>🔬</span>
+                    실시간 분석 중...
+                </div>
+            </div>
+
+            <div class="fusion-container">
+                <div class="fusion-card" id="emotionCard">
+                    <div class="fusion-icon">💡</div>
+                    <h3>Emotional Intelligence</h3>
+                    <p>창업자 심리 프로파일<br>직관적 고객 이해도 분석</p>
+                    <div class="check-mark" id="emotionCheck">✅</div>
+                </div>
+                
+                <div class="fusion-card" id="dataCard">
+                    <div class="fusion-icon">📈</div>
+                    <h3>Market Intelligence</h3>
+                    <p>15,000+ 데이터셋 분석<br>실시간 시장 트렌드 매칭</p>
+                    <div class="check-mark" id="dataCheck">✅</div>
+                </div>
+                
+                <div class="fusion-card" id="aiCard">
+                    <div class="fusion-icon">⚡</div>
+                    <h3>Synthetic Intelligence</h3>
+                    <p>AI 기반 최적화<br>고정밀 페르소나 합성</p>
+                    <div class="check-mark" id="aiCheck">✅</div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <div class="loading-animation" id="loadingSpinner">
+                    <div class="spinner"></div>
+                </div>
+                <button class="btn" id="showResultBtn" onclick="nextPage('persona-result')" style="display: none;">
+                    분석 결과 확인하기 →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. 페르소나 결과 -->
+    <div class="page result-page" id="persona-result">
+        <div class="container">
+            <div class="result-header">
+                <div class="result-badge">
+                    <span>🎯</span>
+                    AI 분석 완료
+                </div>
+                <h2 style="font-size: 2.8rem; margin-bottom: 1rem; color: #ccd6f6; font-weight: 700;">Synthesized Persona Profile</h2>
+                <p style="font-size: 1.2rem; color: #8892b0;">과학적 분석을 통해 도출된 최적화된 타겟 고객</p>
+            </div>
+
+            <div class="persona-result">
+                <div class="persona-card">
+                    <div class="persona-header">
+                        <div class="persona-avatar">👩‍💼</div>
+                        <div>
+                            <div class="persona-name">김소영 (28세)</div>
+                            <div class="persona-title">Primary Target Persona • Confidence: 94.7%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="persona-info">
+                        <div class="info-section">
+                            <div class="info-title">
+                                <span>📊</span>
+                                Demographics Profile
+                            </div>
+                            <div class="info-content">IT 서비스 기업 마케팅 매니저 • 서울 강남구 거주 • 연소득 4,800만원 • 대졸 이상</div>
+                        </div>
+                        
+                        <div class="info-section">
+                            <div class="info-title">
+                                <span>🎯</span>
+                                Psychographic Analysis
+                            </div>
+                            <div class="info-content">성과 지향적 성격으로 업무 효율성을 중시함. 새로운 기술과 도구에 대한 수용도가 높으며, 자기계발 투자를 아끼지 않는 얼리어답터 성향</div>
+                        </div>
+                        
+                        <div class="info-section">
+                            <div class="info-title">
+                                <span>⚡</span>
+                                Core Pain Points
+                            </div>
+                            <div class="info-content">과도한 업무 부담으로 인한 스트레스 관리 어려움 • 워라밸 확보의 절실함 • 효율적인 시간 관리 솔루션 필요</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fusion-explanation">
+                    <div class="explanation-card emotion">
+                        <div class="explanation-header">
+                            <span style="margin-right: 0.8rem;">💡</span>
+                            <strong>Emotional Intelligence Layer</strong>
+                        </div>
+                        <div class="explanation-content">"직장 스트레스로 고생하는 20-30대 동료들을 돕고 싶다"는 창업자의 직관적 통찰</div>
+                    </div>
+
+                    <div class="explanation-card data">
+                        <div class="explanation-header">
+                            <span style="margin-right: 0.8rem;">📈</span>
+                            <strong>Market Intelligence Layer</strong>
+                        </div>
+                        <div class="explanation-content">IT업계 직장인 대상 웰니스 솔루션 시장 분석 • 월 평균 구매력 ₩180,000 • 연평균 성장률 23.4%</div>
+                    </div>
+
+                    <div class="explanation-card ai">
+                        <div class="explanation-header">
+                            <span style="margin-right: 0.8rem;">⚡</span>
+                            <strong>AI Synthesis Result</strong>
+                        </div>
+                        <div class="explanation-content">머신러닝 모델을 통해 접근 가능성과 구매 전환율을 최적화한 고정밀 타겟 페르소나</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #059669);">🎯</div>
+                    <div class="stat-value" style="color: #10b981;">452,000</div>
+                    <div class="stat-label">Total Addressable Market</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #d97706);">💰</div>
+                    <div class="stat-value" style="color: #f59e0b;">₩120-180K</div>
+                    <div class="stat-label">Monthly Spending Power</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">📈</div>
+                    <div class="stat-value" style="color: #3b82f6;">+23.4%</div>
+                    <div class="stat-label">Annual Growth Rate</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed);">⚡</div>
+                    <div class="stat-value" style="color: #8b5cf6;">94.7%</div>
+                    <div class="stat-label">AI Confidence Score</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 4rem;">
+                <button class="btn" onclick="nextPage('strategy')">전략 분석 보기 →</button>
+                <div style="margin-top: 1.5rem; color: #8892b0;">
+                    <p>🏆 고정밀 분석이 완료되었습니다</p>
+                    <p>더욱 상세한 시장 분석과 실행 전략은 Professional 플랜에서 확인하실 수 있습니다</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. 전략 및 가격 -->
+    <div class="page result-page" id="strategy">
+        <div class="container">
+            <div class="result-header">
+                <div class="result-badge">
+                    <span>🚀</span>
+                    Strategic Intelligence
+                </div>
+                <h2 style="font-size: 2.8rem; margin-bottom: 1rem; color: #ccd6f6; font-weight: 700;">AI-Driven Business Strategy</h2>
+                <p style="font-size: 1.2rem; color: #8892b0;">페르소나 기반 맞춤형 사업 전략 및 실행 로드맵</p>
+            </div>
+
+            <div class="strategy-section">
+                <div class="strategy-grid">
+                    <div class="strategy-card">
+                        <h3 style="display: flex; align-items: center; margin-bottom: 2rem; color: #ccd6f6; font-size: 1.6rem;">
+                            <span style="margin-right: 1rem;">🎯</span>
+                            Business Model Recommendation
+                        </h3>
+                        
+                        <div style="margin-bottom: 1.5rem; padding: 1.5rem; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 16px; border: 2px solid #667eea;">
+                            <h4 style="color: #667eea; margin-bottom: 0.8rem; font-size: 1.2rem;">🚀 Scale-up Model (추천)</h4>
+                            <p style="margin-bottom: 0.8rem; color: #ccd6f6; font-weight: 500;">B2B SaaS 직장인 웰니스 플랫폼</p>
+                            <small style="color: #8892b0;">TAM ₩2.4T • 투자 유치 확률 78% • 5년 내 엑시트 가능성 높음</small>
+                        </div>
+                        
+                        <div style="padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 16px; border: 1px solid rgba(255,255,255,0.1);">
+                            <h4 style="color: #8892b0; margin-bottom: 0.8rem;">📍 Local Business Model</h4>
+                            <p style="margin-bottom: 0.8rem; color: #8892b0;">직장인 대상 오프라인 웰니스 센터</p>
+                            <small style="color: #64748b;">안정적 수익 구조 • 확장성 제한 • ROI 예측 가능</small>
+                        </div>
+                    </div>
+
+                    <div class="strategy-card">
+                        <h3 style="display: flex; align-items: center; margin-bottom: 2rem; color: #ccd6f6; font-size: 1.6rem;">
+                            <span style="margin-right: 1rem;">📊</span>
+                            Go-to-Market Strategy
+                        </h3>
+                        
+                        <div style="margin-bottom: 1.5rem; padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 16px;">
+                            <h4 style="color: #10b981; margin-bottom: 0.8rem;">Primary Channels</h4>
+                            <ul style="margin: 0; padding-left: 1.2rem; color: #ccd6f6;">
+                                <li>LinkedIn B2B 타겟 마케팅 (CTR 예상 3.2%)</li>
+                                <li>직장인 커뮤니티 파트너십 (블라인드, 사람인)</li>
+                                <li>기업 HR 담당자 직접 영업</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="padding: 1.5rem; background: rgba(255,255,255,0.03); border-radius: 16px;">
+                            <h4 style="color: #f59e0b; margin-bottom: 0.8rem;">Key Messaging</h4>
+                            <p style="color: #ccd6f6;">"직원 웰빙이 곧 기업 성과입니다"<br>
+                            <small style="color: #8892b0;">B2B 구매 의사결정자 (HR/경영진) 대상 ROI 중심 커뮤니케이션</small></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="government-support">
+                <h3 style="text-align: center; margin-bottom: 2rem; font-size: 2rem; color: #ccd6f6;">🏛️ Government Support Matching</h3>
+                <p style="text-align: center; margin-bottom: 2rem; color: #8892b0;">AI 매칭 시스템이 선별한 최적 정부지원사업</p>
+                
+                <div class="support-grid">
+                    <div class="support-item">
+                        <h4 style="color: #10b981; margin-bottom: 0.8rem; font-size: 1.3rem;">K-Startup 그랜드 챌린지</h4>
+                        <p style="margin-bottom: 1rem; color: #ccd6f6;">글로벌 진출 지원 • 최대 ₩500M • 헬스케어/HR테크 특화</p>
+                        <div style="font-size: 0.9rem; color: #8892b0;">
+                            <p>✅ 페르소나 매칭도: 92.3% • 📅 신청 마감: 2025.09.30</p>
+                            <p>🎯 예상 선정 확률: 높음 (상위 15%)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="support-item">
+                        <h4 style="color: #3b82f6; margin-bottom: 0.8rem; font-size: 1.3rem;">청년창업사관학교</h4>
+                        <p style="margin-bottom: 1rem; color: #ccd6f6;">창업 전 과정 지원 • ₩100M + 멘토링 • 네트워킹</p>
+                        <div style="font-size: 0.9rem; color: #8892b0;">
+                            <p>✅ 페르소나 매칭도: 89.7% • 📅 다음 모집: 2025.11월</p>
+                            <p>🎯 전략적 접근법: B2B 모델 강조</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-section">
+                <h3 style="text-align: center; margin-bottom: 1rem; font-size: 2rem; color: #ccd6f6;">Professional Intelligence Plans</h3>
+                <p style="text-align: center; color: #8892b0; margin-bottom: 3rem;">성장 단계별 맞춤형 전문 분석 서비스</p>
+                
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h4 style="color: #8892b0; font-size: 1.3rem; margin-bottom: 0.5rem;">Persona Pro</h4>
+                        <div class="price">₩49,000<span style="font-size: 1rem; font-weight: 400; color: #8892b0;">/월</span></div>
+                        <p style="font-size: 0.9rem; color: #8892b0; margin-bottom: 1.5rem;">다중 페르소나 분석 + 실시간 업데이트</p>
+                        <ul style="text-align: left; margin-top: 1.5rem; padding-left: 1rem; color: #ccd6f6;">
+                            <li>최대 5개 페르소나 동시 분석</li>
+                            <li>주간 시장 데이터 업데이트</li>
+                            <li>경쟁사 포지셔닝 분석</li>
+                            <li>A/B 테스트 추천</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pricing-card featured">
+                        <h4 style="color: #667eea; font-size: 1.3rem; margin-bottom: 0.5rem;">Strategy Complete</h4>
+                        <div class="price">₹149,000<span style="font-size: 1rem; font-weight: 400; color: #8892b0;">/월</span></div>
+                        <p style="font-size: 0.9rem; color: #8892b0; margin-bottom: 1.5rem;">실시간 인텔리전스 + 전략 자동화</p>
+                        <ul style="text-align: left; margin-top: 1.5rem; padding-left: 1rem; color: #ccd6f6;">
+                            <li>무제한 페르소나 + 시나리오 분석</li>
+                            <li>실시간 시장 트렌드 알림</li>
+                            <li>자동화된 마케팅 전략 생성</li>
+                            <li>정부지원사업 실시간 매칭</li>
+                            <li>투자 피치덱 AI 생성</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <h4 style="color: #10b981; font-size: 1.3rem; margin-bottom: 0.5rem;">Enterprise Partner</h4>
+                        <div class="price">₩399,000<span style="font-size: 1rem; font-weight: 400; color: #8892b0;">/월</span>logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3rem;
+            margin-top: 1.5rem;
+            opacity: 0.6;
+        }
+
+        .trust-

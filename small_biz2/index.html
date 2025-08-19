@@ -1,0 +1,1797 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페르소나 기반 상권 인텔리전스</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .data-reliability {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .reliability-item {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+        
+        .reliability-item .label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 3px;
+        }
+        
+        .reliability-item .value {
+            font-size: 14px;
+            font-weight: 600;
+        }
+        
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            min-height: 600px;
+        }
+        
+        .persona-panel {
+            background: #f8fafc;
+            padding: 25px;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            max-height: 800px;
+            overflow-x: visible;
+        }
+        
+        .persona-panel h3 {
+            color: #1e293b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .business-search-section {
+            margin-bottom: 25px;
+        }
+        
+        .search-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+        
+        .search-results {
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: white;
+        }
+        
+        .search-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 12px;
+        }
+        
+        .search-item:hover {
+            background: #f8fafc;
+        }
+        
+        .search-item:last-child {
+            border-bottom: none;
+        }
+        
+        .search-item.selected {
+            background: #eff6ff;
+            color: #2563eb;
+            font-weight: 500;
+        }
+        
+        .selected-business {
+            background: #eff6ff;
+            border: 1px solid #3b82f6;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .selected-business .name {
+            font-weight: 500;
+            color: #1e40af;
+            font-size: 13px;
+        }
+        
+        .selected-business .category {
+            font-size: 10px;
+            color: #64748b;
+        }
+        
+        .remove-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 3px 6px;
+            font-size: 10px;
+            cursor: pointer;
+        }
+        
+        .location-section {
+            margin-bottom: 25px;
+        }
+        
+        .location-input-grid {
+            display: grid;
+            grid-template-columns: 1fr 60px;
+            gap: 5px;
+            margin-bottom: 8px;
+        }
+        
+        .location-input {
+            padding: 8px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 12px;
+        }
+        
+        .radius-select {
+            padding: 8px 4px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 11px;
+        }
+        
+        .search-location-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 11px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .current-location {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 8px;
+            padding: 8px;
+            margin-top: 8px;
+        }
+        
+        .current-location .title {
+            font-size: 11px;
+            color: #15803d;
+            font-weight: 500;
+            margin-bottom: 3px;
+        }
+        
+        .current-location .address {
+            font-size: 10px;
+            color: #166534;
+        }
+        
+        .persona-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: visible;
+        }
+        
+        .persona-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .persona-card.active {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+        }
+        
+        .persona-card.recommended {
+            border-color: #3b82f6;
+            background: #fefefe;
+        }
+        
+        .persona-card.target {
+            border-color: #059669;
+            background: #f0fdf4;
+        }
+        
+        .recommended-badge {
+            position: absolute;
+            top: -8px;
+            right: 8px;
+            background: #3b82f6;
+            color: white;
+            font-size: 9px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            z-index: 10;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        
+        .target-badge {
+            position: absolute;
+            top: -8px;
+            right: 8px;
+            background: #059669;
+            color: white;
+            font-size: 9px;
+            padding: 3px 6px;
+            border-radius: 4px;
+            z-index: 10;
+            white-space: nowrap;
+            box-shadow: 0 2px 4px rgba(5, 150, 105, 0.3);
+        }
+        
+        .persona-avatar {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 8px;
+        }
+        
+        .persona-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+            font-size: 13px;
+        }
+        
+        .persona-desc {
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+        
+        .persona-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: #059669;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            margin-top: 2px;
+        }
+        
+        .add-target-btn {
+            background: #059669;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 9px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .customer-tabs {
+            display: flex;
+            margin-bottom: 15px;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .customer-tab {
+            flex: 1;
+            padding: 8px;
+            background: #f8fafc;
+            border: none;
+            font-size: 11px;
+            cursor: pointer;
+            color: #64748b;
+        }
+        
+        .customer-tab.active {
+            background: #3b82f6;
+            color: white;
+        }
+        
+        .hongdae-map {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .map-background {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background: linear-gradient(45deg, #f0f9ff 0%, #e0f2fe 50%, #f0fdf4 100%);
+        }
+        
+        .existing-cafe:hover .tooltip,
+        .recommended-location:hover .tooltip {
+            opacity: 1;
+        }
+        
+        .recommended-location {
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.2);
+        }
+        
+        .existing-cafe.competitor {
+            box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+        }
+        
+        .existing-cafe.individual {
+            box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+        }
+        
+        .subway-station {
+            box-shadow: 0 4px 8px rgba(37, 99, 235, 0.3);
+        }
+        
+        .landmark {
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-size: 8px;
+        }
+        
+        .map-placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #f1f5f9, #e2e8f0);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .location-markers {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .marker {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: #ef4444;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            animation: pulse 2s infinite;
+            cursor: pointer;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+        }
+        
+        .marker:nth-child(1) { top: 20%; left: 25%; background: #3b82f6; }
+        .marker:nth-child(2) { top: 40%; left: 60%; background: #10b981; }
+        .marker:nth-child(3) { top: 65%; left: 35%; background: #f59e0b; }
+        .marker:nth-child(4) { top: 30%; left: 80%; background: #8b5cf6; }
+        
+        .insights-panel {
+            background: #f8fafc;
+            padding: 25px;
+            border-left: 1px solid #e2e8f0;
+            overflow-y: auto;
+            max-height: 800px;
+        }
+        
+        .insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3b82f6;
+        }
+        
+        .insight-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+        }
+        
+        .insight-stat {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        
+        .insight-stat:last-child {
+            border-bottom: none;
+        }
+        
+        .stat-label {
+            color: #64748b;
+            font-size: 12px;
+        }
+        
+        .stat-value {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 12px;
+        }
+        
+        .financial-summary {
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .financial-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1e40af;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        
+        .financial-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .financial-item {
+            text-align: center;
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+        }
+        
+        .financial-value {
+            font-size: 14px;
+            font-weight: bold;
+            color: #1e40af;
+            margin-bottom: 2px;
+        }
+        
+        .financial-label {
+            font-size: 10px;
+            color: #64748b;
+        }
+        
+        .break-even-info {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .break-even-months {
+            font-size: 16px;
+            font-weight: bold;
+            color: #059669;
+        }
+        
+        .break-even-detail {
+            font-size: 10px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        
+        .competitor-analysis {
+            background: #fafafa;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .competitor-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .competitor-item:last-child {
+            border-bottom: none;
+        }
+        
+        .competitor-info {
+            flex: 1;
+        }
+        
+        .competitor-name {
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .competitor-distance {
+            font-size: 10px;
+            color: #64748b;
+        }
+        
+        .threat-level {
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-weight: 600;
+        }
+        
+        .threat-high { background: #fecaca; color: #dc2626; }
+        .threat-medium { background: #fed7aa; color: #d97706; }
+        .threat-low { background: #dcfce7; color: #16a34a; }
+        
+        .heatmap-grid {
+            margin: 30px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+        }
+        
+        .heatmap-title {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .heatmap-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .heatmap-table th {
+            background: #f1f5f9;
+            padding: 10px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            text-align: center;
+        }
+        
+        .heatmap-table td {
+            padding: 10px 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .heat-low { background: #fef2f2; color: #dc2626; }
+        .heat-medium { background: #fef3c7; color: #d97706; }
+        .heat-high { background: #dcfce7; color: #16a34a; }
+        .heat-very-high { background: #dbeafe; color: #2563eb; }
+        
+        .simulator-section {
+            background: white;
+            margin: 30px;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        
+        .simulator-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .sim-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .sim-control {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .sim-control label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+            margin-bottom: 5px;
+        }
+        
+        .sim-control select {
+            padding: 10px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        
+        .sim-results {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border-radius: 12px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .sim-result-card {
+            text-align: center;
+        }
+        
+        .sim-result-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #0369a1;
+            margin-bottom: 5px;
+        }
+        
+        .sim-result-label {
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        .recommendation {
+            background: #f0fdf4;
+            border: 1px solid #bbf7d0;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+        
+        .recommendation-title {
+            font-weight: 600;
+            color: #15803d;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+        }
+        
+        .recommendation-text {
+            font-size: 11px;
+            color: #166534;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .persona-panel, .insights-panel {
+                border: none;
+                max-height: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>
+                <i data-lucide="brain"></i>
+                페르소나 × 상권 인텔리전스
+            </h1>
+            <p>300개 업종 × 전국 상권 × 소비자 DNA 분석으로 완벽한 비즈니스 인사이트 제공</p>
+            
+            <div class="data-reliability">
+                <div class="reliability-item">
+                    <div class="label">분석 업종</div>
+                    <div class="value">300개</div>
+                </div>
+                <div class="reliability-item">
+                    <div class="label">전국 상권</div>
+                    <div class="value">실시간</div>
+                </div>
+                <div class="reliability-item">
+                    <div class="label">데이터 정확도</div>
+                    <div class="value">94.2%</div>
+                </div>
+                <div class="reliability-item">
+                    <div class="label">업데이트</div>
+                    <div class="value">매일</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Persona Panel -->
+            <div class="persona-panel">
+                <!-- Business Search -->
+                <div class="business-search-section">
+                    <h3>
+                        <i data-lucide="search"></i>
+                        업종 검색 (300개)
+                    </h3>
+                    
+                    <input type="text" class="search-input" id="businessSearch" placeholder="업종 검색 (예: 카페, 치킨, 미용실)">
+                    
+                    <div class="search-results" id="businessResults" style="display: none;">
+                        <!-- 검색 결과가 여기에 표시됩니다 -->
+                    </div>
+                    
+                    <div id="selectedBusiness" style="display: none;">
+                        <!-- 선택된 업종이 여기에 표시됩니다 -->
+                    </div>
+                </div>
+
+                <!-- Location Input -->
+                <div class="location-section">
+                    <h3>
+                        <i data-lucide="map-pin"></i>
+                        위치 설정
+                    </h3>
+                    
+                    <div class="location-input-grid">
+                        <input type="text" class="location-input" id="locationInput" placeholder="주소 또는 지명 입력">
+                        <select class="radius-select" id="radiusSelect">
+                            <option value="300">300m</option>
+                            <option value="500" selected>500m</option>
+                            <option value="1000">1km</option>
+                            <option value="2000">2km</option>
+                        </select>
+                    </div>
+                    
+                    <button class="search-location-btn" onclick="searchLocation()">
+                        <i data-lucide="search" style="width: 10px; height: 10px;"></i>
+                        위치 검색
+                    </button>
+                    
+                    <div class="current-location" id="currentLocation" style="display: none;">
+                        <div class="title">📍 현재 분석 위치</div>
+                        <div class="address"></div>
+                    </div>
+                </div>
+
+                <!-- Customer Tabs -->
+                <div class="customer-tabs">
+                    <button class="customer-tab active" onclick="switchCustomerTab(this, 'recommended')">추천 고객</button>
+                    <button class="customer-tab" onclick="switchCustomerTab(this, 'target')">내 타겟</button>
+                </div>
+                
+                <!-- Recommended Customers -->
+                <div id="recommendedCustomers">
+                    <div class="persona-card recommended active" onclick="selectPersona(this, 'tech-man')">
+                        <div class="recommended-badge">추천</div>
+                        <div class="persona-avatar">👨‍💻</div>
+                        <div class="persona-name">40대 테크 직장남성</div>
+                        <div class="persona-desc">IT기기 얼리어답터, 프리미엄 선호, 온라인 구매 활발</div>
+                        <div class="persona-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">28%</div>
+                                <div class="stat-label">비율</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">₩12,000</div>
+                                <div class="stat-label">평균소비</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">오후6-8시</div>
+                                <div class="stat-label">방문시간</div>
+                            </div>
+                        </div>
+                        <button class="add-target-btn" onclick="addToTarget(this, event)">내 타겟에 추가</button>
+                    </div>
+
+                    <div class="persona-card recommended" onclick="selectPersona(this, 'student-woman')">
+                        <div class="recommended-badge">추천</div>
+                        <div class="persona-avatar">👩‍🎓</div>
+                        <div class="persona-name">20대 대학생</div>
+                        <div class="persona-desc">트렌드 민감, 가성비 중시, SNS 활용 적극적</div>
+                        <div class="persona-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">42%</div>
+                                <div class="stat-label">비율</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">₩6,200</div>
+                                <div class="stat-label">평균소비</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">오후2-6시</div>
+                                <div class="stat-label">방문시간</div>
+                            </div>
+                        </div>
+                        <button class="add-target-btn" onclick="addToTarget(this, event)">내 타겟에 추가</button>
+                    </div>
+
+                    <div class="persona-card recommended" onclick="selectPersona(this, 'working-mom')">
+                        <div class="recommended-badge">추천</div>
+                        <div class="persona-avatar">👩‍💼</div>
+                        <div class="persona-name">30대 워킹맘</div>
+                        <div class="persona-desc">시간 효율성 중시, 키즈 동반 소비, 온라인 주문 선호</div>
+                        <div class="persona-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">22%</div>
+                                <div class="stat-label">비율</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">₩15,800</div>
+                                <div class="stat-label">평균소비</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">오후2-4시</div>
+                                <div class="stat-label">방문시간</div>
+                            </div>
+                        </div>
+                        <button class="add-target-btn" onclick="addToTarget(this, event)">내 타겟에 추가</button>
+                    </div>
+
+                    <div class="persona-card recommended" onclick="selectPersona(this, 'senior')">
+                        <div class="recommended-badge">추천</div>
+                        <div class="persona-avatar">👴</div>
+                        <div class="persona-name">60대 시니어</div>
+                        <div class="persona-desc">건강 관심, 오프라인 선호, 브랜드 충성도 높음</div>
+                        <div class="persona-stats">
+                            <div class="stat-item">
+                                <div class="stat-value">8%</div>
+                                <div class="stat-label">비율</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">₩18,500</div>
+                                <div class="stat-label">평균소비</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">오전10-12시</div>
+                                <div class="stat-label">방문시간</div>
+                            </div>
+                        </div>
+                        <button class="add-target-btn" onclick="addToTarget(this, event)">내 타겟에 추가</button>
+                    </div>
+                </div>
+                
+                <!-- Target Customers -->
+                <div id="targetCustomers" style="display: none;">
+                    <div style="text-align: center; padding: 20px; color: #64748b; font-size: 12px;">
+                        아직 타겟 고객을 추가하지 않았습니다.<br>
+                        추천 고객에서 원하는 고객층을 선택해주세요.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Map Area -->
+            <div class="map-area">
+                <div class="hongdae-map">
+                    <!-- 홍대입구역 중심의 실제 지도 -->
+                    <div class="map-background">
+                        <!-- 도로 -->
+                        <div class="road main-road" style="position: absolute; top: 45%; left: 0; width: 100%; height: 8px; background: #ddd; border-radius: 2px;"></div>
+                        <div class="road sub-road" style="position: absolute; top: 0; left: 50%; width: 6px; height: 100%; background: #e5e5e5; border-radius: 2px;"></div>
+                        <div class="road sub-road" style="position: absolute; top: 30%; left: 0; width: 100%; height: 4px; background: #e5e5e5; border-radius: 2px;"></div>
+                        <div class="road sub-road" style="position: absolute; top: 70%; left: 0; width: 100%; height: 4px; background: #e5e5e5; border-radius: 2px;"></div>
+                        
+                        <!-- 지하철역 -->
+                        <div class="subway-station" style="position: absolute; bottom: 10%; left: 48%; width: 40px; height: 40px; background: #2563eb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold; z-index: 10;">
+                            🚇
+                            <div style="position: absolute; top: -25px; font-size: 10px; white-space: nowrap; background: rgba(37, 99, 235, 0.9); padding: 2px 6px; border-radius: 4px;">홍대입구역</div>
+                        </div>
+                        
+                        <!-- 주요 랜드마크 -->
+                        <div class="landmark university" style="position: absolute; top: 15%; left: 20%; width: 60px; height: 30px; background: #10b981; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-size: 9px; font-weight: bold;">
+                            홍익대학교
+                        </div>
+                        
+                        <div class="landmark club-street" style="position: absolute; top: 25%; left: 65%; width: 50px; height: 25px; background: #f59e0b; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 8px; font-weight: bold;">
+                            클럽거리
+                        </div>
+                        
+                        <div class="landmark hongdae-park" style="position: absolute; top: 55%; left: 75%; width: 45px; height: 20px; background: #059669; border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-size: 8px; font-weight: bold;">
+                            홍대공원
+                        </div>
+                        
+                        <!-- 기존 카페들 (경쟁업체) -->
+                        <div class="existing-cafe competitor" data-name="스타벅스 홍대점" data-distance="120m" style="position: absolute; top: 35%; left: 45%; width: 24px; height: 24px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; cursor: pointer; z-index: 5;">
+                            ☕
+                            <div class="tooltip" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 9px; white-space: nowrap; opacity: 0; transition: opacity 0.3s;">스타벅스 홍대점<br>120m 거리</div>
+                        </div>
+                        
+                        <div class="existing-cafe competitor" data-name="투썸플레이스" data-distance="180m" style="position: absolute; top: 60%; left: 35%; width: 24px; height: 24px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; cursor: pointer; z-index: 5;">
+                            ☕
+                            <div class="tooltip" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 9px; white-space: nowrap; opacity: 0; transition: opacity 0.3s;">투썸플레이스<br>180m 거리</div>
+                        </div>
+                        
+                        <div class="existing-cafe competitor" data-name="이디야 홍대점" data-distance="200m" style="position: absolute; top: 20%; left: 60%; width: 24px; height: 24px; background: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; cursor: pointer; z-index: 5;">
+                            ☕
+                            <div class="tooltip" style="position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 9px; white-space: nowrap; opacity: 0; transition: opacity 0.3s;">이디야 홍대점<br>200m 거리</div>
+                        </div>
+                        
+                        <div class="existing-cafe individual" data-name="카페 ABC" data-distance="150m" style="position: absolute; top: 75%; left: 55%; width: 20px; height: 20px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 8px; cursor: pointer; z-index: 5;">
+                            ☕
+                            <div class="tooltip" style="position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 9px; white-space: nowrap; opacity: 0; transition: opacity 0.3s;">개인카페 ABC<br>150m 거리</div>
+                        </div>
+                        
+                        <div class="existing-cafe individual" data-name="카페 XYZ" data-distance="280m" style="position: absolute; top: 40%; left: 25%; width: 20px; height: 20px; background: #f59e0b; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 8px; cursor: pointer; z-index: 5;">
+                            ☕
+                            <div class="tooltip" style="position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,0.8); color: white; padding: 4px 8px; border-radius: 4px; font-size: 9px; white-space: nowrap; opacity: 0; transition: opacity 0.3s;">개인카페 XYZ<br>280m 거리</div>
+                        </div>
+                        
+                        <!-- 추천 창업 위치들 -->
+                        <div class="recommended-location" data-spot="A" style="position: absolute; top: 50%; left: 55%; width: 32px; height: 32px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer; animation: pulse 2s infinite; z-index: 8;">
+                            A
+                            <div class="tooltip" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: rgba(16, 185, 129, 0.9); color: white; padding: 6px 10px; border-radius: 6px; font-size: 10px; white-space: nowrap; opacity: 0; transition: opacity 0.3s;">추천 위치 A<br>• 유동인구: 높음<br>• 임대료: 적정<br>• 경쟁강도: 보통</div>
+                        </div>
+                        
+                        <div class="recommended-location" data-spot="B" style="position: absolute; top: 65%; left: 45%; width: 32px; height: 32px; background: #10b981; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer; animation: pulse 2s infinite; z-index: 8;">
+                            B
+                            <div class="tooltip" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: rgba(16, 185, 129, 0.9); color: white; padding: 6px 10px; border-radius: 6px; font-size: 10px; white-space: nowrap; opacity: 0; transition: opacity 0.3s;">추천 위치 B<br>• 유동인구: 매우높음<br>• 임대료: 높음<br>• 경쟁강도: 높음</div>
+                        </div>
+                        
+                        <div class="recommended-location" data-spot="C" style="position: absolute; top: 30%; left: 40%; width: 32px; height: 32px; background: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; cursor: pointer; animation: pulse 2s infinite; z-index: 8;">
+                            C
+                            <div class="tooltip" style="position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: rgba(59, 130, 246, 0.9); color: white; padding: 6px 10px; border-radius: 6px; font-size: 10px; white-space: nowrap; opacity: 0; transition: opacity 0.3s;">추천 위치 C<br>• 유동인구: 보통<br>• 임대료: 저렴<br>• 경쟁강도: 낮음</div>
+                        </div>
+                        
+                        <!-- 반경 표시 (500m 원) -->
+                        <div class="radius-circle" style="position: absolute; top: 50%; left: 50%; width: 300px; height: 300px; border: 2px dashed rgba(59, 130, 246, 0.3); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; z-index: 1;"></div>
+                        
+                        <!-- 범례 -->
+                        <div class="map-legend" style="position: absolute; top: 10px; right: 10px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 8px; font-size: 10px; z-index: 10;">
+                            <div style="font-weight: bold; margin-bottom: 6px; color: #1e293b;">범례</div>
+                            <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                                <div style="width: 12px; height: 12px; background: #10b981; border-radius: 50%; margin-right: 6px;"></div>
+                                추천 창업위치
+                            </div>
+                            <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                                <div style="width: 12px; height: 12px; background: #ef4444; border-radius: 50%; margin-right: 6px;"></div>
+                                대형 카페 (높은 위협)
+                            </div>
+                            <div style="display: flex; align-items: center; margin-bottom: 3px;">
+                                <div style="width: 12px; height: 12px; background: #f59e0b; border-radius: 50%; margin-right: 6px;"></div>
+                                개인 카페 (보통 위협)
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div style="width: 12px; height: 12px; border: 1px dashed #3b82f6; border-radius: 50%; margin-right: 6px;"></div>
+                                분석 반경 (500m)
+                            </div>
+                        </div>
+                        
+                        <!-- 지역 정보 -->
+                        <div class="area-info" style="position: absolute; bottom: 10px; left: 10px; background: rgba(255,255,255,0.95); padding: 10px; border-radius: 8px; font-size: 10px; z-index: 10;">
+                            <div style="font-weight: bold; margin-bottom: 4px; color: #1e293b;">📍 홍대입구역 상권</div>
+                            <div style="color: #64748b;">• 대학가 + 유흥가 복합상권</div>
+                            <div style="color: #64748b;">• 주요 고객: 20-30대 대학생, 직장인</div>
+                            <div style="color: #64748b;">• 성수기: 주말 오후~심야</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Insights Panel -->
+            <div class="insights-panel">
+                <!-- Financial Summary -->
+                <div class="financial-summary">
+                    <div class="financial-title">📊 예상 수익성 분석</div>
+                    
+                    <div class="financial-grid">
+                        <div class="financial-item">
+                            <div class="financial-value">₩18.5M</div>
+                            <div class="financial-label">예상 월매출</div>
+                        </div>
+                        <div class="financial-item">
+                            <div class="financial-value">₩5.2M</div>
+                            <div class="financial-label">예상 월순익</div>
+                        </div>
+                        <div class="financial-item">
+                            <div class="financial-value">28.1%</div>
+                            <div class="financial-label">순이익률</div>
+                        </div>
+                        <div class="financial-item">
+                            <div class="financial-value">4,200만원</div>
+                            <div class="financial-label">예상 초기투자</div>
+                        </div>
+                    </div>
+                    
+                    <div class="break-even-info">
+                        <div class="break-even-months">7.2개월</div>
+                        <div class="break-even-detail">예상 손익분기점</div>
+                    </div>
+                </div>
+
+                <!-- Key Metrics -->
+                <div class="insight-card">
+                    <div class="insight-title">
+                        <i data-lucide="trending-up"></i>
+                        핵심 지표 분석
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">입지 점수</span>
+                        <span class="stat-value">8.2점 / 10점</span>
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">일 유동인구</span>
+                        <span class="stat-value">2,340명</span>
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">동종 경쟁업체</span>
+                        <span class="stat-value">7개 (반경 500m)</span>
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">평당 월임대료</span>
+                        <span class="stat-value">₩185 (적정)</span>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-title">
+                        <i data-lucide="target"></i>
+                        소비 프로필
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">월평균 소비액</span>
+                        <span class="stat-value">₩478,000</span>
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">선호 방문시간</span>
+                        <span class="stat-value">오후 6-8시</span>
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">구매 결정시간</span>
+                        <span class="stat-value">3.2일</span>
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">온라인 구매율</span>
+                        <span class="stat-value">73%</span>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-title">
+                        <i data-lucide="shopping-bag"></i>
+                        주요 구매 업종
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">🖥️ 전자기기</span>
+                        <span class="stat-value">92점</span>
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">☕ 프리미엄 카페</span>
+                        <span class="stat-value">87점</span>
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">🏃‍♂️ 스포츠웨어</span>
+                        <span class="stat-value">79점</span>
+                    </div>
+                    <div class="insight-stat">
+                        <span class="stat-label">🍷 프리미엄 주류</span>
+                        <span class="stat-value">74점</span>
+                    </div>
+                </div>
+
+                <!-- Competitor Analysis -->
+                <div class="insight-card">
+                    <div class="insight-title">
+                        <i data-lucide="shield"></i>
+                        홍대입구 반경 500m 경쟁업체
+                    </div>
+                    <div class="competitor-analysis">
+                        <div class="competitor-item">
+                            <div class="competitor-info">
+                                <div class="competitor-name">스타벅스 홍대점</div>
+                                <div class="competitor-distance">120m 거리 • 대형 프랜차이즈</div>
+                            </div>
+                            <div class="threat-level threat-high">높음</div>
+                        </div>
+                        <div class="competitor-item">
+                            <div class="competitor-info">
+                                <div class="competitor-name">투썸플레이스</div>
+                                <div class="competitor-distance">180m 거리 • 대형 프랜차이즈</div>
+                            </div>
+                            <div class="threat-level threat-high">높음</div>
+                        </div>
+                        <div class="competitor-item">
+                            <div class="competitor-info">
+                                <div class="competitor-name">이디야 홍대점</div>
+                                <div class="competitor-distance">200m 거리 • 저가 프랜차이즈</div>
+                            </div>
+                            <div class="threat-level threat-medium">보통</div>
+                        </div>
+                        <div class="competitor-item">
+                            <div class="competitor-info">
+                                <div class="competitor-name">개인카페 2곳</div>
+                                <div class="competitor-distance">150-280m • 로컬 카페</div>
+                            </div>
+                            <div class="threat-level threat-low">낮음</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Location Recommendations -->
+                <div class="insight-card">
+                    <div class="insight-title">
+                        <i data-lucide="map-pin"></i>
+                        추천 창업 위치 분석
+                    </div>
+                    <div class="competitor-analysis">
+                        <div class="competitor-item">
+                            <div class="competitor-info">
+                                <div class="competitor-name">📍 위치 A (추천)</div>
+                                <div class="competitor-distance">유동인구 높음, 임대료 적정</div>
+                            </div>
+                            <div class="threat-level threat-low" style="background: #dcfce7; color: #166534;">최적</div>
+                        </div>
+                        <div class="competitor-item">
+                            <div class="competitor-info">
+                                <div class="competitor-name">📍 위치 B</div>
+                                <div class="competitor-distance">역세권, 유동인구 최고</div>
+                            </div>
+                            <div class="threat-level threat-medium">고수익</div>
+                        </div>
+                        <div class="competitor-item">
+                            <div class="competitor-info">
+                                <div class="competitor-name">📍 위치 C</div>
+                                <div class="competitor-distance">임대료 저렴, 경쟁 적음</div>
+                            </div>
+                            <div class="threat-level threat-medium">안정</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recommendation -->
+                <div class="recommendation">
+                    <div class="recommendation-title">
+                        <i data-lucide="check-circle"></i>
+                        홍대 카페 창업 추천도: 적합
+                    </div>
+                    <div class="recommendation-text">
+                        홍대입구역은 대학생과 직장인이 많은 상권으로 카페 창업에 적합합니다. 
+                        대형 프랜차이즈와의 경쟁이 치열하지만, 차별화된 컨셉과 합리적 가격으로 충분히 승산이 있습니다.
+                        특히 위치 A는 유동인구 대비 임대료가 적정하여 가장 추천합니다.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Heatmap Section -->
+        <div class="heatmap-grid">
+            <div class="heatmap-title">업종별 페르소나 매칭 히트맵</div>
+            <table class="heatmap-table">
+                <thead>
+                    <tr>
+                        <th>업종</th>
+                        <th>20대 여성</th>
+                        <th>30대 남성</th>
+                        <th>40대 여성</th>
+                        <th>60대 남성</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 600;">카페/디저트</td>
+                        <td class="heat-very-high">95</td>
+                        <td class="heat-medium">65</td>
+                        <td class="heat-high">78</td>
+                        <td class="heat-low">45</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">IT/전자</td>
+                        <td class="heat-high">72</td>
+                        <td class="heat-very-high">88</td>
+                        <td class="heat-medium">55</td>
+                        <td class="heat-low">42</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">뷰티/화장</td>
+                        <td class="heat-very-high">92</td>
+                        <td class="heat-low">25</td>
+                        <td class="heat-very-high">85</td>
+                        <td class="heat-low">15</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">프리미엄 식품</td>
+                        <td class="heat-low">35</td>
+                        <td class="heat-high">76</td>
+                        <td class="heat-very-high">89</td>
+                        <td class="heat-high">71</td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 600;">스포츠/레저</td>
+                        <td class="heat-medium">68</td>
+                        <td class="heat-very-high">94</td>
+                        <td class="heat-medium">62</td>
+                        <td class="heat-high">73</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Business Simulator -->
+        <div class="simulator-section">
+            <div class="simulator-title">
+                <i data-lucide="calculator"></i>
+                비즈니스 시뮬레이터
+            </div>
+            
+            <div class="sim-controls">
+                <div class="sim-control">
+                    <label>업종 선택</label>
+                    <select onchange="updateSimulation()">
+                        <option>프리미엄 카페</option>
+                        <option>IT 액세서리샵</option>
+                        <option>비건 레스토랑</option>
+                        <option>헬스케어 매장</option>
+                    </select>
+                </div>
+                <div class="sim-control">
+                    <label>지역 선택</label>
+                    <select onchange="updateSimulation()">
+                        <option>강남구 테헤란로</option>
+                        <option>마포구 홍대입구</option>
+                        <option>송파구 잠실</option>
+                        <option>영등포구 여의도</option>
+                    </select>
+                </div>
+                <div class="sim-control">
+                    <label>매장 크기</label>
+                    <select onchange="updateSimulation()">
+                        <option>소형 (20평 이하)</option>
+                        <option>중형 (20-50평)</option>
+                        <option>대형 (50평 이상)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sim-results">
+                <div class="sim-result-card">
+                    <div class="sim-result-value">78%</div>
+                    <div class="sim-result-label">성공 확률</div>
+                </div>
+                <div class="sim-result-card">
+                    <div class="sim-result-value">₩28M</div>
+                    <div class="sim-result-label">예상 월매출</div>
+                </div>
+                <div class="sim-result-card">
+                    <div class="sim-result-value">347명</div>
+                    <div class="sim-result-label">일평균 방문자</div>
+                </div>
+                <div class="sim-result-card">
+                    <div class="sim-result-value">12개</div>
+                    <div class="sim-result-label">반경 500m 경쟁업체</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // 업종 데이터 (300개 업종의 일부 샘플)
+        const businessTypes = [
+            // 음식업
+            { name: "커피전문점", category: "음식업 > 카페", keywords: ["카페", "커피", "스타벅스", "이디야"] },
+            { name: "베이커리", category: "음식업 > 제과", keywords: ["빵집", "베이커리", "파리바게뜨", "뚜레쥬르"] },
+            { name: "치킨전문점", category: "음식업 > 치킨", keywords: ["치킨", "닭", "BBQ", "교촌"] },
+            { name: "피자전문점", category: "음식업 > 피자", keywords: ["피자", "도미노", "피자헛"] },
+            { name: "한식당", category: "음식업 > 한식", keywords: ["한식", "백반", "정식", "찌개"] },
+            { name: "중식당", category: "음식업 > 중식", keywords: ["중식", "짜장면", "탕수육", "짬뽕"] },
+            { name: "일식당", category: "음식업 > 일식", keywords: ["일식", "초밥", "라멘", "돈까스"] },
+            { name: "양식당", category: "음식업 > 양식", keywords: ["양식", "스테이크", "파스타", "리조또"] },
+            { name: "분식점", category: "음식업 > 분식", keywords: ["분식", "떡볶이", "튀김", "김밥"] },
+            { name: "족발보쌈", category: "음식업 > 족발", keywords: ["족발", "보쌈", "막국수"] },
+            
+            // 서비스업
+            { name: "미용실", category: "서비스업 > 미용", keywords: ["미용실", "헤어", "파마", "커트"] },
+            { name: "네일샵", category: "서비스업 > 미용", keywords: ["네일", "매니큐어", "젤네일"] },
+            { name: "피부관리실", category: "서비스업 > 미용", keywords: ["피부", "에스테틱", "관리실"] },
+            { name: "마사지샵", category: "서비스업 > 건강", keywords: ["마사지", "안마", "스파"] },
+            { name: "세탁소", category: "서비스업 > 세탁", keywords: ["세탁", "드라이클리닝", "빨래"] },
+            
+            // 소매업
+            { name: "편의점", category: "소매업 > 편의점", keywords: ["편의점", "CU", "GS25", "세븐일레븐"] },
+            { name: "슈퍼마켓", category: "소매업 > 마트", keywords: ["슈퍼", "마트", "식료품"] },
+            { name: "의류매장", category: "소매업 > 의류", keywords: ["옷", "의류", "패션", "브랜드"] },
+            { name: "신발매장", category: "소매업 > 신발", keywords: ["신발", "스니커즈", "구두"] },
+            { name: "화장품매장", category: "소매업 > 화장품", keywords: ["화장품", "코스메틱", "올리브영"] }
+        ];
+
+        let currentTargetCustomers = [];
+        let selectedPersonaType = 'tech-man';
+
+        // 업종 검색 기능
+        document.getElementById('businessSearch').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            const results = document.getElementById('businessResults');
+            
+            if (query.length < 1) {
+                results.style.display = 'none';
+                return;
+            }
+            
+            const filtered = businessTypes.filter(business => 
+                business.name.toLowerCase().includes(query) ||
+                business.category.toLowerCase().includes(query) ||
+                business.keywords.some(keyword => keyword.toLowerCase().includes(query))
+            );
+            
+            if (filtered.length > 0) {
+                results.innerHTML = filtered.slice(0, 8).map(business => 
+                    `<div class="search-item" onclick="selectBusiness('${business.name}', '${business.category}')">
+                        <div style="font-weight: 500;">${business.name}</div>
+                        <div style="font-size: 10px; color: #64748b;">${business.category}</div>
+                    </div>`
+                ).join('');
+                results.style.display = 'block';
+            } else {
+                results.innerHTML = '<div class="search-item">검색 결과가 없습니다</div>';
+                results.style.display = 'block';
+            }
+        });
+
+        function selectBusiness(name, category) {
+            const selectedDiv = document.getElementById('selectedBusiness');
+            selectedDiv.innerHTML = `
+                <div class="selected-business">
+                    <div>
+                        <div class="name">${name}</div>
+                        <div class="category">${category}</div>
+                    </div>
+                    <button class="remove-btn" onclick="removeBusiness()">삭제</button>
+                </div>
+            `;
+            selectedDiv.style.display = 'block';
+            document.getElementById('businessResults').style.display = 'none';
+            document.getElementById('businessSearch').value = '';
+            
+            // 업종에 따른 데이터 업데이트
+            updateBusinessData(name);
+        }
+
+        function removeBusiness() {
+            document.getElementById('selectedBusiness').style.display = 'none';
+        }
+
+        function searchLocation() {
+            const location = document.getElementById('locationInput').value;
+            const radius = document.getElementById('radiusSelect').value;
+            
+            if (!location) {
+                alert('주소를 입력해주세요');
+                return;
+            }
+            
+            const currentLocationDiv = document.getElementById('currentLocation');
+            currentLocationDiv.querySelector('.address').textContent = `${location} (반경 ${radius}m)`;
+            currentLocationDiv.style.display = 'block';
+            
+            // 위치에 따른 데이터 업데이트
+            updateLocationData(location, radius);
+        }
+
+        function switchCustomerTab(element, tabType) {
+            // 탭 활성화
+            document.querySelectorAll('.customer-tab').forEach(tab => tab.classList.remove('active'));
+            element.classList.add('active');
+            
+            // 컨텐츠 표시
+            if (tabType === 'recommended') {
+                document.getElementById('recommendedCustomers').style.display = 'block';
+                document.getElementById('targetCustomers').style.display = 'none';
+            } else {
+                document.getElementById('recommendedCustomers').style.display = 'none';
+                document.getElementById('targetCustomers').style.display = 'block';
+            }
+        }
+
+        function selectPersona(element, personaType) {
+            // Remove active class from all persona cards in recommended customers
+            document.querySelectorAll('#recommendedCustomers .persona-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            // Add active class to selected card
+            element.classList.add('active');
+            
+            selectedPersonaType = personaType;
+            
+            // Update insights based on selected persona
+            updateInsights(personaType);
+        }
+
+        function addToTarget(button, event) {
+            event.stopPropagation(); // 카드 클릭 이벤트 방지
+            
+            const customerCard = button.closest('.persona-card');
+            const customerName = customerCard.querySelector('.persona-name').textContent;
+            const customerStats = customerCard.querySelector('.persona-stats').cloneNode(true);
+            const avatar = customerCard.querySelector('.persona-avatar').textContent;
+            const desc = customerCard.querySelector('.persona-desc').textContent;
+            
+            // 이미 추가된 고객인지 확인
+            if (currentTargetCustomers.some(c => c.name === customerName)) {
+                alert('이미 타겟 고객에 추가된 고객입니다.');
+                return;
+            }
+            
+            // 타겟 고객에 추가
+            const targetCustomer = {
+                name: customerName,
+                avatar: avatar,
+                desc: desc,
+                stats: customerStats.innerHTML
+            };
+            
+            currentTargetCustomers.push(targetCustomer);
+            updateTargetCustomersDisplay();
+            
+            button.textContent = '추가됨';
+            button.disabled = true;
+            button.style.background = '#9ca3af';
+        }
+
+        function removeFromTarget(customerName) {
+            currentTargetCustomers = currentTargetCustomers.filter(c => c.name !== customerName);
+            updateTargetCustomersDisplay();
+            
+            // 추천 고객에서 버튼 상태 복원
+            const recommendedCards = document.querySelectorAll('#recommendedCustomers .persona-card');
+            recommendedCards.forEach(card => {
+                if (card.querySelector('.persona-name').textContent === customerName) {
+                    const button = card.querySelector('.add-target-btn');
+                    button.textContent = '내 타겟에 추가';
+                    button.disabled = false;
+                    button.style.background = '#059669';
+                }
+            });
+        }
+
+        function updateTargetCustomersDisplay() {
+            const targetDiv = document.getElementById('targetCustomers');
+            
+            if (currentTargetCustomers.length === 0) {
+                targetDiv.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #64748b; font-size: 12px;">
+                        아직 타겟 고객을 추가하지 않았습니다.<br>
+                        추천 고객에서 원하는 고객층을 선택해주세요.
+                    </div>
+                `;
+            } else {
+                targetDiv.innerHTML = currentTargetCustomers.map(customer => `
+                    <div class="persona-card target">
+                        <div class="target-badge">타겟</div>
+                        <div class="persona-avatar">${customer.avatar}</div>
+                        <div class="persona-name">${customer.name}</div>
+                        <div class="persona-desc">${customer.desc}</div>
+                        <div class="persona-stats">${customer.stats}</div>
+                        <button class="remove-btn" style="margin-top: 5px; padding: 4px 8px; font-size: 9px; width: 100%;" onclick="removeFromTarget('${customer.name}')">타겟에서 제거</button>
+                    </div>
+                `).join('');
+            }
+            
+            // 추천도 업데이트
+            updateRecommendationMatch();
+        }
+
+        function updateRecommendationMatch() {
+            const totalRecommended = 4; // 추천 고객 수
+            const matchPercentage = Math.round((currentTargetCustomers.length / totalRecommended) * 100);
+            
+            const recommendationTitle = document.querySelector('.recommendation-title');
+            const recommendationText = document.querySelector('.recommendation-text');
+            
+            if (currentTargetCustomers.length === 0) {
+                recommendationTitle.innerHTML = `
+                    <i data-lucide="alert-circle"></i>
+                    창업 추천도: 분석 필요 (타겟 고객 미설정)
+                `;
+                recommendationText.textContent = '타겟 고객을 선택하시면 더 정확한 창업 추천도를 확인할 수 있습니다.';
+            } else {
+                recommendationTitle.innerHTML = `
+                    <i data-lucide="check-circle"></i>
+                    창업 추천도: 적합 (추천 고객과 ${matchPercentage}% 일치)
+                `;
+                recommendationText.textContent = `선택하신 업종과 위치는 유동인구가 많고 타겟 고객층이 잘 형성되어 있어 창업에 적합합니다. 현재 추천 고객 중 ${currentTargetCustomers.length}개 그룹을 타겟으로 설정하셨으며, 이는 해당 지역 고객층과 ${matchPercentage}% 일치합니다.`;
+            }
+            
+            // 아이콘 재생성
+            lucide.createIcons();
+        }
+
+        function updateInsights(personaType) {
+            const insights = {
+                'tech-man': {
+                    consumption: '₩478,000',
+                    visitTime: '오후 6-8시',
+                    decisionTime: '3.2일',
+                    onlineRate: '73%',
+                    topCategories: [
+                        { name: '🖥️ 전자기기', score: '92점' },
+                        { name: '☕ 프리미엄 카페', score: '87점' },
+                        { name: '🏃‍♂️ 스포츠웨어', score: '79점' },
+                        { name: '🍷 프리미엄 주류', score: '74점' }
+                    ]
+                },
+                'student-woman': {
+                    consumption: '₩156,000',
+                    visitTime: '오후 2-6시',
+                    decisionTime: '1.8일',
+                    onlineRate: '89%',
+                    topCategories: [
+                        { name: '💄 뷰티/화장품', score: '95점' },
+                        { name: '☕ 카페/디저트', score: '91점' },
+                        { name: '👗 패스트패션', score: '84점' },
+                        { name: '📱 모바일 액세서리', score: '78점' }
+                    ]
+                },
+                'working-mom': {
+                    consumption: '₩387,000',
+                    visitTime: '오후 2-4시',
+                    decisionTime: '2.1일',
+                    onlineRate: '85%',
+                    topCategories: [
+                        { name: '🧸 키즈용품', score: '93점' },
+                        { name: '🥗 건강식품', score: '89점' },
+                        { name: '💆‍♀️ 뷰티/웰니스', score: '81점' },
+                        { name: '🏠 생활용품', score: '76점' }
+                    ]
+                },
+                'senior': {
+                    consumption: '₩423,000',
+                    visitTime: '오전 10-12시',
+                    decisionTime: '5.3일',
+                    onlineRate: '34%',
+                    topCategories: [
+                        { name: '💊 건강관리', score: '96점' },
+                        { name: '🍯 프리미엄 식품', score: '88점' },
+                        { name: '👔 정장/의류', score: '79점' },
+                        { name: '📖 서적/문화', score: '72점' }
+                    ]
+                }
+            };
+
+            const data = insights[personaType];
+            if (!data) return;
+
+            // Update consumption profile
+            const consumptionStats = document.querySelectorAll('.insight-card')[1].querySelectorAll('.insight-stat .stat-value');
+            if (consumptionStats.length >= 4) {
+                consumptionStats[0].textContent = data.consumption;
+                consumptionStats[1].textContent = data.visitTime;
+                consumptionStats[2].textContent = data.decisionTime;
+                consumptionStats[3].textContent = data.onlineRate;
+            }
+
+            // Update top categories
+            const categoryStats = document.querySelectorAll('.insight-card')[2].querySelectorAll('.insight-stat');
+            categoryStats.forEach((stat, index) => {
+                if (data.topCategories[index]) {
+                    stat.querySelector('.stat-label').textContent = data.topCategories[index].name;
+                    stat.querySelector('.stat-value').textContent = data.topCategories[index].score;
+                }
+            });
+        }
+
+        function updateBusinessData(businessName) {
+            // 업종별 데이터 업데이트 로직
+            const businessData = {
+                '커피전문점': {
+                    revenue: '₩18.5M',
+                    profit: '₩5.2M',
+                    margin: '28.1%',
+                    investment: '4,200만원',
+                    breakEven: '7.2개월'
+                },
+                '치킨전문점': {
+                    revenue: '₩22.3M',
+                    profit: '₩6.8M',
+                    margin: '30.5%',
+                    investment: '3,800만원',
+                    breakEven: '5.8개월'
+                },
+                '미용실': {
+                    revenue: '₩12.8M',
+                    profit: '₩4.1M',
+                    margin: '32.0%',
+                    investment: '2,500만원',
+                    breakEven: '6.1개월'
+                }
+            };
+            
+            const data = businessData[businessName] || businessData['커피전문점'];
+            
+            // 재무 데이터 업데이트
+            const financialItems = document.querySelectorAll('.financial-item .financial-value');
+            if (financialItems.length >= 4) {
+                financialItems[0].textContent = data.revenue;
+                financialItems[1].textContent = data.profit;
+                financialItems[2].textContent = data.margin;
+                financialItems[3].textContent = data.investment;
+            }
+            
+            document.querySelector('.break-even-months').textContent = data.breakEven;
+        }
+
+        function updateLocationData(location, radius) {
+            // 위치별 데이터 업데이트 로직
+            const competitorStat = document.querySelector('.insight-card .insight-stat:nth-child(3) .stat-value');
+            if (competitorStat) {
+                competitorStat.textContent = `7개 (반경 ${radius}m)`;
+            }
+            
+            // 경쟁업체 분석 업데이트
+            const competitorTitle = document.querySelector('.insight-card:last-of-type .insight-title');
+            if (competitorTitle) {
+                competitorTitle.innerHTML = `
+                    <i data-lucide="shield"></i>
+                    반경 ${radius}m 경쟁업체
+                `;
+            }
+            
+            lucide.createIcons();
+        }
+
+        function updateSimulation() {
+            // Simulate random values for demo
+            const successRate = Math.floor(Math.random() * 30) + 60;
+            const revenue = Math.floor(Math.random() * 40) + 15;
+            const visitors = Math.floor(Math.random() * 400) + 200;
+            const competitors = Math.floor(Math.random() * 20) + 5;
+
+            document.querySelectorAll('.sim-result-value').forEach((element, index) => {
+                const values = [`${successRate}%`, `₩${revenue}M`, `${visitors}명`, `${competitors}개`];
+                element.textContent = values[index];
+            });
+        }
+
+        // Add hover effects to map elements
+        document.querySelectorAll('.existing-cafe, .recommended-location').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1)';
+                this.style.zIndex = '15';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+                this.style.zIndex = this.classList.contains('recommended-location') ? '8' : '5';
+            });
+            
+            element.addEventListener('click', function() {
+                const name = this.getAttribute('data-name') || `추천 위치 ${this.getAttribute('data-spot')}`;
+                const distance = this.getAttribute('data-distance') || '';
+                
+                if (this.classList.contains('recommended-location')) {
+                    const spot = this.getAttribute('data-spot');
+                    let locationInfo = '';
+                    
+                    switch(spot) {
+                        case 'A':
+                            locationInfo = `
+📍 위치 A (가장 추천)
+• 월 유동인구: 45,000명
+• 평당 임대료: ₩220
+• 예상 월매출: ₩16.5M
+• 손익분기: 6.8개월
+• 특징: 대학생 집중 지역
+                            `;
+                            break;
+                        case 'B':
+                            locationInfo = `
+📍 위치 B (고수익형)
+• 월 유동인구: 78,000명  
+• 평당 임대료: ₩380
+• 예상 월매출: ₩24.2M
+• 손익분기: 8.1개월
+• 특징: 역세권 최고 입지
+                            `;
+                            break;
+                        case 'C':
+                            locationInfo = `
+📍 위치 C (안정형)
+• 월 유동인구: 32,000명
+• 평당 임대료: ₩160
+• 예상 월매출: ₩12.8M
+• 손익분기: 5.9개월
+• 특징: 주거지역 인접
+                            `;
+                            break;
+                    }
+                    alert(locationInfo);
+                } else {
+                    alert(`${name}\n${distance ? distance + ' 거리' : ''}\n\n경쟁업체 상세 정보:\n• 주요 고객: 20-30대\n• 운영시간: 07:00-22:00\n• 평균 객단가: ₩4,500-6,500\n• 매출 추정: 상위권`);
+                }
+            });
+        });
+
+        // Initialize with default data
+        document.addEventListener('DOMContentLoaded', function() {
+            updateInsights('tech-man');
+            updateSimulation();
+            updateRecommendationMatch();
+        });
+    </script>
+</body>
+</html>

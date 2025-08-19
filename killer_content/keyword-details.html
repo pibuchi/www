@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>키워드 상세 분석 - Killer Content</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1e1e2a;
+            color: #ffffff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: #2a2a3a;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #3a3a4a;
+        }
+        
+        .header h1 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .back-btn {
+            background: var(--primary, #7c5cff);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            background: var(--primary-dark, #5a4fcf);
+            transform: translateY(-1px);
+        }
+        
+        .keyword-selector {
+            background: #2a2a3a;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+            border: 1px solid #3a3a4a;
+        }
+        
+        .keyword-selector h2 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            color: #ffffff;
+        }
+        
+        .keyword-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .keyword-btn {
+            background: #3a3a4a;
+            border: 2px solid #4a4a5a;
+            color: #b7b7c7;
+            padding: 10px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            min-width: 120px;
+            text-align: center;
+        }
+        
+        .keyword-btn:hover {
+            border-color: var(--primary, #7c5cff);
+            color: var(--primary, #7c5cff);
+            background: #4a4a5a;
+        }
+        
+        .keyword-btn.active {
+            background: var(--primary, #7c5cff);
+            border-color: var(--primary, #7c5cff);
+            color: white;
+        }
+        
+        .keyword-details {
+            background: #2a2a3a;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            overflow: hidden;
+            min-height: 600px;
+            border: 1px solid #3a3a4a;
+        }
+        
+        .details-header {
+            background: linear-gradient(135deg, var(--primary, #7c5cff), var(--primary-dark, #5a4fcf));
+            color: white;
+            padding: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .details-header h2 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .details-header .subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            margin: 0;
+            padding-left: 20px;
+            border-left: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .details-content {
+            padding: 30px;
+        }
+        
+        .stats-grid {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            overflow-x: auto;
+            padding: 10px 0;
+        }
+        
+        .stat-card {
+            background: #3a3a4a;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid var(--primary, #7c5cff);
+            border: 1px solid #4a4a5a;
+            min-width: 140px;
+            flex-shrink: 0;
+        }
+        
+        .stat-card .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--primary, #7c5cff);
+            margin-bottom: 5px;
+        }
+        
+        .stat-card .stat-label {
+            font-size: 11px;
+            color: #b7b7c7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        .content-section {
+            background: #3a3a4a;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #4a4a5a;
+        }
+        
+        .content-section h3 {
+            margin: 0 0 15px 0;
+            font-size: 16px;
+            color: #ffffff;
+            font-weight: 600;
+        }
+        
+        .trend-chart {
+            height: 250px;
+            background: #1e1e2a;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid #3a3a4a;
+        }
+        
+        .persona-grid {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .persona-item {
+            background: #1e1e2a;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 3px solid;
+            border: 1px solid #3a3a4a;
+        }
+        
+        .persona-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .persona-name {
+            font-weight: 600;
+            color: #ffffff;
+        }
+        
+        .persona-score {
+            padding: 4px 8px;
+            border-radius: 12px;
+            color: white;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .persona-desc {
+            font-size: 12px;
+            color: #b7b7c7;
+            line-height: 1.4;
+            margin: 0;
+        }
+        
+        .insights-text {
+            font-size: 14px;
+            color: #b7b7c7;
+            line-height: 1.6;
+            margin: 0;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #b7b7c7;
+        }
+        
+        .loading .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid var(--primary, #7c5cff);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .stats-grid {
+                gap: 10px;
+                padding: 5px 0;
+            }
+            
+            .stat-card {
+                min-width: 120px;
+                padding: 12px 15px;
+            }
+            
+            .stat-card .stat-value {
+                font-size: 20px;
+            }
+            
+            .stat-card .stat-label {
+                font-size: 10px;
+            }
+            
+            .details-header {
+                padding: 20px;
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+            
+            .details-header h2 {
+                font-size: 24px;
+            }
+            
+            .details-header .subtitle {
+                padding-left: 0;
+                border-left: none;
+                border-top: 2px solid rgba(255, 255, 255, 0.3);
+                padding-top: 10px;
+            }
+            
+            .details-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- 헤더 -->
+        <div class="header">
+            <h1>키워드 상세 분석</h1>
+            <a href="index.html" class="back-btn">← 메인으로 돌아가기</a>
+        </div>
+        
+        <!-- 키워드 선택기 -->
+        <div class="keyword-selector">
+            <h2>분석할 키워드 선택</h2>
+            <div class="keyword-buttons" id="keywordButtons">
+                <!-- 키워드 버튼들이 여기에 동적으로 생성됩니다 -->
+            </div>
+        </div>
+        
+        <!-- 키워드 상세 정보 -->
+        <div class="keyword-details" id="keywordDetails">
+            <div class="loading">
+                <div class="spinner"></div>
+                <p>키워드를 선택하면 상세 분석이 표시됩니다</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 스크립트 -->
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // 키워드 상세보기 페이지 전용 스크립트
+        let currentKeyword = null;
+        
+        // app.js의 전역 함수들이 실행되지 않도록 방지
+        window.isKeywordDetailsPage = true;
+        
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeKeywordPage();
+        });
+        
+        function initializeKeywordPage() {
+            // 데이터가 로드될 때까지 대기
+            if (typeof trendSeries === 'undefined') {
+                setTimeout(initializeKeywordPage, 100);
+                return;
+            }
+            
+            // 키워드 버튼들 생성
+            createKeywordButtons();
+            
+            // URL 파라미터에서 키워드 확인
+            const urlParams = new URLSearchParams(window.location.search);
+            const keyword = urlParams.get('keyword');
+            if (keyword) {
+                showKeywordDetails(keyword);
+            }
+        }
+        
+        function createKeywordButtons() {
+            const buttonsContainer = document.getElementById('keywordButtons');
+            
+            if (typeof trendSeries === 'undefined') {
+                buttonsContainer.innerHTML = '<p>키워드 데이터를 불러올 수 없습니다.</p>';
+                return;
+            }
+            
+            const keywords = Object.keys(trendSeries);
+            buttonsContainer.innerHTML = keywords.map(keyword => `
+                <button class="keyword-btn" onclick="showKeywordDetails('${keyword}')">
+                    ${keyword}
+                </button>
+            `).join('');
+        }
+        
+        function showKeywordDetails(keyword) {
+            currentKeyword = keyword;
+            
+            // 활성 버튼 표시
+            document.querySelectorAll('.keyword-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.textContent.trim() === keyword) {
+                    btn.classList.add('active');
+                }
+            });
+            
+            // 상세 정보 표시
+            displayKeywordDetails(keyword);
+        }
+        
+        function displayKeywordDetails(keyword) {
+            const detailsContainer = document.getElementById('keywordDetails');
+            
+            // 데이터 확인
+            if (typeof trendSeries === 'undefined' || !trendSeries[keyword]) {
+                detailsContainer.innerHTML = '<div class="loading"><p>키워드 데이터를 찾을 수 없습니다.</p></div>';
+                return;
+            }
+            
+            const data = trendSeries[keyword];
+            const range = 8; // 기본값
+            const labels = trendLabels8;
+            const keywordData = data.data8;
+            const currentValue = keywordData[keywordData.length - 1];
+            const previousValue = keywordData[keywordData.length - 2];
+            const growthRate = previousValue ? ((currentValue - previousValue) / previousValue * 100).toFixed(1) : 0;
+            const isGrowing = growthRate > 0;
+            
+            // 상세 정보 HTML 생성
+            detailsContainer.innerHTML = `
+                <div class="details-header">
+                    <h2>${keyword}</h2>
+                    <p class="subtitle">트렌드 분석 및 페르소나 반응도</p>
+                </div>
+                
+                <div class="details-content">
+                    <!-- 통계 카드들 -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value">${currentValue}</div>
+                            <div class="stat-label">현재 점수</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" style="color: ${isGrowing ? '#36d399' : '#ff6b6b'}">
+                                ${isGrowing ? '+' : ''}${growthRate}%
+                            </div>
+                            <div class="stat-label">전분기 대비</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${Math.max(...keywordData)}</div>
+                            <div class="stat-label">최고점</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${(keywordData.reduce((a,b) => a+b, 0) / keywordData.length).toFixed(1)}</div>
+                            <div class="stat-label">평균</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${Math.min(...keywordData)}</div>
+                            <div class="stat-label">최저점</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${calculateVolatility(keywordData).toFixed(1)}%</div>
+                            <div class="stat-label">변동성</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 상세 내용 -->
+                    <div class="content-grid">
+                        <div class="content-section">
+                            <h3>트렌드 변화</h3>
+                            <div class="trend-chart">
+                                <canvas id="trendChart" width="400" height="200"></canvas>
+                            </div>
+                            
+                            <h3>키워드 인사이트</h3>
+                            <p class="insights-text">
+                                ${trendNotes && trendNotes[keyword] ? trendNotes[keyword] : '해당 키워드에 대한 상세 분석 정보가 없습니다.'}
+                            </p>
+                        </div>
+                        
+                        <div class="content-section">
+                            <h3>페르소나별 반응도</h3>
+                            <div class="persona-grid">
+                                ${Object.entries(personaKeywordReaction || {}).map(([persona, reactions]) => {
+                                    const reaction = reactions[keyword] || 0;
+                                    const personaName = personaDB && personaDB[persona] ? personaDB[persona].name : persona;
+                                    const reactionText = reaction === 2 ? '매우 높음' : reaction === 1 ? '보통' : '낮음';
+                                    const reactionColor = reaction === 2 ? '#36d399' : reaction === 1 ? '#ffd166' : '#ff6b6b';
+                                    const reactionDesc = reaction === 2 ? '강한 관심과 긍정적 반응을 보이는 페르소나입니다.' : 
+                                                        reaction === 1 ? '보통 수준의 관심을 보이는 페르소나입니다.' : '낮은 관심도를 보이는 페르소나입니다.';
+                                    return `
+                                        <div class="persona-item" style="border-left-color: ${reactionColor};">
+                                            <div class="persona-header">
+                                                <span class="persona-name">${personaName}</span>
+                                                <span class="persona-score" style="background: ${reactionColor};">${reactionText}</span>
+                                            </div>
+                                            <p class="persona-desc">${reactionDesc}</p>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // 차트 그리기
+            setTimeout(() => {
+                drawTrendChart('trendChart', labels, keywordData, data.color);
+            }, 100);
+        }
+        
+        // 변동성 계산 함수
+        function calculateVolatility(data) {
+            const mean = data.reduce((a, b) => a + b, 0) / data.length;
+            const variance = data.reduce((sum, value) => sum + Math.pow(value - mean, 2), 0) / data.length;
+            return Math.sqrt(variance) / mean * 100;
+        }
+        
+        // 트렌드 차트 그리기
+        function drawTrendChart(canvasId, labels, data, color) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // 차트 영역 설정
+            const margin = { top: 20, right: 20, bottom: 30, left: 40 };
+            const chartWidth = width - margin.left - margin.right;
+            const chartHeight = height - margin.top - margin.bottom;
+            
+            // 스케일 계산
+            const xScale = chartWidth / (labels.length - 1);
+            const yScale = chartHeight / (Math.max(...data) - Math.min(...data));
+            
+            // 그리드 그리기
+            ctx.strokeStyle = '#f0f0f0';
+            ctx.lineWidth = 1;
+            
+            // 수직 그리드
+            for (let i = 0; i < labels.length; i++) {
+                const x = margin.left + i * xScale;
+                ctx.beginPath();
+                ctx.moveTo(x, margin.top);
+                ctx.lineTo(x, height - margin.bottom);
+                ctx.stroke();
+            }
+            
+            // 수평 그리드
+            const ySteps = 5;
+            for (let i = 0; i <= ySteps; i++) {
+                const y = margin.top + (i / ySteps) * chartHeight;
+                ctx.beginPath();
+                ctx.moveTo(margin.left, y);
+                ctx.lineTo(width - margin.right, y);
+                ctx.stroke();
+            }
+            
+            // 라인 차트 그리기
+            ctx.strokeStyle = color;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            
+            data.forEach((value, i) => {
+                const x = margin.left + i * xScale;
+                const y = margin.top + (Math.max(...data) - value) * yScale;
+                
+                if (i === 0) {
+                    ctx.moveTo(x, y);
+                } else {
+                    ctx.lineTo(x, y);
+                }
+            });
+            
+            ctx.stroke();
+            
+            // 데이터 포인트 그리기
+            ctx.fillStyle = color;
+            data.forEach((value, i) => {
+                const x = margin.left + i * xScale;
+                const y = margin.top + (Math.max(...data) - value) * yScale;
+                
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, 2 * Math.PI);
+                ctx.fill();
+            });
+            
+            // X축 라벨
+            ctx.fillStyle = '#666';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            labels.forEach((label, i) => {
+                const x = margin.left + i * xScale;
+                ctx.fillText(label, x, height - margin.bottom + 20);
+            });
+            
+            // Y축 라벨
+            ctx.textAlign = 'right';
+            const ySteps2 = 5;
+            for (let i = 0; i <= ySteps2; i++) {
+                const value = Math.min(...data) + (i / ySteps2) * (Math.max(...data) - Math.min(...data));
+                const y = margin.top + (i / ySteps2) * chartHeight;
+                ctx.fillText(Math.round(value), margin.left - 10, y + 4);
+            }
+        }
+    </script>
+</body>
+</html>

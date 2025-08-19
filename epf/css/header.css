@@ -1,0 +1,195 @@
+/* 헤더 스타일 */
+.header {
+  background: rgba(15, 15, 35, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-primary);
+  padding: var(--spacing-md) var(--spacing-xl);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-fixed);
+  height: var(--header-height);
+  display: flex;
+  align-items: center;
+}
+
+.header-content {
+  max-width: var(--container-2xl);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-xl);
+  width: 100%;
+}
+
+.logo {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  background: var(--primary-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  flex-shrink: 0;
+}
+
+/* 헤더 모드 선택기 */
+.header-mode-selector {
+  display: flex;
+  gap: var(--spacing-sm);
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xs);
+  flex: 1;
+  max-width: 400px;
+  justify-content: center;
+}
+
+.mode-nav-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.profile-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: var(--shadow-sm);
+} all var(--transition-normal);
+  border: none;
+  background: none;
+  color: var(--text-tertiary);
+  font-family: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  flex: 1;
+  justify-content: center;
+  white-space: nowrap;
+}
+
+.mode-nav-item:hover {
+  background: var(--bg-hover);
+  color: var(--primary-color);
+}
+
+.mode-nav-item.active {
+  background: var(--bg-active);
+  color: var(--primary-color);
+  box-shadow: var(--shadow-sm);
+}
+
+.mode-nav-icon {
+  font-size: var(--font-size-base);
+}
+
+/* 헤더 네비게이션 */
+.header-nav {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.nav-item {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  font-weight: var(--font-weight-medium);
+  border: 1px solid transparent;
+  text-decoration: none;
+  color: var(--text-secondary);
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background: var(--bg-card);
+  color: var(--primary-color);
+}
+
+.nav-item.active {
+  background: var(--bg-active);
+  border-color: rgba(102, 126, 234, 0.5);
+  color: var(--primary-color);
+}
+
+/* 상태 표시 */
+.nav-item::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  margin-right: var(--spacing-sm);
+  transition: background-color var(--transition-normal);
+}
+
+.nav-item.active::before {
+  background: var(--primary-color);
+}
+
+/* 헤더 액션 버튼 */
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.header-action-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--bg-card);
+  border: 1px solid var(--border-primary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-base);
+}
+
+.header-action-btn:hover {
+  background: var(--bg-hover);
+  color: var(--primary-color);
+  transform: translateY(-1px);
+}
+
+/* 알림 배지 */
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background: var(--error-color);
+  border-radius: var(--radius-full);
+  border: 2px solid var(--bg-primary);
+}
+
+/* 프로필 드롭다운 */
+.profile-dropdown {
+  position: relative;
+}
+
+.profile-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  background: var(--primary-gradient);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition:

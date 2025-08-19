@@ -1,0 +1,44 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: iknowyou-api-server
+  
+  datasource:
+    url: jdbc:mysql://localhost:3306/iknowyou_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: iknowyou_user
+    password: iknowyou_password
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+  
+  security:
+    user:
+      name: admin
+      password: admin123
+
+logging:
+  level:
+    com.iknowyou: DEBUG
+    org.springframework.security: DEBUG
+
+jwt:
+  secret: iknowyou_jwt_secret_key_2024_very_long_and_secure
+  expiration: 86400000 # 24 hours
+
+cors:
+  allowed-origins:
+    - http://localhost:3000
+    - http://localhost:3001
+    - https://iknowyou.cloud
+    - https://www.iknowyou.cloud
+    - https://admin.iknowyou.cloud
+    - https://pibuchi.duckdns.org 

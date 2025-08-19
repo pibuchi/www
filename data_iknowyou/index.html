@@ -1,0 +1,1407 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터베이스 스키마 관리</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f9fafb;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            background-color: white;
+            min-height: 100vh;
+        }
+        
+        .header {
+            margin-bottom: 32px;
+        }
+        
+        .header h1 {
+            font-size: 30px;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #6b7280;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 24px;
+        }
+        
+        .tab {
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            color: #6b7280;
+            border-bottom: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tab.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+            background-color: #eff6ff;
+        }
+        
+        .tab:hover {
+            color: #374151;
+        }
+        
+        .content {
+            display: none;
+        }
+        
+        .content.active {
+            display: block;
+        }
+        
+        .grid {
+            display: grid;
+            gap: 24px;
+        }
+        
+        .grid-2 {
+            grid-template-columns: 1fr 1fr;
+        }
+        
+        .grid-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .grid-4 {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        
+        @media (max-width: 1024px) {
+            .grid-2, .grid-3, .grid-4 {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            background: white;
+            transition: box-shadow 0.2s;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .card-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .icon-wrapper {
+            padding: 8px;
+            background-color: #dbeafe;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .icon {
+            width: 16px;
+            height: 16px;
+        }
+        
+        .table-name {
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .table-description {
+            font-size: 14px;
+            color: #6b7280;
+        }
+        
+        .badge {
+            padding: 4px 8px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .badge-master { background-color: #dbeafe; color: #1d4ed8; }
+        .badge-aggregate { background-color: #dcfce7; color: #16a34a; }
+        .badge-demographic { background-color: #f3e8ff; color: #9333ea; }
+        .badge-reference { background-color: #f3f4f6; color: #374151; }
+        
+        .badge-pk { background-color: #fee2e2; color: #dc2626; }
+        .badge-fk { background-color: #fef3c7; color: #d97706; }
+        
+        .record-count {
+            font-size: 14px;
+            color: #6b7280;
+            text-align: right;
+        }
+        
+        .expand-btn {
+            background: none;
+            border: none;
+            color: #2563eb;
+            cursor: pointer;
+            padding: 4px;
+        }
+        
+        .fields-list {
+            margin-top: 16px;
+            display: none;
+        }
+        
+        .fields-list.expanded {
+            display: block;
+        }
+        
+        .field-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .field-name {
+            font-weight: 500;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .field-type {
+            color: #6b7280;
+        }
+        
+        .detail-panel {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 24px;
+        }
+        
+        .detail-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        
+        .detail-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #111827;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .action-btn {
+            padding: 8px;
+            background: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            color: #6b7280;
+        }
+        
+        .action-btn:hover {
+            color: #374151;
+        }
+        
+        .detail-meta {
+            display: flex;
+            gap: 16px;
+            font-size: 14px;
+            color: #6b7280;
+            margin-bottom: 16px;
+        }
+        
+        .fields-table {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .fields-table-header {
+            padding: 12px 16px;
+            background-color: #f3f4f6;
+            border-bottom: 1px solid #e5e7eb;
+            font-weight: 500;
+            color: #111827;
+        }
+        
+        .field-row {
+            padding: 12px 16px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .field-row:hover {
+            background-color: #f9fafb;
+        }
+        
+        .field-row:last-child {
+            border-bottom: none;
+        }
+        
+        .placeholder {
+            text-align: center;
+            padding: 48px 24px;
+            color: #6b7280;
+        }
+        
+        .placeholder-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            color: #d1d5db;
+        }
+        
+        .search-container {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+        
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            flex: 1;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .relationship-box {
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid;
+        }
+        
+        .relationship-box.core {
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+        }
+        
+        .relationship-box.aggregate {
+            background-color: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+        
+        .relationship-box.demographic {
+            background-color: #faf5ff;
+            border-color: #e9d5ff;
+        }
+        
+        .relationship-box.reference {
+            background-color: #f9fafb;
+            border-color: #e5e7eb;
+        }
+        
+        .relationship-title {
+            font-weight: 500;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        
+        .relationship-flow {
+            margin-top: 32px;
+            padding: 24px;
+            background-color: #f9fafb;
+            border-radius: 8px;
+        }
+        
+        .flow-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .flow-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+        
+        .flow-dot.blue { background-color: #3b82f6; }
+        .flow-dot.green { background-color: #10b981; }
+        .flow-dot.purple { background-color: #8b5cf6; }
+        .flow-dot.gray { background-color: #6b7280; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        
+        .stat-card {
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid;
+        }
+        
+        .stat-card.blue {
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+        }
+        
+        .stat-card.green {
+            background-color: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+        
+        .stat-card.purple {
+            background-color: #faf5ff;
+            border-color: #e9d5ff;
+        }
+        
+        .stat-card.gray {
+            background-color: #f9fafb;
+            border-color: #e5e7eb;
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .progress-track {
+            width: 96px;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .progress-green { background-color: #10b981; }
+        .progress-blue { background-color: #3b82f6; }
+        .progress-yellow { background-color: #f59e0b; }
+        
+        /* ERD 스타일 */
+        .erd-table {
+            background: white;
+            border: 2px solid #374151;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            font-family: 'Courier New', monospace;
+            z-index: 2;
+            position: relative;
+        }
+        
+        .erd-table-header {
+            background: #374151;
+            color: white;
+            padding: 8px 12px;
+            font-weight: bold;
+            font-size: 13px;
+            text-align: center;
+            border-bottom: 1px solid #4b5563;
+        }
+        
+        .erd-table-body {
+            padding: 0;
+        }
+        
+        .erd-field {
+            padding: 6px 12px;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 12px;
+            background: white;
+            color: #374151;
+        }
+        
+        .erd-field:last-child {
+            border-bottom: none;
+        }
+        
+        .erd-field-pk {
+            background: #fef2f2;
+            color: #dc2626;
+            font-weight: 600;
+        }
+        
+        .erd-field-fk {
+            background: #fffbeb;
+            color: #d97706;
+            font-weight: 500;
+        }
+        
+        .erd-field-more {
+            padding: 6px 12px;
+            font-size: 11px;
+            color: #9ca3af;
+            font-style: italic;
+            text-align: center;
+            background: #f9fafb;
+            border-bottom: none;
+        }
+        
+        .erd-relationship-line {
+            stroke: #6b7280;
+            stroke-width: 2;
+            fill: none;
+        }
+        
+        .erd-relationship-label {
+            font-size: 11px;
+            fill: #4b5563;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>데이터베이스 스키마 관리</h1>
+            <p>상권분석 및 인구통계 데이터베이스 스키마 구조</p>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('tables')">
+                <i data-lucide="database"></i>
+                테이블 구조
+            </button>
+            <button class="tab" onclick="showTab('relationships')">
+                <i data-lucide="git-branch"></i>
+                관계도
+            </button>
+            <button class="tab" onclick="showTab('erd')">
+                <i data-lucide="network"></i>
+                ERD 뷰
+            </button>
+            <button class="tab" onclick="showTab('analytics')">
+                <i data-lucide="bar-chart-3"></i>
+                아이템 분석
+            </button>
+            <button class="tab" onclick="window.open('data_test_claude_item.html', '_blank')">
+                <i data-lucide="bar-chart-3"></i>
+                데이터 분석
+            </button>
+        </div>
+
+        <!-- Tables Tab Content -->
+        <div id="tables" class="content active">
+            <div class="grid grid-2">
+                <!-- Table List -->
+                <div>
+                    <div class="search-container">
+                        <h2 style="font-size: 20px; font-weight: 600; color: #111827;">테이블 목록</h2>
+                        <div style="display: flex; align-items: center; gap: 8px; margin-left: auto;">
+                            <i data-lucide="search" style="width: 16px; height: 16px; color: #9ca3af;"></i>
+                            <input type="text" placeholder="테이블 검색..." class="search-input" style="width: 200px;">
+                        </div>
+                    </div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <!-- Table Cards -->
+                        <div class="card" onclick="selectTable('상권분석정보_전체')">
+                            <div class="card-header">
+                                <div class="card-info">
+                                    <div class="icon-wrapper">
+                                        <i data-lucide="building" class="icon"></i>
+                                    </div>
+                                    <div>
+                                        <div class="table-name">상권분석정보_전체</div>
+                                        <div class="table-description">상가업소 상세 정보</div>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="badge badge-master">master</div>
+                                    <div class="record-count">1,234,567 건</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px;">
+                                <span style="font-size: 14px; color: #6b7280;">39개 필드</span>
+                                <button class="expand-btn" onclick="event.stopPropagation(); toggleFields('table1')">
+                                    <i data-lucide="chevron-right" style="width: 16px; height: 16px;" id="icon1"></i>
+                                </button>
+                            </div>
+                            <div class="fields-list" id="fields1">
+                                <div class="field-item">
+                                    <div class="field-name">상가업소번호 <span class="badge badge-pk">PK</span></div>
+                                    <div class="field-type">VARCHAR(20)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">행정동코드 <span class="badge badge-fk">FK</span></div>
+                                    <div class="field-type">VARCHAR(10)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">상권업종소분류코드 <span class="badge badge-fk">FK</span></div>
+                                    <div class="field-type">VARCHAR(10)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">상호명</div>
+                                    <div class="field-type">VARCHAR(100)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">도로명주소</div>
+                                    <div class="field-type">VARCHAR(200)</div>
+                                </div>
+                                <div style="text-align: center; padding: 8px; font-size: 14px; color: #6b7280;">
+                                    ... 34개 필드 더 보기
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" onclick="selectTable('상권분석정보_소분류별점포수')">
+                            <div class="card-header">
+                                <div class="card-info">
+                                    <div class="icon-wrapper">
+                                        <i data-lucide="bar-chart-3" class="icon"></i>
+                                    </div>
+                                    <div>
+                                        <div class="table-name">상권분석정보_소분류별점포수</div>
+                                        <div class="table-description">업종별 점포수 집계</div>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="badge badge-aggregate">aggregate</div>
+                                    <div class="record-count">45,678 건</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px;">
+                                <span style="font-size: 14px; color: #6b7280;">5개 필드</span>
+                                <button class="expand-btn" onclick="event.stopPropagation(); toggleFields('table2')">
+                                    <i data-lucide="chevron-right" style="width: 16px; height: 16px;" id="icon2"></i>
+                                </button>
+                            </div>
+                            <div class="fields-list" id="fields2">
+                                <div class="field-item">
+                                    <div class="field-name">행정동코드 <span class="badge badge-fk">FK</span></div>
+                                    <div class="field-type">VARCHAR(10)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">행정동명</div>
+                                    <div class="field-type">VARCHAR(50)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">상권업종소분류코드 <span class="badge badge-fk">FK</span></div>
+                                    <div class="field-type">VARCHAR(10)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">상권업종소분류명</div>
+                                    <div class="field-type">VARCHAR(50)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">상가수</div>
+                                    <div class="field-type">INT</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" onclick="selectTable('인구통계정보_거주인구')">
+                            <div class="card-header">
+                                <div class="card-info">
+                                    <div class="icon-wrapper">
+                                        <i data-lucide="users" class="icon"></i>
+                                    </div>
+                                    <div>
+                                        <div class="table-name">인구통계정보_거주인구</div>
+                                        <div class="table-description">거주인구 통계</div>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="badge badge-demographic">demographic</div>
+                                    <div class="record-count">123,456 건</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px;">
+                                <span style="font-size: 14px; color: #6b7280;">7개 필드</span>
+                                <button class="expand-btn" onclick="event.stopPropagation(); toggleFields('table3')">
+                                    <i data-lucide="chevron-right" style="width: 16px; height: 16px;" id="icon3"></i>
+                                </button>
+                            </div>
+                            <div class="fields-list" id="fields3">
+                                <div class="field-item">
+                                    <div class="field-name">시도명</div>
+                                    <div class="field-type">VARCHAR(20)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">시군구명</div>
+                                    <div class="field-type">VARCHAR(50)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">행정동명</div>
+                                    <div class="field-type">VARCHAR(50)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">성별</div>
+                                    <div class="field-type">VARCHAR(10)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">연령그룹</div>
+                                    <div class="field-type">VARCHAR(20)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">인구수</div>
+                                    <div class="field-type">INT</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">순이동</div>
+                                    <div class="field-type">INT</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" onclick="selectTable('위치코드')">
+                            <div class="card-header">
+                                <div class="card-info">
+                                    <div class="icon-wrapper">
+                                        <i data-lucide="map" class="icon"></i>
+                                    </div>
+                                    <div>
+                                        <div class="table-name">위치코드</div>
+                                        <div class="table-description">지역 코드 참조</div>
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div class="badge badge-reference">reference</div>
+                                    <div class="record-count">3,456 건</div>
+                                </div>
+                            </div>
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 12px;">
+                                <span style="font-size: 14px; color: #6b7280;">6개 필드</span>
+                                <button class="expand-btn" onclick="event.stopPropagation(); toggleFields('table4')">
+                                    <i data-lucide="chevron-right" style="width: 16px; height: 16px;" id="icon4"></i>
+                                </button>
+                            </div>
+                            <div class="fields-list" id="fields4">
+                                <div class="field-item">
+                                    <div class="field-name">시도코드 <span class="badge badge-pk">PK</span></div>
+                                    <div class="field-type">VARCHAR(2)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">시도명</div>
+                                    <div class="field-type">VARCHAR(20)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">시군구코드 <span class="badge badge-pk">PK</span></div>
+                                    <div class="field-type">VARCHAR(5)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">시군구명</div>
+                                    <div class="field-type">VARCHAR(50)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">행정동코드 <span class="badge badge-pk">PK</span></div>
+                                    <div class="field-type">VARCHAR(10)</div>
+                                </div>
+                                <div class="field-item">
+                                    <div class="field-name">행정동명</div>
+                                    <div class="field-type">VARCHAR(50)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Table Detail -->
+                <div class="detail-panel" id="detail-panel">
+                    <div class="placeholder">
+                        <div class="placeholder-icon">
+                            <i data-lucide="table" style="width: 48px; height: 48px;"></i>
+                        </div>
+                        <h3 style="font-size: 18px; font-weight: 500; color: #111827; margin-bottom: 8px;">테이블을 선택하세요</h3>
+                        <p>왼쪽에서 테이블을 클릭하면 상세 정보를 확인할 수 있습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Relationships Tab Content -->
+        <div id="relationships" class="content">
+            <div class="card">
+                <h2 style="font-size: 20px; font-weight: 600; color: #111827; margin-bottom: 24px;">테이블 관계도</h2>
+                
+                <div class="grid grid-3">
+                    <!-- Core Tables -->
+                    <div>
+                        <div class="relationship-title">핵심 테이블</div>
+                        <div class="relationship-box core">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <i data-lucide="building" style="width: 16px; height: 16px; color: #2563eb;"></i>
+                                <span style="font-weight: 500; color: #1e3a8a;">상권분석정보_전체</span>
+                            </div>
+                            <p style="font-size: 14px; color: #1e40af;">메인 상가업소 데이터</p>
+                            <div style="margin-top: 8px; font-size: 12px; color: #2563eb;">
+                                PK: 상가업소번호<br>
+                                FK: 행정동코드, 상권업종소분류코드
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Aggregate Tables -->
+                    <div>
+                        <div class="relationship-title">집계 테이블</div>
+                        <div class="relationship-box aggregate" style="margin-bottom: 16px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <i data-lucide="bar-chart-3" style="width: 16px; height: 16px; color: #16a34a;"></i>
+                                <span style="font-weight: 500; color: #14532d;">소분류별점포수</span>
+                            </div>
+                            <p style="font-size: 14px; color: #15803d;">업종별 점포수 요약</p>
+                        </div>
+                        
+                        <div class="relationship-box demographic">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <i data-lucide="users" style="width: 16px; height: 16px; color: #9333ea;"></i>
+                                <span style="font-weight: 500; color: #581c87;">인구통계정보</span>
+                            </div>
+                            <p style="font-size: 14px; color: #7c3aed;">거주/이동 인구 데이터</p>
+                        </div>
+                    </div>
+
+                    <!-- Reference Tables -->
+                    <div>
+                        <div class="relationship-title">참조 테이블</div>
+                        <div class="relationship-box reference" style="margin-bottom: 16px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <i data-lucide="map" style="width: 16px; height: 16px; color: #6b7280;"></i>
+                                <span style="font-weight: 500; color: #111827;">위치코드</span>
+                            </div>
+                            <p style="font-size: 14px; color: #374151;">지역 코드 마스터</p>
+                        </div>
+                        
+                        <div class="relationship-box reference">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <i data-lucide="settings" style="width: 16px; height: 16px; color: #6b7280;"></i>
+                                <span style="font-weight: 500; color: #111827;">아이템매핑표</span>
+                            </div>
+                            <p style="font-size: 14px; color: #374151;">업종 분류 매핑</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Relationship Flow -->
+                <div class="relationship-flow">
+                    <h4 style="font-weight: 500; color: #111827; margin-bottom: 16px;">주요 연결 관계</h4>
+                    <div>
+                        <div class="flow-item">
+                            <span class="flow-dot blue"></span>
+                            <span>위치코드 → 상권분석정보_전체 (행정동코드)</span>
+                        </div>
+                        <div class="flow-item">
+                            <span class="flow-dot green"></span>
+                            <span>상권분석정보_전체 → 소분류별점포수 (상권업종소분류코드)</span>
+                        </div>
+                        <div class="flow-item">
+                            <span class="flow-dot purple"></span>
+                            <span>위치코드 → 인구통계정보 (지역명)</span>
+                        </div>
+                        <div class="flow-item">
+                            <span class="flow-dot gray"></span>
+                            <span>아이템매핑표 → 상권분석정보 (업종소분류명)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ERD View Tab Content -->
+        <div id="erd" class="content">
+            <div class="card">
+                <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 24px;">
+                    <h2 style="font-size: 20px; font-weight: 600; color: #111827;">Entity Relationship Diagram</h2>
+                    <div style="display: flex; gap: 8px; margin-left: auto;">
+                        <button style="padding: 6px 12px; border: 1px solid #d1d5db; background: white; border-radius: 4px; font-size: 12px; cursor: pointer;" onclick="zoomERD('in')">
+                            <i data-lucide="zoom-in" style="width: 14px; height: 14px;"></i> 확대
+                        </button>
+                        <button style="padding: 6px 12px; border: 1px solid #d1d5db; background: white; border-radius: 4px; font-size: 12px; cursor: pointer;" onclick="zoomERD('out')">
+                            <i data-lucide="zoom-out" style="width: 14px; height: 14px;"></i> 축소
+                        </button>
+                        <button style="padding: 6px 12px; border: 1px solid #d1d5db; background: white; border-radius: 4px; font-size: 12px; cursor: pointer;" onclick="resetERDZoom()">
+                            <i data-lucide="maximize" style="width: 14px; height: 14px;"></i> 전체보기
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="border: 1px solid #e5e7eb; border-radius: 8px; background: #f8fafc; overflow: auto; height: 600px; position: relative;" id="erd-container">
+                    <div id="erd-canvas" style="transform: scale(1); transform-origin: top left; transition: transform 0.3s ease; width: 1400px; height: 800px; position: relative; margin: 20px;">
+                        
+                        <!-- 위치코드 테이블 -->
+                        <div class="erd-table" style="position: absolute; left: 50px; top: 50px; width: 180px;">
+                            <div class="erd-table-header">위치코드</div>
+                            <div class="erd-table-body">
+                                <div class="erd-field erd-field-pk">🔑 시도코드</div>
+                                <div class="erd-field">시도명</div>
+                                <div class="erd-field erd-field-pk">🔑 시군구코드</div>
+                                <div class="erd-field">시군구명</div>
+                                <div class="erd-field erd-field-pk">🔑 행정동코드</div>
+                                <div class="erd-field">행정동명</div>
+                            </div>
+                        </div>
+
+                        <!-- 상권분석정보_전체 테이블 (중앙) -->
+                        <div class="erd-table" style="position: absolute; left: 350px; top: 150px; width: 220px;">
+                            <div class="erd-table-header">상권분석정보_전체</div>
+                            <div class="erd-table-body">
+                                <div class="erd-field erd-field-pk">🔑 상가업소번호</div>
+                                <div class="erd-field erd-field-fk">🔗 시도코드</div>
+                                <div class="erd-field">시도명</div>
+                                <div class="erd-field erd-field-fk">🔗 시군구코드</div>
+                                <div class="erd-field">시군구명</div>
+                                <div class="erd-field erd-field-fk">🔗 행정동코드</div>
+                                <div class="erd-field">행정동명</div>
+                                <div class="erd-field">상권업종대분류코드</div>
+                                <div class="erd-field">상권업종대분류명</div>
+                                <div class="erd-field">상권업종중분류코드</div>
+                                <div class="erd-field">상권업종중분류명</div>
+                                <div class="erd-field erd-field-fk">🔗 상권업종소분류코드</div>
+                                <div class="erd-field">상권업종소분류명</div>
+                                <div class="erd-field">상호명</div>
+                                <div class="erd-field">지점명</div>
+                                <div class="erd-field">도로명주소</div>
+                                <div class="erd-field">경도</div>
+                                <div class="erd-field">위도</div>
+                                <div class="erd-field-more">... 21개 필드 더</div>
+                            </div>
+                        </div>
+
+                        <!-- 상권분석정보_소분류별점포수 테이블 -->
+                        <div class="erd-table" style="position: absolute; left: 650px; top: 100px; width: 220px;">
+                            <div class="erd-table-header">소분류별점포수</div>
+                            <div class="erd-table-body">
+                                <div class="erd-field erd-field-fk">🔗 행정동코드</div>
+                                <div class="erd-field">행정동명</div>
+                                <div class="erd-field erd-field-fk">🔗 상권업종소분류코드</div>
+                                <div class="erd-field">상권업종소분류명</div>
+                                <div class="erd-field">상가수</div>
+                            </div>
+                        </div>
+
+                        <!-- 아이템매핑표 테이블 -->
+                        <div class="erd-table" style="position: absolute; left: 650px; top: 300px; width: 180px;">
+                            <div class="erd-table-header">아이템매핑표</div>
+                            <div class="erd-table-body">
+                                <div class="erd-field">분류</div>
+                                <div class="erd-field erd-field-fk">🔗 상권업종소분류명</div>
+                                <div class="erd-field">아이템명</div>
+                            </div>
+                        </div>
+
+                        <!-- 인구통계정보_거주인구 테이블 -->
+                        <div class="erd-table" style="position: absolute; left: 50px; top: 350px; width: 200px;">
+                            <div class="erd-table-header">인구통계정보_거주인구</div>
+                            <div class="erd-table-body">
+                                <div class="erd-field">시도명</div>
+                                <div class="erd-field">시군구명</div>
+                                <div class="erd-field">행정동명</div>
+                                <div class="erd-field">성별</div>
+                                <div class="erd-field">연령그룹</div>
+                                <div class="erd-field">인구수</div>
+                                <div class="erd-field">순이동</div>
+                            </div>
+                        </div>
+
+                        <!-- 인구통계정보_이동인구 테이블 -->
+                        <div class="erd-table" style="position: absolute; left: 50px; top: 550px; width: 200px;">
+                            <div class="erd-table-header">인구통계정보_이동인구</div>
+                            <div class="erd-table-body">
+                                <div class="erd-field">시도명</div>
+                                <div class="erd-field">시군구명</div>
+                                <div class="erd-field">성별</div>
+                                <div class="erd-field">연령그룹</div>
+                                <div class="erd-field">인구수</div>
+                                <div class="erd-field">순이동</div>
+                                <div class="erd-field">시도간전입</div>
+                                <div class="erd-field">시도간전출</div>
+                                <div class="erd-field">총전입</div>
+                                <div class="erd-field">총전출</div>
+                                <div class="erd-field-more">... 3개 필드 더</div>
+                            </div>
+                        </div>
+
+                        <!-- 관계선들 -->
+                        <svg style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;">
+                            <!-- 위치코드 → 상권분석정보_전체 -->
+                            <line x1="230" y1="140" x2="350" y2="220" stroke="#3b82f6" stroke-width="2" marker-end="url(#arrowhead-blue)"/>
+                            <text x="285" y="175" fill="#3b82f6" font-size="11" text-anchor="middle">행정동코드</text>
+                            
+                            <!-- 상권분석정보_전체 → 소분류별점포수 -->
+                            <line x1="570" y1="200" x2="650" y2="180" stroke="#10b981" stroke-width="2" marker-end="url(#arrowhead-green)"/>
+                            <text x="610" y="185" fill="#10b981" font-size="11" text-anchor="middle">소분류코드</text>
+                            
+                            <!-- 상권분석정보_전체 → 아이템매핑표 -->
+                            <line x1="570" y1="280" x2="650" y2="330" stroke="#8b5cf6" stroke-width="2" marker-end="url(#arrowhead-purple)"/>
+                            <text x="610" y="300" fill="#8b5cf6" font-size="11" text-anchor="middle">소분류명</text>
+                            
+                            <!-- 위치코드 → 인구통계정보_거주인구 -->
+                            <line x1="140" y1="220" x2="140" y2="350" stroke="#f59e0b" stroke-width="2" marker-end="url(#arrowhead-yellow)"/>
+                            <text x="155" y="285" fill="#f59e0b" font-size="11">지역명</text>
+                            
+                            <!-- 위치코드 → 인구통계정보_이동인구 -->
+                            <line x1="140" y1="220" x2="140" y2="550" stroke="#ef4444" stroke-width="2" marker-end="url(#arrowhead-red)"/>
+                            <text x="155" y="385" fill="#ef4444" font-size="11">지역명</text>
+
+                            <!-- 화살표 마커 정의 -->
+                            <defs>
+                                <marker id="arrowhead-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6"/>
+                                </marker>
+                                <marker id="arrowhead-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#10b981"/>
+                                </marker>
+                                <marker id="arrowhead-purple" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#8b5cf6"/>
+                                </marker>
+                                <marker id="arrowhead-yellow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#f59e0b"/>
+                                </marker>
+                                <marker id="arrowhead-red" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+                                    <polygon points="0 0, 10 3.5, 0 7" fill="#ef4444"/>
+                                </marker>
+                            </defs>
+                        </svg>
+
+                        <!-- 범례 -->
+                        <div style="position: absolute; right: 20px; top: 20px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <h4 style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 12px;">범례</h4>
+                            <div style="display: flex; flex-direction: column; gap: 8px; font-size: 12px;">
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="color: #dc2626;">🔑</span>
+                                    <span>Primary Key</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <span style="color: #d97706;">🔗</span>
+                                    <span>Foreign Key</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: 8px;">
+                                    <div style="width: 20px; height: 2px; background: #3b82f6;"></div>
+                                    <span>관계선</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- ERD 설명 -->
+                <div style="margin-top: 20px; padding: 16px; background: #f9fafb; border-radius: 8px;">
+                    <h4 style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px;">ERD 설명</h4>
+                    <ul style="font-size: 14px; color: #6b7280; margin-left: 20px; line-height: 1.6;">
+                        <li><strong>위치코드</strong>는 모든 지역 기반 테이블의 중심 참조 테이블입니다.</li>
+                        <li><strong>상권분석정보_전체</strong>는 개별 상가업소의 상세 정보를 담는 핵심 팩트 테이블입니다.</li>
+                        <li><strong>소분류별점포수</strong>는 업종별로 집계된 요약 데이터를 제공합니다.</li>
+                        <li><strong>인구통계정보</strong> 테이블들은 상권 분석을 위한 인구 데이터를 제공합니다.</li>
+                        <li><strong>아이템매핑표</strong>는 업종 분류 체계를 정의하는 코드 테이블입니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="analytics" class="content">
+            <h2 style="font-size: 20px; font-weight: 600; color: #111827; margin-bottom: 24px;">데이터 분석 대시보드</h2>
+            
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label" style="color: #2563eb;">총 상가업소</div>
+                            <div class="stat-value" style="color: #1e3a8a;">1,234,567</div>
+                        </div>
+                        <i data-lucide="building" style="width: 32px; height: 32px; color: #2563eb;"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card green">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label" style="color: #16a34a;">업종 분류</div>
+                            <div class="stat-value" style="color: #14532d;">789</div>
+                        </div>
+                        <i data-lucide="bar-chart-3" style="width: 32px; height: 32px; color: #16a34a;"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card purple">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label" style="color: #9333ea;">총 인구</div>
+                            <div class="stat-value" style="color: #581c87;">51,780,579</div>
+                        </div>
+                        <i data-lucide="users" style="width: 32px; height: 32px; color: #9333ea;"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card gray">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label" style="color: #6b7280;">지역 코드</div>
+                            <div class="stat-value" style="color: #111827;">3,456</div>
+                        </div>
+                        <i data-lucide="map" style="width: 32px; height: 32px; color: #6b7280;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-2">
+                <div class="card">
+                    <h3 style="font-weight: 600; color: #111827; margin-bottom: 16px;">테이블별 데이터 현황</h3>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="building" style="width: 16px; height: 16px;"></i>
+                                <span style="font-weight: 500; color: #374151;">상권분석정보_전체</span>
+                            </div>
+                            <span style="font-size: 14px; color: #6b7280;">1,234,567</span>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="bar-chart-3" style="width: 16px; height: 16px;"></i>
+                                <span style="font-weight: 500; color: #374151;">소분류별점포수</span>
+                            </div>
+                            <span style="font-size: 14px; color: #6b7280;">45,678</span>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+                                <span style="font-weight: 500; color: #374151;">인구통계정보_거주인구</span>
+                            </div>
+                            <span style="font-size: 14px; color: #6b7280;">123,456</span>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="users" style="width: 16px; height: 16px;"></i>
+                                <span style="font-weight: 500; color: #374151;">인구통계정보_이동인구</span>
+                            </div>
+                            <span style="font-size: 14px; color: #6b7280;">89,012</span>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="map" style="width: 16px; height: 16px;"></i>
+                                <span style="font-weight: 500; color: #374151;">위치코드</span>
+                            </div>
+                            <span style="font-size: 14px; color: #6b7280;">3,456</span>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <i data-lucide="settings" style="width: 16px; height: 16px;"></i>
+                                <span style="font-weight: 500; color: #374151;">아이템매핑표</span>
+                            </div>
+                            <span style="font-size: 14px; color: #6b7280;">789</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 style="font-weight: 600; color: #111827; margin-bottom: 16px;">데이터 품질 지표</h3>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="color: #374151;">데이터 완성도</span>
+                            <div class="progress-bar">
+                                <div class="progress-track">
+                                    <div class="progress-fill progress-green" style="width: 95%;"></div>
+                                </div>
+                                <span style="font-size: 14px; color: #6b7280;">95%</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="color: #374151;">참조 무결성</span>
+                            <div class="progress-bar">
+                                <div class="progress-track">
+                                    <div class="progress-fill progress-blue" style="width: 98%;"></div>
+                                </div>
+                                <span style="font-size: 14px; color: #6b7280;">98%</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="color: #374151;">최신성</span>
+                            <div class="progress-bar">
+                                <div class="progress-track">
+                                    <div class="progress-fill progress-yellow" style="width: 87%;"></div>
+                                </div>
+                                <span style="font-size: 14px; color: #6b7280;">87%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Tab switching
+        function showTab(tabName) {
+            // Hide all content
+            const contents = document.querySelectorAll('.content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Toggle field expansion
+        function toggleFields(tableId) {
+            const fieldsDiv = document.getElementById('fields' + tableId.slice(-1));
+            const icon = document.getElementById('icon' + tableId.slice(-1));
+            
+            if (fieldsDiv.classList.contains('expanded')) {
+                fieldsDiv.classList.remove('expanded');
+                icon.setAttribute('data-lucide', 'chevron-right');
+            } else {
+                fieldsDiv.classList.add('expanded');
+                icon.setAttribute('data-lucide', 'chevron-down');
+            }
+            
+            lucide.createIcons();
+        }
+
+        // Table selection
+        function selectTable(tableName) {
+            const detailPanel = document.getElementById('detail-panel');
+            
+            const tableData = {
+                '상권분석정보_전체': {
+                    name: '상권분석정보_전체',
+                    description: '상가업소 상세 정보',
+                    type: 'master',
+                    recordCount: '1,234,567',
+                    fieldCount: '39',
+                    fields: [
+                        { name: '상가업소번호', type: 'VARCHAR(20)', key: 'PK', description: '상가업소 고유번호' },
+                        { name: '시도코드', type: 'VARCHAR(2)', key: 'FK', description: '시도 코드' },
+                        { name: '시도명', type: 'VARCHAR(20)', key: '', description: '시도명' },
+                        { name: '시군구코드', type: 'VARCHAR(5)', key: 'FK', description: '시군구 코드' },
+                        { name: '시군구명', type: 'VARCHAR(50)', key: '', description: '시군구명' },
+                        { name: '행정동코드', type: 'VARCHAR(10)', key: 'FK', description: '행정동 코드' },
+                        { name: '행정동명', type: 'VARCHAR(50)', key: '', description: '행정동명' },
+                        { name: '상권업종대분류코드', type: 'VARCHAR(10)', key: '', description: '업종 대분류 코드' },
+                        { name: '상권업종대분류명', type: 'VARCHAR(50)', key: '', description: '업종 대분류명' },
+                        { name: '상권업종중분류코드', type: 'VARCHAR(10)', key: '', description: '업종 중분류 코드' },
+                        { name: '상권업종중분류명', type: 'VARCHAR(50)', key: '', description: '업종 중분류명' },
+                        { name: '상권업종소분류코드', type: 'VARCHAR(10)', key: 'FK', description: '업종 소분류 코드' },
+                        { name: '상권업종소분류명', type: 'VARCHAR(50)', key: '', description: '업종 소분류명' },
+                        { name: '상호명', type: 'VARCHAR(100)', key: '', description: '상호명' },
+                        { name: '지점명', type: 'VARCHAR(100)', key: '', description: '지점명' },
+                        { name: '도로명주소', type: 'VARCHAR(200)', key: '', description: '도로명 주소' },
+                        { name: '경도', type: 'DECIMAL(10,7)', key: '', description: '경도 좌표' },
+                        { name: '위도', type: 'DECIMAL(10,7)', key: '', description: '위도 좌표' }
+                    ]
+                },
+                '상권분석정보_소분류별점포수': {
+                    name: '상권분석정보_소분류별점포수',
+                    description: '업종별 점포수 집계',
+                    type: 'aggregate',
+                    recordCount: '45,678',
+                    fieldCount: '5',
+                    fields: [
+                        { name: '행정동코드', type: 'VARCHAR(10)', key: 'FK', description: '행정동 코드' },
+                        { name: '행정동명', type: 'VARCHAR(50)', key: '', description: '행정동명' },
+                        { name: '상권업종소분류코드', type: 'VARCHAR(10)', key: 'FK', description: '업종 소분류 코드' },
+                        { name: '상권업종소분류명', type: 'VARCHAR(50)', key: '', description: '업종 소분류명' },
+                        { name: '상가수', type: 'INT', key: '', description: '점포 수' }
+                    ]
+                },
+                '인구통계정보_거주인구': {
+                    name: '인구통계정보_거주인구',
+                    description: '거주인구 통계',
+                    type: 'demographic',
+                    recordCount: '123,456',
+                    fieldCount: '7',
+                    fields: [
+                        { name: '시도명', type: 'VARCHAR(20)', key: '', description: '시도명' },
+                        { name: '시군구명', type: 'VARCHAR(50)', key: '', description: '시군구명' },
+                        { name: '행정동명', type: 'VARCHAR(50)', key: '', description: '행정동명' },
+                        { name: '성별', type: 'VARCHAR(10)', key: '', description: '성별' },
+                        { name: '연령그룹', type: 'VARCHAR(20)', key: '', description: '연령그룹' },
+                        { name: '인구수', type: 'INT', key: '', description: '인구수' },
+                        { name: '순이동', type: 'INT', key: '', description: '순이동 인구' }
+                    ]
+                },
+                '위치코드': {
+                    name: '위치코드',
+                    description: '지역 코드 참조',
+                    type: 'reference',
+                    recordCount: '3,456',
+                    fieldCount: '6',
+                    fields: [
+                        { name: '시도코드', type: 'VARCHAR(2)', key: 'PK', description: '시도 코드' },
+                        { name: '시도명', type: 'VARCHAR(20)', key: '', description: '시도명' },
+                        { name: '시군구코드', type: 'VARCHAR(5)', key: 'PK', description: '시군구 코드' },
+                        { name: '시군구명', type: 'VARCHAR(50)', key: '', description: '시군구명' },
+                        { name: '행정동코드', type: 'VARCHAR(10)', key: 'PK', description: '행정동 코드' },
+                        { name: '행정동명', type: 'VARCHAR(50)', key: '', description: '행정동명' }
+                    ]
+                }
+            };
+
+            const table = tableData[tableName];
+            if (!table) return;
+
+            const getBadgeClass = (type) => {
+                switch(type) {
+                    case 'master': return 'badge-master';
+                    case 'aggregate': return 'badge-aggregate';
+                    case 'demographic': return 'badge-demographic';
+                    case 'reference': return 'badge-reference';
+                    default: return 'badge-reference';
+                }
+            };
+
+            const getKeyBadge = (key) => {
+                if (key === 'PK') return '<span class="badge badge-pk">PK</span>';
+                if (key === 'FK') return '<span class="badge badge-fk">FK</span>';
+                return '';
+            };
+
+            let fieldsHtml = '';
+            table.fields.forEach(field => {
+                fieldsHtml += `
+                    <div class="field-row">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span style="font-weight: 500; color: #111827;">${field.name}</span>
+                                ${getKeyBadge(field.key)}
+                            </div>
+                            <span style="font-size: 14px; color: #6b7280;">${field.type}</span>
+                        </div>
+                        <p style="font-size: 14px; color: #6b7280; margin-top: 4px;">${field.description}</p>
+                    </div>
+                `;
+            });
+
+            detailPanel.innerHTML = `
+                <div>
+                    <div class="detail-header">
+                        <div>
+                            <h3 class="detail-title">${table.name}</h3>
+                            <p style="color: #6b7280; margin-top: 4px;">${table.description}</p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn">
+                                <i data-lucide="eye" style="width: 16px; height: 16px;"></i>
+                            </button>
+                            <button class="action-btn">
+                                <i data-lucide="edit" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="detail-meta">
+                        <span>레코드: ${table.recordCount}건</span>
+                        <span>필드: ${table.fieldCount}개</span>
+                        <span class="badge ${getBadgeClass(table.type)}">${table.type}</span>
+                    </div>
+
+                    <div class="fields-table">
+                        <div class="fields-table-header">필드 정보</div>
+                        ${fieldsHtml}
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
+        }
+
+        // Initialize icons on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+
+        // ERD 줌 기능
+        let erdScale = 1;
+        const erdCanvas = document.getElementById('erd-canvas');
+        
+        function zoomERD(direction) {
+            if (direction === 'in' && erdScale < 2) {
+                erdScale += 0.2;
+            } else if (direction === 'out' && erdScale > 0.4) {
+                erdScale -= 0.2;
+            }
+            updateERDScale();
+        }
+        
+        function resetERDZoom() {
+            erdScale = 1;
+            updateERDScale();
+        }
+        
+        function updateERDScale() {
+            if (erdCanvas) {
+                erdCanvas.style.transform = `scale(${erdScale})`;
+            }
+        }
+    </script>
+</body>
+</html>

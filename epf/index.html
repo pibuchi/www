@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Persona Platform</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/header.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <div class="header-content">
+      <div class="logo">Enterprise Persona Platform</div>
+      
+      <!-- 모드 선택 메뉴 (대시보드에서만 표시) -->
+      <div class="header-mode-selector" id="header-mode-selector">
+        <button class="mode-nav-item active" data-mode="tool">
+          <span class="mode-nav-icon">🔧</span>
+          <span>작업 도구</span>
+        </button>
+        <button class="mode-nav-item" data-mode="guide">
+          <span class="mode-nav-icon">📚</span>
+          <span>워크플로우 가이드</span>
+        </button>
+        <button class="mode-nav-item" data-mode="hybrid">
+          <span class="mode-nav-icon">⚡</span>
+          <span>하이브리드 모드</span>
+        </button>
+      </div>
+      
+      <nav class="header-nav">
+        <button class="nav-item active" data-page="dashboard">메인 대시보드</button>
+        <button class="nav-item" data-page="projects">프로젝트 관리</button>
+        <button class="nav-item" data-page="settings">설정</button>
+      </nav>
+    </div>
+  </header>
+
+  <div class="main-container">
+    <!-- 메인 대시보드 페이지 -->
+    <div id="dashboard-page" class="page-content active">
+      <!-- 워크플로우 가이드 모드 -->
+      <div id="workflow-guide-mode" class="workflow-guide-mode">
+        <div id="guide-content"></div>
+      </div>
+
+      <!-- 작업 도구 모드 -->
+      <div id="tool-mode" class="tool-mode active">
+        <div class="tool-sidebar">
+          <div id="sidebar-content"></div>
+        </div>
+        <div class="tool-content">
+          <div id="current-section-content"></div>
+        </div>
+      </div>
+
+      <!-- 하이브리드 모드 -->
+      <div id="hybrid-mode" class="hybrid-mode">
+        <div class="hybrid-panel">
+          <div class="hybrid-header">📚 워크플로우 가이드</div>
+          <div class="hybrid-content" id="hybrid-guide-content"></div>
+        </div>
+        <div class="hybrid-panel">
+          <div class="hybrid-header">🔧 작업 도구</div>
+          <div class="hybrid-content" id="hybrid-tool-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 프로젝트 관리 페이지 -->
+    <div id="projects-page" class="page-content">
+      <div id="projects-content"></div>
+    </div>
+
+    <!-- 설정 페이지 -->
+    <div id="settings-page" class="page-content">
+      <div id="settings-content"></div>
+    </div>
+  </div>
+
+  <!-- 연결 상태 표시 -->
+  <div class="connection-status status-success">
+    🔗 시스템 연결됨
+  </div>
+
+  <!-- 🔧 임시 Fallback 상수 정의 (누락된 파일 대비) -->
+  <script>
+    // 기본 상수 정의 (config.js가 없을 경우 대비)
+    window.MODES = window.MODES || {
+      GUIDE: 'guide',
+      TOOL: 'tool', 
+      HYBRID: 'hybrid'
+    };
+
+    window.PAGES = window.PAGES || {
+      DASHBOARD: 'dashboard',
+      PROJECTS: 'projects',
+      SETTINGS: 'settings'
+    };
+
+    window.SECTIONS = window.SECTIONS || [
+      'business-context',
+      'data-integration', 
+      'persona-modeling',
+      'market-intelligence',
+      'strategy-simulation',
+      'insights-dashboard',
+      'performance-tracking'
+    ];
+
+    window.SECTION_META = window.SECTION_META || {
+      'business-context': { title: '비즈니스 컨텍스트', icon: '🎯' },
+      'data-integration': { title: '데이터 통합', icon: '🔗' },
+      'persona-modeling': { title: '페르소나 모델링', icon: '👥' },
+      'market-intelligence': { title: '시장 인텔리전스', icon: '📊' },
+      'strategy-simulation': { title: '전략 시뮬레이션', icon: '🎮' },
+      'insights-dashboard': { title: '인사이트 대시보드', icon: '💡' },
+      'performance-tracking': { title: '성과 추적', icon: '📈' }
+    };
+
+    // 기본 앱 상태 (state.js가 없을 경우 대비)
+    window.appState = window.appState || {
+      state: {
+        currentMode: 'tool',
+        currentPage: 'dashboard', 
+        currentSection: 'business-context'
+      },
+      getState: function(key) { return this.state[key]; },
+      setMode: function(mode) { 
+        this.state.currentMode = mode;
+        console.log('모드 변경:', mode);
+      },
+      setPage: function(page) {
+        this.state.currentPage = page;
+        console.log('페이지 변경:', page);
+      },
+      setSection: function(section) {
+        this.state.currentSection = section;
+        console.log('섹션 변경:', section);
+        if (window.sectionManager) {
+          window.sectionManager.updateSection(section);
+        }
+      },
+      subscribe: function() {},
+      autoSave: function() { console.log('자동 저장됨'); }
+    };
+
+    // 기본 APP_CONFIG
+    window.APP_CONFIG = window.APP_CONFIG || {
+      animation: {
+        duration: { normal: 300 },
+        easing: 'ease-in-out'
+      }
+    };
+
+    // 기본 BrowserUtils
+    window.BrowserUtils = window.BrowserUtils || {
+      supports: {
+        localStorage: true,
+        fetch: true
+      },
+      prefersReducedMotion: () => false
+    };
+
+    // 🚨 강제 SectionManager 생성 (sections.js 실패 시 대비)
+    window.createFallbackSectionManager = function() {
+      console.log('🚨 Fallback SectionManager 생성 중...');
+      
+      window.sectionManager = {
+        currentSection: 'business-context',
+        
+        createSidebarContent: function() {
+          return `
+            <div class="sidebar-section">
+              <h3>📊 분석 단계</h3>
+              <div class="sidebar-item active" data-section="business-context">
+                <span class="icon">🎯</span>
+                <span class="text">비즈니스 컨텍스트</span>
+              </div>
+              <div class="sidebar-item" data-section="data-integration">
+                <span class="icon">🔗</span>
+                <span class="text">데이터 통합</span>
+              </div>
+              <div class="sidebar-item" data-section="persona-modeling">
+                <span class="icon">👥</span>
+                <span class="text">페르소나 모델링</span>
+              </div>
+              <div class="sidebar-item" data-section="market-intelligence">
+                <span class="icon">📊</span>
+                <span class="text">시장 인텔리전스</span>
+              </div>
+            </div>
+            
+            <div class="sidebar-section">
+              <h3>🚀 전략 수립</h3>
+              <div class="sidebar-item" data-section="strategy-simulation">
+                <span class="icon">🎮</span>
+                <span class="text">전략 시뮬레이션</span>
+              </div>
+              <div class="sidebar-item" data-section="insights-dashboard">
+                <span class="icon">💡</span>
+                <span class="text">인사이트 대시보드</span>
+              </div>
+              <div class="sidebar-item" data-section="performance-tracking">
+                <span class="icon">📈</span>
+                <span class="text">성과 추적</span>
+              </div>
+            </div>
+
+            <div class="progress-indicator">
+              <div class="progress-bar">
+                <div class="progress-fill" style="width: 45%"></div>
+              </div>
+              <div class="progress-text">
+                <span>전체 진행률</span>
+                <span class="progress-percentage">45%</span>
+              </div>
+            </div>
+          `;
+        },
+        
+        createWorkflowGuideContent: function() {
+          return `
+            <div class="guide-hero">
+              <h2>📚 워크플로우 가이드</h2>
+              <p>체계적인 페르소나 전략 수립을 위한 단계별 가이드</p>
+            </div>
+            <div class="guide-steps">
+              <div class="guide-step">
+                <div class="step-icon">🎯</div>
+                <h3>1. 프로젝트 설정</h3>
+                <ul>
+                  <li>비즈니스 목표 설정</li>
+                  <li>타겟 시장 정의</li>
+                  <li>데이터 소스 연결</li>
+                </ul>
+              </div>
+            </div>
+          `;
+        },
+        
+        createSectionContent: function(sectionId) {
+          return `
+            <div class="card">
+              <div class="card-header">
+                <h2 class="card-title">${SECTION_META[sectionId]?.title || sectionId}</h2>
+                <p class="card-subtitle">이 섹션의 콘텐츠입니다.</p>
+              </div>
+              <div class="form-group">
+                <p>현재 섹션: <strong>${sectionId}</strong></p>
+                <p>사이드바가 정상적으로 작동하고 있습니다! ✅</p>
+              </div>
+            </div>
+          `;
+        },
+        
+        createHybridToolContent: function(sectionId) {
+          return `<p>하이브리드 모드: ${sectionId}</p>`;
+        },
+        
+        updateSection: function(sectionId) {
+          console.log('📍 sectionManager.updateSection 호출:', sectionId);
+          this.currentSection = sectionId;
+          
+          // 메인 콘텐츠 업데이트
+          const mainContent = document.getElementById('current-section-content');
+          if (mainContent) {
+            mainContent.innerHTML = this.createSectionContent(sectionId);
+          }
+          
+          // 하이브리드 콘텐츠 업데이트
+          const hybridContent = document.getElementById('hybrid-tool-content');
+          if (hybridContent) {
+            hybridContent.innerHTML = this.createHybridToolContent(sectionId);
+          }
+          
+          // 사이드바 활성화
+          const allItems = document.querySelectorAll('.sidebar-item');
+          allItems.forEach(item => item.classList.remove('active'));
+          
+          const activeItem = document.querySelector(`[data-section="${sectionId}"]`);
+          if (activeItem) {
+            activeItem.classList.add('active');
+          }
+          
+          console.log('✅ 섹션 업데이트 완료:', sectionId);
+        }
+      };
+      
+      console.log('✅ Fallback SectionManager 생성 완료');
+    };
+  </script>
+
+  <!-- 🔧 JavaScript Files - 올바른 순서로 로드 -->
+  <!-- 1. 유틸리티와 기본 함수들 먼저 -->
+  <script src="js/utils.js"></script>
+  
+  <!-- 2. 설정 파일들 (선택적) -->
+  <script src="js/config.js" onerror="console.warn('config.js 파일을 찾을 수 없습니다. 기본값을 사용합니다.')"></script>
+  <script src="js/state.js" onerror="console.warn('state.js 파일을 찾을 수 없습니다. 기본값을 사용합니다.')"></script>
+  
+  <!-- 3. 섹션 관리자 -->
+  <script src="js/sections.js"></script>
+  
+  <!-- 4. 기타 모듈들 (선택적) -->
+  <script src="js/pages.js" onerror="console.warn('pages.js 파일을 찾을 수 없습니다.')"></script>
+  <script src="js/modes.js" onerror="console.warn('modes.js 파일을 찾을 수 없습니다.')"></script>
+  <script src="js/events.js" onerror="console.warn('events.js 파일을 찾을 수 없습니다.')"></script>
+  
+  <!-- 5. 메인 애플리케이션 마지막 -->
+  <script src="js/app.js"></script>
+
+  <!-- 🚨 긴급 디버깅 및 강제 이벤트 설정 -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('🔍 DOM 로드 완료 - 디버깅 시작');
+      
+      // 필수 객체들 확인
+      setTimeout(() => {
+        console.log('✅ 체크리스트:');
+        console.log('- DOM 객체:', typeof DOM, !!DOM?.$);
+        console.log('- appState:', typeof appState, !!appState?.setSection);
+        console.log('- sectionManager:', typeof sectionManager);
+        
+        // 🚨 sectionManager가 없으면 강제 생성
+        if (!window.sectionManager) {
+          console.warn('🚨 sectionManager가 없음! Fallback 생성...');
+          if (window.createFallbackSectionManager) {
+            window.createFallbackSectionManager();
+          }
+        }
+        
+        // 사이드바 강제 이벤트 설정 (fallback)
+        const sidebarItems = document.querySelectorAll('.sidebar-item');
+        console.log('- 사이드바 항목 수:', sidebarItems.length);
+        
+        if (sidebarItems.length === 0) {
+          console.warn('⚠️ 사이드바 항목이 없습니다. 강제 생성...');
+          
+          // 강제로 사이드바 생성
+          const sidebarContent = document.getElementById('sidebar-content');
+          if (sidebarContent && window.sectionManager) {
+            sidebarContent.innerHTML = sectionManager.createSidebarContent();
+            console.log('🔧 사이드바 강제 생성됨');
+            
+            // 생성된 항목에 이벤트 추가
+            setTimeout(() => {
+              const newItems = document.querySelectorAll('.sidebar-item');
+              console.log('🔄 새로 생성된 사이드바 항목:', newItems.length);
+            }, 100);
+          }
+        }
+        
+        // 강제 이벤트 리스너 (안전망)
+        document.addEventListener('click', (e) => {
+          const sidebarItem = e.target.closest('.sidebar-item');
+          if (sidebarItem?.dataset?.section) {
+            console.log('🎯 사이드바 클릭 감지:', sidebarItem.dataset.section);
+            
+            // 기존 active 제거
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+              item.classList.remove('active');
+            });
+            
+            // 클릭된 항목 활성화
+            sidebarItem.classList.add('active');
+            
+            // 상태 업데이트
+            if (window.appState?.setSection) {
+              window.appState.setSection(sidebarItem.dataset.section);
+            }
+          }
+        });
+        
+        // 🔧 애플리케이션 강제 재시작 (필요시)
+        if (window.app && !window.app.isInitialized) {
+          console.log('🔄 앱 재초기화 시도...');
+          window.app.init().catch(console.error);
+        }
+        
+        // 🚨 sections.js 오류 방지를 위한 강제 오버라이드
+        if (window.sectionManager && window.sectionManager.updateSection) {
+          console.log('🔧 sectionManager.updateSection 오버라이드...');
+          
+          const originalUpdateSection = window.sectionManager.updateSection;
+          window.sectionManager.updateSection = function(sectionId) {
+            console.log('🛡️ 안전한 updateSection 호출:', sectionId);
+            
+            try {
+              // 기본 콘텐츠 업데이트
+              const mainContent = document.getElementById('current-section-content');
+              if (mainContent) {
+                mainContent.innerHTML = this.createSectionContent ? 
+                  this.createSectionContent(sectionId) : 
+                  `<div class="card"><h2>${sectionId} 섹션</h2><p>콘텐츠가 로드되었습니다.</p></div>`;
+              }
+              
+              // 사이드바 업데이트 (100% 안전)
+              const allItems = document.querySelectorAll('.sidebar-item');
+              if (allItems.length > 0) {
+                allItems.forEach(item => {
+                  if (item && item.classList) {
+                    item.classList.remove('active');
+                  }
+                });
+                
+                const activeItem = document.querySelector(`[data-section="${sectionId}"]`);
+                if (activeItem && activeItem.classList) {
+                  activeItem.classList.add('active');
+                }
+              }
+              
+              this.currentSection = sectionId;
+              console.log('✅ 안전한 updateSection 완료:', sectionId);
+              
+            } catch (error) {
+              console.error('updateSection 오버라이드 오류:', error);
+              // fallback으로 원본 호출 시도
+              try {
+                originalUpdateSection.call(this, sectionId);
+              } catch (originalError) {
+                console.error('원본 updateSection도 실패:', originalError);
+              }
+            }
+          };
+          
+          console.log('✅ updateSection 오버라이드 완료');
+        }
+        
+      }, 1000);
+    });
+  </script>
+</body>
+</html>

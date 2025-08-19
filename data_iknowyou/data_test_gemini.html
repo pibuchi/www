@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>데이터베이스 스키마 뷰어</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #f4f7f6;
+        }
+        .sidebar {
+            width: 250px;
+            background-color: #ffffff;
+            border-right: 1px solid #e0e0e0;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+        .sidebar h2 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.2em;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .sidebar ul li {
+            padding: 10px 0;
+            cursor: pointer;
+            color: #555;
+            transition: background-color 0.2s;
+            border-radius: 4px;
+            padding-left: 5px;
+        }
+        .sidebar ul li:hover {
+            background-color: #e9ecef;
+        }
+        .sidebar ul li.active {
+            background-color: #007bff;
+            color: white;
+            font-weight: bold;
+        }
+        .main-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+        .erd-area {
+            flex-grow: 1;
+            background-color: #ffffff;
+            border: 1px dashed #cccccc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #888;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+        .detail-area {
+            flex-grow: 1; /* ERD와 상세정보 영역이 모두 사용 가능하도록 설정 */
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            padding: 20px;
+            overflow-y: auto;
+            border-radius: 8px;
+        }
+        .detail-area h3 {
+            margin-top: 0;
+            color: #007bff;
+            font-size: 1.5em;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .detail-section {
+            margin-bottom: 25px;
+        }
+        .detail-section h4 {
+            color: #333;
+            font-size: 1.1em;
+            border-left: 4px solid #007bff;
+            padding-left: 10px;
+            margin-bottom: 15px;
+        }
+        .detail-section table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .detail-section table th,
+        .detail-section table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        .detail-section table th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #444;
+        }
+        .detail-section p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px;
+            color: #999;
+            font-size: 1.1em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>테이블 목록</h2>
+        <input type="text" id="tableSearch" placeholder="테이블 검색..." style="width: calc(100% - 10px); padding: 8px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px;">
+        <ul id="tableList">
+            <li data-table="Users">Users</li>
+            <li data-table="Products">Products</li>
+            <li data-table="Orders">Orders</li>
+            <li data-table="OrderItems">OrderItems</li>
+            <li data-table="Categories">Categories</li>
+            <li data-table="Payments">Payments</li>
+            <li data-table="Reviews">Reviews</li>
+        </ul>
+    </div>
+
+    <div class="main-content">
+        <div class="erd-area">
+            ERD (개체-관계 다이어그램) 영역<br>
+            (여기에는 테이블 간의 관계를 시각화하는 라이브러리 연동이 필요합니다. 예: GoJS, JointJS, Mermaid, D3.js)
+        </div>
+
+        <div class="detail-area" id="detailArea">
+            <div class="empty-state">
+                왼쪽에서 테이블을 선택하여 상세 정보를 확인하세요.
+            </div>
+            </div>
+    </div>
+
+    <script>
+        // 실제 데이터베이스 스키마 정보 (더미 데이터)
+        const schemaData = {
+            "Users": {
+                description: "사용자 정보를 저장하는 테이블",
+                columns: [
+                    { name: "user_id", type: "INT", nullable: "NO", key: "PK", default: null, description: "사용자 고유 ID" },
+                    { name: "username", type: "VARCHAR(50)", nullable: "NO", key: "Unique", default: null, description: "사용자 로그인명" },
+                    { name: "email", type: "VARCHAR(100)", nullable: "NO", key: "Unique", default: null, description: "사용자 이메일 주소" },
+                    { name: "password_hash", type: "VARCHAR(255)", nullable: "NO", key: null, default: null, description: "비밀번호 해시 값" },
+                    { name: "created_at", type: "DATETIME", nullable: "NO", key: null, default: "CURRENT_TIMESTAMP", description: "계정 생성 시간" },
+                    { name: "last_login", type: "DATETIME", nullable: "YES", key: null, default: null, description: "마지막 로그인 시간" }
+                ],
+                indexes: [
+                    { name: "idx_username", columns: ["username"], type: "Unique" },
+                    { name: "idx_email", columns: ["email"], type: "Unique" }
+                ],
+                relationships: [
+                    { to_table: "Orders", type: "1:N", on: "user_id" },
+                    { to_table: "Reviews", type: "1:N", on: "user_id" }
+                ]
+            },
+            "Products": {
+                description: "상품 정보를 저장하는 테이블",
+                columns: [
+                    { name: "product_id", type: "INT", nullable: "NO", key: "PK", default: null, description: "상품 고유 ID" },
+                    { name: "product_name", type: "VARCHAR(100)", nullable: "NO", key: null, default: null, description: "상품 이름" },
+                    { name: "description", type: "TEXT", nullable: "YES", key: null, default: null, description: "상품 상세 설명" },
+                    { name: "price", type: "DECIMAL(10,2)", nullable: "NO", key: null, default: null, description: "상품 가격" },
+                    { name: "stock_quantity", type: "INT", nullable: "NO", key: null, default: "0", description: "재고 수량" },
+                    { name: "category_id", type: "INT", nullable: "YES", key: "FK", default: null, description: "상품 카테고리 ID" }
+                ],
+                indexes: [
+                    { name: "idx_product_name", columns: ["product_name"], type: "BTree" }
+                ],
+                relationships: [
+                    { to_table: "Categories", type: "N:1", on: "category_id" },
+                    { to_table: "OrderItems", type: "1:N", on: "product_id" },
+                    { to_table: "Reviews", type: "1:N", on: "product_id" }
+                ]
+            },
+            "Orders": {
+                description: "주문 정보를 저장하는 테이블",
+                columns: [
+                    { name: "order_id", type: "INT", nullable: "NO", key: "PK", default: null, description: "주문 고유 ID" },
+                    { name: "user_id", type: "INT", nullable: "NO", key: "FK", default: null, description: "주문한 사용자 ID" },
+                    { name: "order_date", type: "DATETIME", nullable: "NO", key: null, default: "CURRENT_TIMESTAMP", description: "주문 일시" },
+                    { name: "total_amount", type: "DECIMAL(10,2)", nullable: "NO", key: null, default: null, description: "총 주문 금액" },
+                    { name: "status", type: "VARCHAR(20)", nullable: "NO", key: null, default: "'PENDING'", description: "주문 상태 (예: PENDING, COMPLETED, CANCELLED)" }
+                ],
+                indexes: [
+                    { name: "idx_order_date", columns: ["order_date"], type: "BTree" }
+                ],
+                relationships: [
+                    { to_table: "Users", type: "N:1", on: "user_id" },
+                    { to_table: "OrderItems", type: "1:N", on: "order_id" },
+                    { to_table: "Payments", type: "1:1", on: "order_id" }
+                ]
+            },
+            "OrderItems": {
+                description: "주문 상품 상세 정보를 저장하는 테이블",
+                columns: [
+                    { name: "order_item_id", type: "INT", nullable: "NO", key: "PK", default: null, description: "주문 상품 고유 ID" },
+                    { name: "order_id", type: "INT", nullable: "NO", key: "FK", default: null, description: "주문 ID" },
+                    { name: "product_id", type: "INT", nullable: "NO", key: "FK", default: null, description: "상품 ID" },
+                    { name: "quantity", type: "INT", nullable: "NO", key: null, default: null, description: "상품 수량" },
+                    { name: "price_at_order", type: "DECIMAL(10,2)", nullable: "NO", key: null, default: null, description: "주문 당시 상품 가격" }
+                ],
+                indexes: [],
+                relationships: [
+                    { to_table: "Orders", type: "N:1", on: "order_id" },
+                    { to_table: "Products", type: "N:1", on: "product_id" }
+                ]
+            },
+            "Categories": {
+                description: "상품 카테고리 정보를 저장하는 테이블",
+                columns: [
+                    { name: "category_id", type: "INT", nullable: "NO", key: "PK", default: null, description: "카테고리 고유 ID" },
+                    { name: "category_name", type: "VARCHAR(50)", nullable: "NO", key: "Unique", default: null, description: "카테고리 이름" }
+                ],
+                indexes: [
+                    { name: "idx_category_name", columns: ["category_name"], type: "Unique" }
+                ],
+                relationships: [
+                    { to_table: "Products", type: "1:N", on: "category_id" }
+                ]
+            },
+            "Payments": {
+                description: "결제 정보를 저장하는 테이블",
+                columns: [
+                    { name: "payment_id", type: "INT", nullable: "NO", key: "PK", default: null, description: "결제 고유 ID" },
+                    { name: "order_id", type: "INT", nullable: "NO", key: "FK", default: null, description: "관련 주문 ID" },
+                    { name: "payment_method", type: "VARCHAR(50)", nullable: "NO", key: null, default: null, description: "결제 수단" },
+                    { name: "amount", type: "DECIMAL(10,2)", nullable: "NO", key: null, default: null, description: "결제 금액" },
+                    { name: "payment_date", type: "DATETIME", nullable: "NO", key: null, default: "CURRENT_TIMESTAMP", description: "결제 일시" },
+                    { name: "status", type: "VARCHAR(20)", nullable: "NO", key: null, default: "'COMPLETED'", description: "결제 상태" }
+                ],
+                indexes: [],
+                relationships: [
+                    { to_table: "Orders", type: "1:1", on: "order_id" }
+                ]
+            },
+            "Reviews": {
+                description: "상품 리뷰 정보를 저장하는 테이블",
+                columns: [
+                    { name: "review_id", type: "INT", nullable: "NO", key: "PK", default: null, description: "리뷰 고유 ID" },
+                    { name: "product_id", type: "INT", nullable: "NO", key: "FK", default: null, description: "리뷰 대상 상품 ID" },
+                    { name: "user_id", type: "INT", nullable: "NO", key: "FK", default: null, description: "리뷰 작성 사용자 ID" },
+                    { name: "rating", type: "INT", nullable: "NO", key: null, default: null, description: "평점 (1-5)" },
+                    { name: "comment", type: "TEXT", nullable: "YES", key: null, default: null, description: "리뷰 내용" },
+                    { name: "created_at", type: "DATETIME", nullable: "NO", key: null, default: "CURRENT_TIMESTAMP", description: "리뷰 작성 시간" }
+                ],
+                indexes: [],
+                relationships: [
+                    { to_table: "Products", type: "N:1", on: "product_id" },
+                    { to_table: "Users", type: "N:1", on: "user_id" }
+                ]
+            }
+        };
+
+        const tableListElement = document.getElementById('tableList');
+        const detailAreaElement = document.getElementById('detailArea');
+        const tableSearchInput = document.getElementById('tableSearch');
+
+        // 테이블 목록 렌더링
+        function renderTableList(filter = '') {
+            tableListElement.innerHTML = '';
+            const filteredTables = Object.keys(schemaData).filter(tableName =>
+                tableName.toLowerCase().includes(filter.toLowerCase())
+            );
+
+            filteredTables.forEach(tableName => {
+                const li = document.createElement('li');
+                li.textContent = tableName;
+                li.dataset.table = tableName;
+                li.addEventListener('click', () => {
+                    selectTableRow(li);
+                    displayTableDetails(tableName);
+                });
+                tableListElement.appendChild(li);
+            });
+        }
+
+        // 테이블 목록 항목 선택 시 스타일 변경
+        function selectTableRow(selectedLi) {
+            Array.from(tableListElement.children).forEach(li => {
+                li.classList.remove('active');
+            });
+            selectedLi.classList.add('active');
+        }
+
+        // 테이블 상세 정보 표시
+        function displayTableDetails(tableName) {
+            const table = schemaData[tableName];
+            if (!table) {
+                detailAreaElement.innerHTML = `<div class="empty-state">테이블 정보를 찾을 수 없습니다.</div>`;
+                return;
+            }
+
+            let html = `<h3>${tableName}</h3>`;
+            html += `<div class="detail-section">`;
+            html += `<h4>테이블 설명</h4>`;
+            html += `<p>${table.description || '설명 없음'}</p>`;
+            html += `</div>`;
+
+            // 컬럼 정보
+            html += `<div class="detail-section">`;
+            html += `<h4>컬럼</h4>`;
+            if (table.columns && table.columns.length > 0) {
+                html += `<table>`;
+                html += `<thead><tr><th>이름</th><th>타입</th><th>NULL</th><th>키</th><th>기본값</th><th>설명</th></tr></thead>`;
+                html += `<tbody>`;
+                table.columns.forEach(col => {
+                    html += `<tr>`;
+                    html += `<td>${col.name}</td>`;
+                    html += `<td>${col.type}</td>`;
+                    html += `<td>${col.nullable}</td>`;
+                    html += `<td>${col.key || ''}</td>`;
+                    html += `<td>${col.default || ''}</td>`;
+                    html += `<td>${col.description || ''}</td>`;
+                    html += `</tr>`;
+                });
+                html += `</tbody></table>`;
+            } else {
+                html += `<p>컬럼 정보가 없습니다.</p>`;
+            }
+            html += `</div>`;
+
+            // 인덱스 정보
+            html += `<div class="detail-section">`;
+            html += `<h4>인덱스</h4>`;
+            if (table.indexes && table.indexes.length > 0) {
+                html += `<table>`;
+                html += `<thead><tr><th>이름</th><th>컬럼</th><th>타입</th></tr></thead>`;
+                html += `<tbody>`;
+                table.indexes.forEach(idx => {
+                    html += `<tr>`;
+                    html += `<td>${idx.name}</td>`;
+                    html += `<td>${idx.columns.join(', ')}</td>`;
+                    html += `<td>${idx.type}</td>`;
+                    html += `</tr>`;
+                });
+                html += `</tbody></table>`;
+            } else {
+                html += `<p>인덱스 정보가 없습니다.</p>`;
+            }
+            html += `</div>`;
+
+            // 관계 정보
+            html += `<div class="detail-section">`;
+            html += `<h4>관계</h4>`;
+            if (table.relationships && table.relationships.length > 0) {
+                html += `<table>`;
+                html += `<thead><tr><th>연결 테이블</th><th>관계 유형</th><th>연결 컬럼</th></tr></thead>`;
+                html += `<tbody>`;
+                table.relationships.forEach(rel => {
+                    html += `<tr>`;
+                    html += `<td><a href="#" onclick="displayTableDetails('${rel.to_table}'); return false;">${rel.to_table}</a></td>`;
+                    html += `<td>${rel.type}</td>`;
+                    html += `<td>${rel.on}</td>`;
+                    html += `</tr>`;
+                });
+                html += `</tbody></table>`;
+            } else {
+                html += `<p>다른 테이블과의 관계가 없습니다.</p>`;
+            }
+            html += `</div>`;
+
+            detailAreaElement.innerHTML = html;
+        }
+
+        // 검색 기능
+        tableSearchInput.addEventListener('keyup', (event) => {
+            renderTableList(event.target.value);
+        });
+
+        // 초기 로드
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTableList();
+            // Optionally, select the first table and display its details on load
+            // if (Object.keys(schemaData).length > 0) {
+            //     const firstTableName = Object.keys(schemaData)[0];
+            //     const firstLi = tableListElement.querySelector(`li[data-table="${firstTableName}"]`);
+            //     if (firstLi) {
+            //         selectTableRow(firstLi);
+            //         displayTableDetails(firstTableName);
+            //     }
+            // }
+        });
+    </script>
+</body>
+</html>

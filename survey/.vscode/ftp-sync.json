@@ -1,0 +1,17 @@
+{
+    "remotePath": "/public_html/survey/",
+    "host": "nfcouncil.co.kr",
+    "username": "nfco",
+    "password": "jinho6196**",
+    "port": 21,
+    "secure": false,
+    "protocol": "ftp",
+    "uploadOnSave": true,
+    "passive": true,
+    "debug": false,
+    "ignore": [
+        ".vscode",
+        ".git",
+        "*.tmp"
+    ]
+}

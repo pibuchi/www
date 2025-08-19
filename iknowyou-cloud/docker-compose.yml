@@ -1,0 +1,117 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: iknowyou_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: iknowyou_db
+      MYSQL_USER: iknowyou_user
+      MYSQL_PASSWORD: iknowyou_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - iknowyou_network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: iknowyou_nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
+    depends_on:
+      - front-office
+      - back-office
+      - api-server
+      - ai-server
+    networks:
+      - iknowyou_network
+
+  # Spring Boot API Server
+  api-server:
+    build:
+      context: ./api-server
+      dockerfile: Dockerfile
+    container_name: iknowyou_api_server
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/iknowyou_db?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: iknowyou_user
+      SPRING_DATASOURCE_PASSWORD: iknowyou_password
+    depends_on:
+      - mysql
+    networks:
+      - iknowyou_network
+
+  # FastAPI AI Server
+  ai-server:
+    build:
+      context: ./ai-server
+      dockerfile: Dockerfile
+    container_name: iknowyou_ai_server
+    restart: unless-stopped
+    ports:
+      - "8081:8081"
+    environment:
+      PINECONE_API_KEY: ${PINECONE_API_KEY}
+      PINECONE_ENVIRONMENT: ${PINECONE_ENVIRONMENT}
+      PINECONE_INDEX_NAME: iknowyou-vectors
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    networks:
+      - iknowyou_network
+
+  # Next.js Front Office
+  front-office:
+    build:
+      context: ./front-office
+      dockerfile: Dockerfile
+    container_name: iknowyou_front_office
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      API_BASE_URL: http://api-server:8080
+      AI_BASE_URL: http://ai-server:8081
+    depends_on:
+      - api-server
+      - ai-server
+    networks:
+      - iknowyou_network
+
+  # Next.js Back Office
+  back-office:
+    build:
+      context: ./back-office
+      dockerfile: Dockerfile
+    container_name: iknowyou_back_office
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      API_BASE_URL: http://api-server:8080
+      AI_BASE_URL: http://ai-server:8081
+    depends_on:
+      - api-server
+      - ai-server
+    networks:
+      - iknowyou_network
+
+volumes:
+  mysql_data:
+
+networks:
+  iknowyou_network:
+    driver: bridge 

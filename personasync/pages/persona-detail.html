@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>페르소나 상세 - PersonaSync™</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="../index.html" class="logo">PersonaSync™</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="../index.html">대시보드</a></li>
+                <li class="nav-item"><a href="./persona-create.html">페르소나 생성</a></li>
+                <li class="nav-item"><a href="./analytics.html">분석</a></li>
+                <li class="nav-item"><a href="./reports.html">리포트</a></li>
+            </ul>
+            <div class="user-info"></div>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="card mb-20">
+            <div class="persona-header-detail">
+                <div class="persona-avatar-large">김</div>
+                <div class="persona-info-main">
+                    <h1 class="persona-name-main">김얼리 (얼리어답터)</h1>
+                    <div class="persona-tags">
+                        <span class="persona-tag primary">프리미엄 세그먼트</span>
+                        <span class="persona-tag">25-35세</span>
+                        <span class="persona-tag">수도권</span>
+                    </div>
+                    <p class="persona-description">신기술에 민감하고 트렌드를 선도하는 혁신 추구형 고객으로, 남들보다 먼저 경험하는 것에서 자부심을 느끼며 기술적 우위를 중시합니다.</p>
+                </div>
+                <div class="persona-actions">
+                    <button class="btn btn-primary" onclick="exportPersona()">📄 내보내기</button>
+                    <button class="btn btn-secondary" onclick="goHome()">🏠 대시보드</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="grid-4 mb-20">
+            <div class="metric-card excellent">
+                <div class="metric-value">89.3%</div>
+                <div class="metric-label">예측 정확도</div>
+            </div>
+            <div class="metric-card good">
+                <div class="metric-value">34%</div>
+                <div class="metric-label">시장 점유율</div>
+            </div>
+            <div class="metric-card good">
+                <div class="metric-value">2,340</div>
+                <div class="metric-label">관찰 데이터 수</div>
+            </div>
+            <div class="metric-card excellent">
+                <div class="metric-value">₩1.2M</div>
+                <div class="metric-label">평균 구매력</div>
+            </div>
+        </div>
+
+        <!-- WHO-WHY-NEXT Analysis -->
+        <div class="grid-3 mb-20">
+            <!-- WHO -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">👥 WHO</h2>
+                    <p class="card-subtitle">이 사람은 누구인가?</p>
+                </div>
+                <div class="persona-details">
+                    <div class="demo-item">
+                        <span class="demo-label">연령대:</span>
+                        <span class="demo-value">25-35세 (평균 29.2세)</span>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">성별:</span>
+                        <span class="demo-value">남성 62%, 여성 38%</span>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">직업:</span>
+                        <span class="demo-value">IT/금융/마케팅 전문직</span>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">거주지:</span>
+                        <span class="demo-value">서울/경기 78%</span>
+                    </div>
+                    <div class="demo-item">
+                        <span class="demo-label">소득:</span>
+                        <span class="demo-value">연 5,000만원 이상</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WHY -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🧠 WHY</h2>
+                    <p class="card-subtitle">왜 그런 선택을 하는가?</p>
+                </div>
+                <div class="motivation-list">
+                    <div class="motivation-item">
+                        <div class="motivation-bar">
+                            <span class="bar-label">기술 우위성</span>
+                            <div class="bar-fill" style="width: 85%"></div>
+                            <span class="bar-value">85%</span>
+                        </div>
+                    </div>
+                    <div class="motivation-item">
+                        <div class="motivation-bar">
+                            <span class="bar-label">사회적 인정</span>
+                            <div class="bar-fill" style="width: 78%"></div>
+                            <span class="bar-value">78%</span>
+                        </div>
+                    </div>
+                    <div class="motivation-item">
+                        <div class="motivation-bar">
+                            <span class="bar-label">혁신 경험</span>
+                            <div class="bar-fill" style="width: 72%"></div>
+                            <span class="bar-value">72%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEXT -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🔮 NEXT</h2>
+                    <p class="card-subtitle">다음에 무엇을 할 것인가?</p>
+                </div>
+                <div class="prediction-list">
+                    <div class="prediction-item high-prob">
+                        <div class="prediction-header">
+                            <span class="prediction-icon">🛒</span>
+                            <span class="probability">85%</span>
+                        </div>
+                        <div class="prediction-content">
+                            <strong>신제품 프리오더</strong>
+                            <p>출시 1주 내 구매 예상</p>
+                        </div>
+                    </div>
+                    <div class="prediction-item medium-prob">
+                        <div class="prediction-header">
+                            <span class="prediction-icon">📱</span>
+                            <span class="probability">72%</span>
+                        </div>
+                        <div class="prediction-content">
+                            <strong>소셜 미디어 리뷰</strong>
+                            <p>구매 후 24시간 내 리뷰 작성</p>
+                        </div>
+                    </div>
+                    <div class="prediction-item low-prob">
+                        <div class="prediction-header">
+                            <span class="prediction-icon">🔄</span>
+                            <span class="probability">45%</span>
+                        </div>
+                        <div class="prediction-content">
+                            <strong>액세서리 추가 구매</strong>
+                            <p>본 제품 구매 후 2주 내</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-20">
+            <button class="btn btn-secondary" onclick="goHome()">🏠 대시보드로 돌아가기</button>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script>
+        function exportPersona() {
+            window.personaSync?.showNotification('페르소나 상세 리포트를 생성하고 있습니다...', 'info');
+            setTimeout(() => {
+                window.personaSync?.showNotification('페르소나 리포트가 성공적으로 생성되었습니다!', 'success');
+            }, 2000);
+        }
+
+        function goHome() {
+            window.location.href = '../index.html';
+        }
+    </script>
+
+    <style>
+        .persona-header-detail {
+            display: flex;
+            align-items: flex-start;
+            gap: 25px;
+        }
+
+        .persona-avatar-large {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 42px;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .persona-info-main {
+            flex: 1;
+        }
+
+        .persona-name-main {
+            font-size: 32px;
+            color: #ffffff;
+            margin-bottom: 15px;
+        }
+
+        .persona-tags {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .persona-tag.primary {
+            background: rgba(102, 126, 234, 0.3);
+            color: #667eea;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 2px solid #667eea;
+        }
+
+        .persona-description {
+            color: #b8bcc8;
+            font-size: 16px;
+            line-height: 1.6;
+            max-width: 600px;
+        }
+
+        .persona-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .metric-card.excellent {
+            border-left: 4px solid #4CAF50;
+        }
+
+        .metric-card.good {
+            border-left: 4px solid #2196F3;
+        }
+
+        .persona-details {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .demo-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(74, 80, 116, 0.3);
+        }
+
+        .demo-label {
+            color: #b8bcc8;
+            font-size: 14px;
+        }
+
+        .demo-value {
+            color: #ffffff;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .motivation-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .motivation-bar {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .bar-label {
+            min-width: 80px;
+            font-size: 12px;
+            color: #b8bcc8;
+        }
+
+        .bar-fill {
+            height: 20px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            position: relative;
+            margin: 0 10px;
+            flex: 1;
+        }
+
+        .bar-value {
+            min-width: 35px;
+            text-align: right;
+            font-size: 12px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .prediction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .prediction-item {
+            display: flex;
+            gap: 12px;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4a5074;
+        }
+
+        .prediction-item.high-prob {
+            background: rgba(76, 175, 80, 0.1);
+            border-left-color: #4CAF50;
+        }
+
+        .prediction-item.medium-prob {
+            background: rgba(255, 152, 0, 0.1);
+            border-left-color: #FF9800;
+        }
+
+        .prediction-item.low-prob {
+            background: rgba(244, 67, 54, 0.1);
+            border-left-color: #f44336;
+        }
+
+        .prediction-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-width: 50px;
+        }
+
+        .prediction-icon {
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+
+        .probability {
+            font-weight: bold;
+            font-size: 14px;
+            color: #667eea;
+        }
+
+        .prediction-content strong {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .prediction-content p {
+            color: #b8bcc8;
+            font-size: 13px;
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .persona-header-detail {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .persona-actions {
+                flex-direction: row;
+                justify-content: center;
+            }
+        }
+    </style>
+</body>
+</html>

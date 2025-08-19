@@ -1,0 +1,2477 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>i know you AI - 비즈니스 전략 AI 서비스</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 좌측 목차 -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-toggle" id="sidebarToggle">
+                <span class="toggle-icon">◀</span>
+            </div>
+            
+            <div class="sidebar-content">
+                <div class="logo">
+                    <div class="logo-text"><span class="ai">안진호</span>님은</div>
+                    <div class="logo-subtitle">프리미엄서비스 이용고객입니다</div>
+                </div>
+                
+                <div class="nav-section">
+                    <div class="nav-title">분석 단계</div>
+                    <a href="#" class="nav-item active" data-section="item-selection">
+                        <span class="step-number">1</span>
+                        아이템 선정 및 기본 분석
+                    </a>
+                    <a href="#" class="nav-item" data-section="market-analysis">
+                        <span class="step-number">2</span>
+                        시장 환경 분석
+                    </a>
+                    <a href="#" class="nav-item" data-section="competition-analysis">
+                        <span class="step-number">3</span>
+                        경쟁 환경 분석
+                    </a>
+                    <a href="#" class="nav-item" data-section="trend-analysis">
+                        <span class="step-number">4</span>
+                        트렌드 및 기회 분석
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">전략 수립</div>
+                    <a href="#" class="nav-item" data-section="target-selection">
+                        <span class="step-number">5</span>
+                        타겟 시장 선정
+                    </a>
+                    <a href="#" class="nav-item" data-section="positioning">
+                        <span class="step-number">6</span>
+                        포지셔닝 전략
+                    </a>
+                    <a href="#" class="nav-item" data-section="marketing-strategy">
+                        <span class="step-number">7</span>
+                        통합 마케팅 전략
+                    </a>
+                    <a href="#" class="nav-item" data-section="implementation">
+                        <span class="step-number">8</span>
+                        실행 계획 및 성과 지표
+                    </a>
+                </div>
+            </div>
+        </nav>
+
+        <!-- 모바일 햄버거 메뉴 -->
+        <div class="mobile-hamburger" id="mobileHamburger">
+            <div class="hamburger-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <!-- 모바일 메뉴 오버레이 -->
+        <div class="mobile-menu-overlay" id="mobileMenuOverlay">
+            <div class="mobile-menu-content">
+                <div class="mobile-menu-header">
+                    <h3>메뉴</h3>
+                    <button class="close-mobile-menu-btn" id="closeMobileMenuBtn">×</button>
+                </div>
+                <div class="mobile-menu-sections">
+                    <div class="menu-section">
+                        <h4>분석 단계</h4>
+                        <ul>
+                            <li><a href="#" data-section="item-selection">1. 아이템 선정 및 기본 분석</a></li>
+                            <li><a href="#" data-section="market-analysis">2. 시장 환경 분석</a></li>
+                            <li><a href="#" data-section="competition-analysis">3. 경쟁 환경 분석</a></li>
+                            <li><a href="#" data-section="trend-analysis">4. 트렌드 및 기회 분석</a></li>
+                        </ul>
+                    </div>
+                    <div class="menu-section">
+                        <h4>전략 수립</h4>
+                        <ul>
+                            <li><a href="#" data-section="target-selection">5. 타겟 시장 선정</a></li>
+                            <li><a href="#" data-section="positioning">6. 포지셔닝 전략</a></li>
+                            <li><a href="#" data-section="marketing-strategy">7. 통합 마케팅 전략</a></li>
+                            <li><a href="#" data-section="implementation">8. 실행 계획 및 성과 지표</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 메인 컨텐츠 -->
+        <main class="main-content">
+            <header class="header">
+                <div class="header-left">
+                    <h1>Market(시장) 조사/분석</h1>
+                    <div class="breadcrumb">
+                        <span id="selectedItem">피부관리에 특화된 2030 여성 피부관리 기기 개발</span>
+                    </div>
+                </div>
+                
+                <div class="header-right">
+                    <div class="user-actions">
+                        <a href="#" class="user-action-btn mypage" title="마이페이지">
+                            👤
+                        </a>
+                        <a href="#" class="user-action-btn logout" title="로그아웃">
+                            🚪
+                        </a>
+                    </div>
+                    
+                    <div class="progress-indicator">
+                        <span>진행단계:</span>
+                        <div class="progress-steps" id="progressSteps">
+                            <div class="progress-step current">1</div>
+                            <div class="progress-divider"></div>
+                            <div class="progress-step">2</div>
+                            <div class="progress-divider"></div>
+                            <div class="progress-step">3</div>
+                            <div class="progress-divider"></div>
+                            <div class="progress-step">4</div>
+                            <div class="progress-divider"></div>
+                            <div class="progress-step">5</div>
+                            <div class="progress-divider"></div>
+                            <div class="progress-step">6</div>
+                            <div class="progress-divider"></div>
+                            <div class="progress-step">7</div>
+                            <div class="progress-divider"></div>
+                            <div class="progress-step">8</div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <section class="content" id="content-container">
+                <!-- 1단계: 아이템 선정 및 기본 분석 -->
+                <div class="content-section active" id="item-selection">
+                    <div class="section-header">
+                        <h2 class="section-title">1단계: 아이템 선정 및 기본 분석</h2>
+                        <p class="section-desc">분석하고자 하는 상품 아이템을 선정하고 기본적인 시장 정보를 수집합니다.</p>
+                    </div>
+
+                    <!-- 창업 아이템 선정 인터페이스 -->
+                    <div class="startup-item-form">
+                        <h3>아이템 선정</h3>
+                        
+                        <div class="form-section">
+                            <div class="form-group">
+                                <label class="form-label">• 창업 아이템</label>
+                                <input type="text" class="form-input" id="startupItem" 
+                                       value="" 
+                                       placeholder="AI에게 분석하고자 하는 상품 아이템에 대하여 자세하게 알려주세요">
+                            </div>
+                        </div>
+                        
+                        <div class="search-section">
+                            <button class="search-btn" id="searchSimilarItems">
+                                <span class="search-icon"></span>
+                                아이템 검색
+                            </button>
+                        </div>
+                        
+                        <!-- AI 추천 결과 -->
+                        <div class="ai-recommendations" id="aiRecommendations" style="display: none;">
+                            <h4>AI 추천 결과</h4>
+                            <div class="recommendation-list">
+                                <div class="recommendation-item">
+                                    <div class="recommendation-content">
+                                        <span class="category-path">온라인 > 뷰티테크 > 홈케어 디바이스 > AI 피부 분석기</span>
+                                        <span class="similarity-score">(유사도: 0.89)</span>
+                                        <span class="ai-badge">AI추천</span>
+                                    </div>
+                                    <button class="select-btn" data-category="AI 피부 분석기" data-score="0.89">선택</button>
+                                </div>
+                                
+                                <div class="recommendation-item">
+                                    <div class="recommendation-content">
+                                        <span class="category-path">온라인 > IoT > 스마트홈 > 홈케어 로봇</span>
+                                        <span class="similarity-score">(유사도: 0.76)</span>
+                                        <span class="ai-badge">AI추천</span>
+                                    </div>
+                                    <button class="select-btn" data-category="홈케어 로봇" data-score="0.76">선택</button>
+                                </div>
+                                
+                                <div class="recommendation-item">
+                                    <div class="recommendation-content">
+                                        <span class="category-path">온라인 > 헬스케어 > 웨어러블 > 건강 모니터링</span>
+                                        <span class="similarity-score">(유사도: 0.71)</span>
+                                        <span class="ai-badge">AI추천</span>
+                                    </div>
+                                    <button class="select-btn" data-category="건강 모니터링" data-score="0.71">선택</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="stats-section" id="itemBasicInfo" style="display: none;">
+                        <h3>아이템 기본 정보</h3>
+                        <div class="stats-content">
+                            <p><strong>제품명:</strong> <span id="selectedProductName">AI 스마트 피부 분석기 + 홈케어 디바이스</span></p>
+                            <p><strong>카테고리:</strong> <span id="selectedCategory">뷰티테크 / 홈케어 디바이스</span></p>
+                            <p><strong>타겟:</strong> <span id="selectedTarget">20-30대 여성 (주요: 25-35세)</span></p>
+                            <p><strong>가격대:</strong> <span id="selectedPrice">15만원 ~ 35만원</span></p>
+                            <p><strong>핵심 기능:</strong> <span id="selectedFeatures">AI 피부 분석, 맞춤형 케어 추천, 홈케어 디바이스 연동</span></p>
+                        </div>
+                    </div>
+
+                    <!-- 시장 분석 차트 섹션 -->
+                    <div class="market-charts-section" id="marketChartsSection" style="display: none;">
+                        <h3>시장 분석 데이터</h3>
+                        
+                        <!-- 타겟 분석 차트 -->
+                        <div class="chart-container">
+                            <h4>타겟 고객 분석</h4>
+                            <div class="target-chart">
+                                <div class="chart-bar">
+                                    <div class="chart-label">25-35세 여성</div>
+                                    <div class="chart-bar-fill" style="width: 85%; background: #4285f4;">
+                                        <span class="chart-value">85%</span>
+                                    </div>
+                                </div>
+                                <div class="chart-bar">
+                                    <div class="chart-label">20-24세 여성</div>
+                                    <div class="chart-bar-fill" style="width: 65%; background: #34a853;">
+                                        <span class="chart-value">65%</span>
+                                    </div>
+                                </div>
+                                <div class="chart-bar">
+                                    <div class="chart-label">36-40세 여성</div>
+                                    <div class="chart-bar-fill" style="width: 70%; background: #fbbc05;">
+                                        <span class="chart-value">70%</span>
+                                    </div>
+                                </div>
+                                <div class="chart-bar">
+                                    <div class="chart-label">41-50세 여성</div>
+                                    <div class="chart-bar-fill" style="width: 45%; background: #ea4335;">
+                                        <span class="chart-value">45%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 가격대 분석 차트 -->
+                        <div class="chart-container">
+                            <h4>가격대별 시장 점유율</h4>
+                            <div class="price-chart">
+                                <div class="price-segment">
+                                    <div class="price-range">15-25만원</div>
+                                    <div class="price-bar">
+                                        <div class="price-fill" style="width: 40%; background: #4285f4;"></div>
+                                    </div>
+                                    <div class="price-percentage">40%</div>
+                                </div>
+                                <div class="price-segment">
+                                    <div class="price-range">25-35만원</div>
+                                    <div class="price-bar">
+                                        <div class="price-fill" style="width: 35%; background: #34a853;"></div>
+                                    </div>
+                                    <div class="price-percentage">35%</div>
+                                </div>
+                                <div class="price-segment">
+                                    <div class="price-range">35-50만원</div>
+                                    <div class="price-bar">
+                                        <div class="price-fill" style="width: 20%; background: #fbbc05;"></div>
+                                    </div>
+                                    <div class="price-percentage">20%</div>
+                                </div>
+                                <div class="price-segment">
+                                    <div class="price-range">50만원 이상</div>
+                                    <div class="price-bar">
+                                        <div class="price-fill" style="width: 5%; background: #ea4335;"></div>
+                                    </div>
+                                    <div class="price-percentage">5%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 시장 규모 차트 -->
+                        <div class="chart-container">
+                            <h4>시장 규모 및 성장률</h4>
+                            <div class="market-size-charts">
+                                <div class="market-chart">
+                                    <h5>국내 시장 규모</h5>
+                                    <div class="market-size-bar">
+                                        <div class="size-fill" style="width: 60%; background: linear-gradient(135deg, #667eea, #764ba2);">
+                                            <span class="size-value">3.2조원</span>
+                                        </div>
+                                    </div>
+                                    <div class="market-info">
+                                        <span class="year">2023년</span>
+                                        <span class="growth">+15.8%</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="market-chart">
+                                    <h5>글로벌 시장 규모</h5>
+                                    <div class="market-size-bar">
+                                        <div class="size-fill" style="width: 100%; background: linear-gradient(135deg, #f093fb, #f5576c);">
+                                            <span class="size-value">1,200억 달러</span>
+                                        </div>
+                                    </div>
+                                    <div class="market-info">
+                                        <span class="year">2023년</span>
+                                        <span class="growth">+18.2%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 경쟁사 분석 차트 -->
+                        <div class="chart-container">
+                            <h4>주요 경쟁사 시장 점유율</h4>
+                            <div class="competitor-chart">
+                                <div class="competitor-item">
+                                    <div class="competitor-name">L'Oreal (Perso)</div>
+                                    <div class="competitor-bar">
+                                        <div class="competitor-fill" style="width: 28%; background: #ff6b6b;">
+                                            <span class="competitor-percentage">28%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="competitor-item">
+                                    <div class="competitor-name">Samsung (Beauty Mirror)</div>
+                                    <div class="competitor-bar">
+                                        <div class="competitor-fill" style="width: 22%; background: #00a86b;">
+                                            <span class="competitor-percentage">22%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="competitor-item">
+                                    <div class="competitor-name">LG (LG Pra.L)</div>
+                                    <div class="competitor-bar">
+                                        <div class="competitor-fill" style="width: 18%; background: #ffa500;">
+                                            <span class="competitor-percentage">18%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="competitor-item">
+                                    <div class="competitor-name">기타</div>
+                                    <div class="competitor-bar">
+                                        <div class="competitor-fill" style="width: 32%; background: #9932cc;">
+                                            <span class="competitor-percentage">32%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box clearfix">
+                        <div class="info-text">
+                            분석을 시작할 준비가 되셨나요?<br>
+                            <span class="info-highlight">AI 분석을 통해 시장 기회를 발견하고 전략을 수립하세요</span>
+                        </div>
+                        <button class="action-button" id="startAnalysisBtn">분석 시작하기</button>
+                    </div>
+                </div>
+
+                <!-- 2단계: 시장 환경 분석 -->
+                <div class="content-section" id="market-analysis">
+                    <div class="section-header">
+                        <h2 class="section-title">2단계: 시장 환경 분석</h2>
+                        <p class="section-desc">해당 시장의 규모, 성장성, 경쟁 강도를 분석하여 시장 기회를 평가합니다.</p>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>뷰티테크 시장 현황</h3>
+                        <div class="stats-content">
+                            <p><strong>글로벌 시장 규모:</strong> 2023년 기준 <span class="stats-highlight">약 1,200억 달러</span></p>
+                            <p><strong>국내 시장 규모:</strong> 2023년 기준 <span class="stats-highlight">약 3.2조원</span></p>
+                            <p><strong>연평균 성장률:</strong> <span class="stats-highlight">15.8%</span> (2020-2023)</p>
+                            <p><strong>홈케어 디바이스 비중:</strong> 전체 뷰티테크 시장의 <span class="stats-highlight">28%</span></p>
+                            <p><strong>AI 기술 도입률:</strong> 신제품 중 <span class="stats-highlight">65%</span>가 AI 기능 탑재</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box clearfix">
+                        <div class="info-text">
+                            <span class="info-highlight">뷰티테크 시장</span>은 코로나19 이후 <span class="info-highlight">홈케어 트렌드</span>로 급성장하고 있으며, 
+                            특히 <span class="info-highlight">AI 기술</span>과 <span class="info-highlight">개인화 서비스</span>에 대한 관심이 높아지고 있습니다.
+                        </div>
+                        <button class="action-button">시장 데이터 보기 →</button>
+                    </div>
+
+                    <div class="gpt-section">
+                        <h2 class="gpt-title">시장 환경 분석 결과</h2>
+                        
+                        <div class="gpt-cards">
+                            <div class="gpt-card" data-target="blue-red-ocean">
+                                <div class="gpt-card-content">
+                                    <strong>블루오션 vs 레드오션</strong><br>
+                                    <small>현재 홈케어 디바이스는 <span class="stats-highlight">블루오션</span> 단계로, 
+                                    AI 기술과 개인화 서비스로 차별화 가능한 시장입니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="market-size-growth">
+                                <div class="gpt-card-content">
+                                    <strong>시장 규모 및 성장성</strong><br>
+                                    <small>국내 시장은 연평균 <span class="stats-highlight">15.8%</span> 성장하며, 
+                                    2030년까지 <span class="stats-highlight">8조원</span> 규모로 확대 전망입니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="competition-intensity">
+                                <div class="gpt-card-content">
+                                    <strong>경쟁 강도 분석</strong><br>
+                                    <small>기존 뷰티 브랜드는 많지만, <span class="stats-highlight">AI 기술</span>과 
+                                    <span class="stats-highlight">홈케어 연동</span>을 동시에 제공하는 제품은 부족합니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                        </div>
+
+                        <!-- 블루오션 vs 레드오션 상세분석 -->
+                        <div class="expanded-card" id="blue-red-ocean">
+                            <div class="expanded-title">🌊 블루오션 vs 레드오션 분석</div>
+                            
+                            <div class="ocean-analysis">
+                                <div class="ocean-section">
+                                    <h4>🔵 블루오션 영역</h4>
+                                    <div class="ocean-content">
+                                        <div class="ocean-item">
+                                            <div class="ocean-icon">💡</div>
+                                            <div class="ocean-text">
+                                                <strong>AI 기반 개인화 서비스</strong><br>
+                                                <small>현재 시장에서 AI 알고리즘을 활용한 맞춤형 케어 추천 서비스는 매우 제한적입니다.</small>
+                                            </div>
+                                        </div>
+                                        <div class="ocean-item">
+                                            <div class="ocean-icon">🔗</div>
+                                            <div class="ocean-text">
+                                                <strong>홈케어 디바이스 연동</strong><br>
+                                                <small>AI 분석과 실제 홈케어 디바이스를 연동하는 통합 솔루션은 거의 존재하지 않습니다.</small>
+                                            </div>
+                                        </div>
+                                        <div class="ocean-item">
+                                            <div class="ocean-icon">📱</div>
+                                            <div class="ocean-text">
+                                                <strong>모바일 앱 통합 관리</strong><br>
+                                                <small>피부 분석부터 케어 실행까지 원스톱으로 관리하는 앱은 시장에 부족합니다.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="ocean-section">
+                                    <h4>🔴 레드오션 영역</h4>
+                                    <div class="ocean-content">
+                                        <div class="ocean-item">
+                                            <div class="ocean-icon">🧴</div>
+                                            <div class="ocean-text">
+                                                <strong>기본 뷰티 디바이스</strong><br>
+                                                <small>LED 마스크, 진동 마사지기 등 기본적인 뷰티 디바이스는 포화 상태입니다.</small>
+                                            </div>
+                                        </div>
+                                        <div class="ocean-item">
+                                            <div class="ocean-icon">💄</div>
+                                            <div class="ocean-text">
+                                                <strong>화장품 추천 서비스</strong><br>
+                                                <small>피부 타입별 화장품 추천 앱은 이미 많은 경쟁자가 존재합니다.</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="opportunity-analysis">
+                                <h4>시장 기회 분석</h4>
+                                <div class="opportunity-grid">
+                                    <div class="opportunity-item">
+                                        <div class="opportunity-title">차별화 포인트</div>
+                                        <div class="opportunity-desc">AI + 홈케어 디바이스 + 모바일 앱의 통합 솔루션</div>
+                                    </div>
+                                    <div class="opportunity-item">
+                                        <div class="opportunity-title">진입 장벽</div>
+                                        <div class="opportunity-desc">AI 기술력과 하드웨어 개발 능력이 필요</div>
+                                    </div>
+                                    <div class="opportunity-item">
+                                        <div class="opportunity-title">성장 잠재력</div>
+                                        <div class="opportunity-desc">연평균 20% 이상의 고성장 시장</div>
+                                    </div>
+                                    <div class="opportunity-item">
+                                        <div class="opportunity-title">리스크 요인</div>
+                                        <div class="opportunity-desc">대기업의 기술 진입 가능성</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="blue-red-ocean">닫기</button>
+                        </div>
+
+                        <!-- 시장 규모 및 성장성 상세분석 -->
+                        <div class="expanded-card" id="market-size-growth">
+                            <div class="expanded-title">시장 규모 및 성장성 분석</div>
+                            
+                            <div class="market-growth-charts">
+                                <div class="growth-chart">
+                                    <h4>국내 시장 성장 추이</h4>
+                                    <div class="growth-timeline">
+                                        <div class="timeline-item">
+                                            <div class="timeline-year">2020년</div>
+                                            <div class="timeline-value">2.1조원</div>
+                                            <div class="timeline-growth">+12.5%</div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-year">2021년</div>
+                                            <div class="timeline-value">2.4조원</div>
+                                            <div class="timeline-growth">+14.3%</div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-year">2022년</div>
+                                            <div class="timeline-value">2.8조원</div>
+                                            <div class="timeline-growth">+16.7%</div>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <div class="timeline-year">2023년</div>
+                                            <div class="timeline-value">3.2조원</div>
+                                            <div class="timeline-growth">+15.8%</div>
+                                        </div>
+                                        <div class="timeline-item future">
+                                            <div class="timeline-year">2025년</div>
+                                            <div class="timeline-value">4.3조원</div>
+                                            <div class="timeline-growth">+16.2%</div>
+                                        </div>
+                                        <div class="timeline-item future">
+                                            <div class="timeline-year">2030년</div>
+                                            <div class="timeline-value">8.0조원</div>
+                                            <div class="timeline-growth">+18.5%</div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="growth-chart">
+                                    <h4>글로벌 시장 규모 비교</h4>
+                                    <div class="global-comparison">
+                                        <div class="region-item">
+                                            <div class="region-name">북미</div>
+                                            <div class="region-bar">
+                                                <div class="region-fill" style="width: 100%; background: #4285f4;">
+                                                    <span class="region-value">450억 달러</span>
+                                                </div>
+                                            </div>
+                                            <div class="region-share">37.5%</div>
+                                        </div>
+                                        <div class="region-item">
+                                            <div class="region-name">유럽</div>
+                                            <div class="region-bar">
+                                                <div class="region-fill" style="width: 85%; background: #34a853;">
+                                                    <span class="region-value">380억 달러</span>
+                                                </div>
+                                            </div>
+                                            <div class="region-share">31.7%</div>
+                                        </div>
+                                        <div class="region-item">
+                                            <div class="region-name">아시아태평양</div>
+                                            <div class="region-bar">
+                                                <div class="region-fill" style="width: 70%; background: #fbbc05;">
+                                                    <span class="region-value">280억 달러</span>
+                                                </div>
+                                            </div>
+                                            <div class="region-share">23.3%</div>
+                                        </div>
+                                        <div class="region-item">
+                                            <div class="region-name">기타</div>
+                                            <div class="region-bar">
+                                                <div class="region-fill" style="width: 25%; background: #ea4335;">
+                                                    <span class="region-value">90억 달러</span>
+                                                </div>
+                                            </div>
+                                            <div class="region-share">7.5%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="growth-factors">
+                                <h4>성장 동력 분석</h4>
+                                <div class="factors-grid">
+                                    <div class="factor-item">
+                                        <div class="factor-icon">🏠</div>
+                                        <div class="factor-title">홈케어 트렌드</div>
+                                        <div class="factor-desc">코로나19 이후 집에서 케어하는 문화 확산</div>
+                                    </div>
+                                    <div class="factor-item">
+                                        <div class="factor-icon">🤖</div>
+                                        <div class="factor-title">AI 기술 발전</div>
+                                        <div class="factor-desc">머신러닝과 딥러닝 기술의 고도화</div>
+                                    </div>
+                                    <div class="factor-item">
+                                        <div class="factor-icon">📱</div>
+                                        <div class="factor-title">모바일 의존도</div>
+                                        <div class="factor-desc">스마트폰을 통한 개인화 서비스 요구 증가</div>
+                                    </div>
+                                    <div class="factor-item">
+                                        <div class="factor-icon">💎</div>
+                                        <div class="factor-title">프리미엄화</div>
+                                        <div class="factor-desc">개인 맞춤형 서비스에 대한 가치 인식</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="market-size-growth">닫기</button>
+                        </div>
+
+                        <!-- 경쟁 강도 분석 상세분석 -->
+                        <div class="expanded-card" id="competition-intensity">
+                            <div class="expanded-title">경쟁 강도 분석</div>
+                            
+                            <div class="competition-matrix">
+                                <h4>경쟁 강도 매트릭스</h4>
+                                <div class="matrix-container">
+                                    <div class="matrix-axis">
+                                        <div class="axis-label">높음</div>
+                                        <div class="axis-label">중간</div>
+                                        <div class="axis-label">낮음</div>
+                                    </div>
+                                    <div class="matrix-grid">
+                                        <div class="matrix-cell high">기존 뷰티 브랜드<br><small>높은 진입장벽</small></div>
+                                        <div class="matrix-cell medium">AI 스타트업<br><small>중간 진입장벽</small></div>
+                                        <div class="matrix-cell low">신규 진입자<br><small>낮은 진입장벽</small></div>
+                                        <div class="matrix-cell medium">하드웨어 기업<br><small>중간 진입장벽</small></div>
+                                        <div class="matrix-cell low">소프트웨어 기업<br><small>낮은 진입장벽</small></div>
+                                        <div class="matrix-cell high">대형 IT 기업<br><small>매우 높은 진입장벽</small></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="competitive-advantages">
+                                <h4>경쟁 우위 요소</h4>
+                                <div class="advantages-grid">
+                                    <div class="advantage-item">
+                                        <div class="advantage-title">기술적 우위</div>
+                                        <div class="advantage-score">85점</div>
+                                        <div class="advantage-desc">AI 알고리즘과 홈케어 디바이스 연동 기술</div>
+                                    </div>
+                                    <div class="advantage-item">
+                                        <div class="advantage-title">시장 선점</div>
+                                        <div class="advantage-score">70점</div>
+                                        <div class="advantage-desc">통합 솔루션으로 시장 선점</div>
+                                    </div>
+                                    <div class="advantage-item">
+                                        <div class="advantage-title">고객 데이터</div>
+                                        <div class="advantage-score">75점</div>
+                                        <div class="advantage-desc">개인화된 피부 데이터 축적</div>
+                                    </div>
+                                    <div class="advantage-item">
+                                        <div class="advantage-title">브랜드 인지도</div>
+                                        <div class="advantage-score">40점</div>
+                                        <div class="advantage-desc">신규 브랜드로 낮은 인지도</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="threat-analysis">
+                                <h4>위협 요소 분석</h4>
+                                <div class="threats-list">
+                                    <div class="threat-item high">
+                                        <div class="threat-icon">🚨</div>
+                                        <div class="threat-content">
+                                            <div class="threat-title">대기업 진입 위협</div>
+                                            <div class="threat-desc">Samsung, LG 등 대기업의 AI 뷰티테크 진입</div>
+                                        </div>
+                                    </div>
+                                    <div class="threat-item medium">
+                                        <div class="threat-icon">⚡</div>
+                                        <div class="threat-content">
+                                            <div class="threat-title">기술 변화 속도</div>
+                                            <div class="threat-desc">AI 기술의 빠른 발전으로 경쟁력 약화 가능성</div>
+                                        </div>
+                                    </div>
+                                    <div class="threat-item low">
+                                        <div class="threat-icon">💰</div>
+                                        <div class="threat-content">
+                                            <div class="threat-title">자금력 부족</div>
+                                            <div class="threat-desc">대기업 대비 마케팅 및 R&D 자금 부족</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="competition-intensity">닫기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3단계: 경쟁 환경 분석 -->
+                <div class="content-section" id="competition-analysis">
+                    <div class="section-header">
+                        <h2 class="section-title">3단계: 경쟁 환경 분석</h2>
+                        <p class="section-desc">주요 경쟁사와 성공 제품을 분석하여 시장 내 성공 요인을 파악합니다.</p>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>주요 경쟁사 현황</h3>
+                        <div class="stats-content">
+                            <p><strong>1위:</strong> <span class="stats-highlight">L'Oreal (Perso)</span> - AI 개인화 뷰티 디바이스</p>
+                            <p><strong>2위:</strong> <span class="stats-highlight">Samsung (Beauty Mirror)</span> - 스마트 미러 + AI 분석</p>
+                            <p><strong>3위:</strong> <span class="stats-highlight">LG (LG Pra.L)</span> - 홈케어 뷰티 디바이스</p>
+                            <p><strong>신규 진입:</strong> <span class="stats-highlight">Apple (HealthKit 연동)</span> - 건강 데이터 기반</p>
+                            <p><strong>국내 스타트업:</strong> <span class="stats-highlight">Glowpick, Hwahae</span> - 앱 기반 분석</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box clearfix">
+                        <div class="info-text">
+                            시장 선도기업인 <span class="info-highlight">L'Oreal</span>과 <span class="info-highlight">Samsung</span>은 
+                            <span class="info-highlight">AI 기술</span>과 <span class="info-highlight">브랜드 파워</span>로 차별화에 성공했습니다. 
+                            특히 20-30대 여성층에게 어필하는 <span class="info-highlight">개인화 서비스</span>와 <span class="info-highlight">편의성</span>이 핵심 성공 요인입니다.
+                        </div>
+                        <button class="action-button">경쟁사 분석 보기 →</button>
+                    </div>
+
+                    <div class="gpt-section">
+                        <h2 class="gpt-title">경쟁 환경 분석 결과</h2>
+                        
+                        <div class="gpt-cards">
+                            <div class="gpt-card" data-target="leading-companies">
+                                <div class="gpt-card-content">
+                                    <strong>선도 기업 분석</strong><br>
+                                    <small>현재 시장에서 <span class="stats-highlight">L'Oreal, Estee Lauder</span> 등이 
+                                    뷰티테크 분야를 선도하고 있으며, <span class="stats-highlight">AI 기술</span> 도입이 가속화되고 있습니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="core-products">
+                                <div class="gpt-card-content">
+                                    <strong>💎 주력 제품 분석</strong><br>
+                                    <small>AI 스킨 분석기, <span class="stats-highlight">홈케어 디바이스</span>가 주요 제품이며, 
+                                    <span class="stats-highlight">개인화 서비스</span>와 <span class="stats-highlight">데이터 기반</span> 케어가 핵심입니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="success-factors">
+                                <div class="gpt-card-content">
+                                    <strong>성공 요인 도출</strong><br>
+                                    <small>기술력, <span class="stats-highlight">브랜드 파워</span>, <span class="stats-highlight">고객 데이터</span>가 
+                                    핵심 성공 요인이며, <span class="stats-highlight">AI 알고리즘</span>의 정확도가 차별화 포인트입니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                        </div>
+
+                        <!-- 선도 기업 분석 상세분석 -->
+                        <div class="expanded-card" id="leading-companies">
+                            <div class="expanded-title">선도 기업 분석</div>
+                            
+                            <div class="companies-overview">
+                                <h4>시장 점유율 현황</h4>
+                                <div class="market-share-chart">
+                                    <div class="company-item">
+                                        <div class="company-name">L'Oreal Group</div>
+                                        <div class="company-bar">
+                                            <div class="company-fill" style="width: 100%; background: #4285f4;">
+                                                <span class="company-value">28.5%</span>
+                                            </div>
+                                        </div>
+                                        <div class="company-details">
+                                            <div class="company-revenue">매출: 2,890억원</div>
+                                            <div class="company-growth">성장률: +12.3%</div>
+                                        </div>
+                                    </div>
+                                    <div class="company-item">
+                                        <div class="company-name">Estee Lauder</div>
+                                        <div class="company-bar">
+                                            <div class="company-fill" style="width: 85%; background: #34a853;">
+                                                <span class="company-value">24.2%</span>
+                                            </div>
+                                        </div>
+                                        <div class="company-details">
+                                            <div class="company-revenue">매출: 2,450억원</div>
+                                            <div class="company-growth">성장률: +15.7%</div>
+                                        </div>
+                                    </div>
+                                    <div class="company-item">
+                                        <div class="company-name">Procter & Gamble</div>
+                                        <div class="company-bar">
+                                            <div class="company-fill" style="width: 70%; background: #fbbc05;">
+                                                <span class="company-value">18.8%</span>
+                                            </div>
+                                        </div>
+                                        <div class="company-details">
+                                            <div class="company-revenue">매출: 1,890억원</div>
+                                            <div class="company-growth">성장률: +8.9%</div>
+                                        </div>
+                                    </div>
+                                    <div class="company-item">
+                                        <div class="company-name">Unilever</div>
+                                        <div class="company-bar">
+                                            <div class="company-fill" style="width: 55%; background: #ea4335;">
+                                                <span class="company-value">15.2%</span>
+                                            </div>
+                                        </div>
+                                        <div class="company-details">
+                                            <div class="company-revenue">매출: 1,520억원</div>
+                                            <div class="company-growth">성장률: +11.2%</div>
+                                        </div>
+                                    </div>
+                                    <div class="company-item">
+                                        <div class="company-name">기타</div>
+                                        <div class="company-bar">
+                                            <div class="company-fill" style="width: 30%; background: #9c27b0;">
+                                                <span class="company-value">13.3%</span>
+                                            </div>
+                                        </div>
+                                        <div class="company-details">
+                                            <div class="company-revenue">매출: 1,250억원</div>
+                                            <div class="company-growth">성장률: +18.5%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="company-strategies">
+                                <h4>주요 전략 분석</h4>
+                                <div class="strategies-grid">
+                                    <div class="strategy-item">
+                                        <div class="strategy-icon">🤖</div>
+                                        <div class="strategy-title">AI 기술 투자</div>
+                                        <div class="strategy-desc">머신러닝 기반 피부 분석 및 맞춤형 제품 추천 시스템 구축</div>
+                                        <div class="strategy-investment">투자 규모: 연 500억원+</div>
+                                    </div>
+                                    <div class="strategy-item">
+                                        <div class="strategy-icon">📱</div>
+                                        <div class="strategy-title">디지털 전환</div>
+                                        <div class="strategy-desc">모바일 앱과 IoT 디바이스를 연동한 통합 케어 솔루션</div>
+                                        <div class="strategy-investment">투자 규모: 연 300억원+</div>
+                                    </div>
+                                    <div class="strategy-item">
+                                        <div class="strategy-icon">🔬</div>
+                                        <div class="strategy-title">R&D 강화</div>
+                                        <div class="strategy-desc">바이오테크놀로지와 화장품 과학의 융합 연구</div>
+                                        <div class="strategy-investment">투자 규모: 연 800억원+</div>
+                                    </div>
+                                    <div class="strategy-item">
+                                        <div class="strategy-icon">🌍</div>
+                                        <div class="strategy-title">글로벌 확장</div>
+                                        <div class="strategy-desc">신흥 시장 중심의 지역별 맞춤형 제품 전략</div>
+                                        <div class="strategy-investment">투자 규모: 연 1,200억원+</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="competitive-advantages">
+                                <h4>경쟁 우위 요소</h4>
+                                <div class="advantages-analysis">
+                                    <div class="advantage-category">
+                                        <h5>기술적 우위</h5>
+                                        <div class="advantage-items">
+                                            <div class="advantage-item">
+                                                <span class="advantage-label">AI 알고리즘</span>
+                                                <span class="advantage-score">95점</span>
+                                            </div>
+                                            <div class="advantage-item">
+                                                <span class="advantage-label">데이터 품질</span>
+                                                <span class="advantage-score">90점</span>
+                                            </div>
+                                            <div class="advantage-item">
+                                                <span class="advantage-label">연구 개발</span>
+                                                <span class="advantage-score">88점</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="advantage-category">
+                                        <h5>시장적 우위</h5>
+                                        <div class="advantage-items">
+                                            <div class="advantage-item">
+                                                <span class="advantage-label">브랜드 파워</span>
+                                                <span class="advantage-score">92점</span>
+                                            </div>
+                                            <div class="advantage-item">
+                                                <span class="advantage-label">유통망</span>
+                                                <span class="advantage-score">85점</span>
+                                            </div>
+                                            <div class="advantage-item">
+                                                <span class="advantage-label">고객 충성도</span>
+                                                <span class="advantage-score">87점</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="leading-companies">닫기</button>
+                        </div>
+
+                        <!-- 주력 제품 분석 상세분석 -->
+                        <div class="expanded-card" id="core-products">
+                            <div class="expanded-title">주력 제품 분석</div>
+                            
+                            <div class="product-categories">
+                                <h4>제품 카테고리별 분석</h4>
+                                <div class="category-grid">
+                                    <div class="category-item">
+                                        <div class="category-header">
+                                            <div class="category-icon">🔍</div>
+                                            <div class="category-title">AI 스킨 분석기</div>
+                                            <div class="category-share">시장 점유율: 35.2%</div>
+                                        </div>
+                                        <div class="category-content">
+                                            <div class="product-features">
+                                                <div class="feature-item">• 고해상도 카메라 + AI 분석</div>
+                                                <div class="feature-item">• 실시간 피부 상태 진단</div>
+                                                <div class="feature-item">• 맞춤형 케어 추천</div>
+                                                <div class="feature-item">• 모바일 앱 연동</div>
+                                            </div>
+                                            <div class="market-info">
+                                                <div class="market-size">시장 규모: 1.2조원</div>
+                                                <div class="growth-rate">성장률: +28.5%</div>
+                                                <div class="price-range">가격대: 15만원~50만원</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-item">
+                                        <div class="category-header">
+                                            <div class="category-icon">🏠</div>
+                                            <div class="category-title">홈케어 디바이스</div>
+                                            <div class="category-share">시장 점유율: 28.7%</div>
+                                        </div>
+                                        <div class="category-content">
+                                            <div class="product-features">
+                                                <div class="feature-item">• LED 테라피 + 진동 마사지</div>
+                                                <div class="feature-item">• 온도/압력 센서</div>
+                                                <div class="feature-item">• 자동 타이머 설정</div>
+                                                <div class="feature-item">• 블루투스 연결</div>
+                                            </div>
+                                            <div class="market-info">
+                                                <div class="market-size">시장 규모: 9,800억원</div>
+                                                <div class="growth-rate">성장률: +22.3%</div>
+                                                <div class="price-range">가격대: 8만원~25만원</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-item">
+                                        <div class="category-header">
+                                            <div class="category-icon">💄</div>
+                                            <div class="category-title">스마트 화장품</div>
+                                            <div class="category-share">시장 점유율: 21.4%</div>
+                                        </div>
+                                        <div class="category-content">
+                                            <div class="product-features">
+                                                <div class="feature-item">• IoT 센서 내장</div>
+                                                <div class="feature-item">• 개인 맞춤형 성분</div>
+                                                <div class="feature-item">• 사용량 모니터링</div>
+                                                <div class="feature-item">• 자동 재주문</div>
+                                            </div>
+                                            <div class="market-info">
+                                                <div class="market-size">시장 규모: 7,200억원</div>
+                                                <div class="growth-rate">성장률: +18.7%</div>
+                                                <div class="price-range">가격대: 3만원~15만원</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="category-item">
+                                        <div class="category-header">
+                                            <div class="category-icon">📱</div>
+                                            <div class="category-title">모바일 앱 서비스</div>
+                                            <div class="category-share">시장 점유율: 14.7%</div>
+                                        </div>
+                                        <div class="category-content">
+                                            <div class="product-features">
+                                                <div class="feature-item">• AI 피부 분석</div>
+                                                <div class="feature-item">• 제품 추천 엔진</div>
+                                                <div class="feature-item">• 커뮤니티 기능</div>
+                                                <div class="feature-item">• 구독 서비스</div>
+                                            </div>
+                                            <div class="market-info">
+                                                <div class="market-size">시장 규모: 4,800억원</div>
+                                                <div class="growth-rate">성장률: +35.2%</div>
+                                                <div class="price-range">가격대: 월 5천원~2만원</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="product-trends">
+                                <h4>제품 트렌드 분석</h4>
+                                <div class="trends-chart">
+                                    <div class="trend-item">
+                                        <div class="trend-year">2020년</div>
+                                        <div class="trend-focus">기본 기능 중심</div>
+                                        <div class="trend-desc">LED, 진동 등 기본적인 케어 기능</div>
+                                    </div>
+                                    <div class="trend-item">
+                                        <div class="trend-year">2021년</div>
+                                        <div class="trend-focus">스마트 연결</div>
+                                        <div class="trend-desc">블루투스, WiFi 연결 기능 추가</div>
+                                    </div>
+                                    <div class="trend-item">
+                                        <div class="trend-year">2022년</div>
+                                        <div class="trend-focus">AI 도입</div>
+                                        <div class="trend-desc">기본적인 AI 분석 기능 탑재</div>
+                                    </div>
+                                    <div class="trend-item">
+                                        <div class="trend-year">2023년</div>
+                                        <div class="trend-focus">고도화 AI</div>
+                                        <div class="trend-desc">딥러닝 기반 정확한 피부 분석</div>
+                                    </div>
+                                    <div class="trend-item future">
+                                        <div class="trend-year">2024년</div>
+                                        <div class="trend-focus">통합 솔루션</div>
+                                        <div class="trend-desc">AI + 디바이스 + 앱 통합</div>
+                                    </div>
+                                    <div class="trend-item future">
+                                        <div class="trend-year">2025년</div>
+                                        <div class="trend-focus">개인화 케어</div>
+                                        <div class="trend-desc">유전자 분석 기반 맞춤형 케어</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="core-products">닫기</button>
+                        </div>
+
+                        <!-- 성공 요인 도출 상세분석 -->
+                        <div class="expanded-card" id="success-factors">
+                            <div class="expanded-title">성공 요인 도출</div>
+                            
+                            <div class="success-factors-analysis">
+                                <h4>핵심 성공 요인 분석</h4>
+                                <div class="factors-matrix">
+                                    <div class="factor-dimension">
+                                        <h5>기술적 요인 (40%)</h5>
+                                        <div class="factor-items">
+                                            <div class="factor-item high">
+                                                <div class="factor-name">AI 알고리즘 정확도</div>
+                                                <div class="factor-score">95점</div>
+                                                <div class="factor-impact">매우 높음</div>
+                                                <div class="factor-desc">머신러닝 기반 피부 분석의 정확도가 핵심 경쟁력</div>
+                                            </div>
+                                            <div class="factor-item high">
+                                                <div class="factor-name">데이터 품질 및 양</div>
+                                                <div class="factor-score">90점</div>
+                                                <div class="factor-impact">매우 높음</div>
+                                                <div class="factor-desc">다양한 피부 타입과 환경의 데이터 축적</div>
+                                            </div>
+                                            <div class="factor-item medium">
+                                                <div class="factor-name">하드웨어 성능</div>
+                                                <div class="factor-score">75점</div>
+                                                <div class="factor-impact">높음</div>
+                                                <div class="factor-desc">센서 정밀도와 내구성이 중요</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="factor-dimension">
+                                        <h5>시장적 요인 (35%)</h5>
+                                        <div class="factor-items">
+                                            <div class="factor-item high">
+                                                <div class="factor-name">브랜드 인지도</div>
+                                                <div class="factor-score">88점</div>
+                                                <div class="factor-impact">매우 높음</div>
+                                                <div class="factor-desc">신뢰할 수 있는 브랜드 이미지 구축</div>
+                                            </div>
+                                            <div class="factor-item medium">
+                                                <div class="factor-name">유통망 확보</div>
+                                                <div class="factor-score">70점</div>
+                                                <div class="factor-impact">높음</div>
+                                                <div class="factor-desc">온/오프라인 채널의 균형적 확보</div>
+                                            </div>
+                                            <div class="factor-item medium">
+                                                <div class="factor-name">가격 경쟁력</div>
+                                                <div class="factor-score">65점</div>
+                                                <div class="factor-impact">중간</div>
+                                                <div class="factor-desc">품질 대비 합리적인 가격 정책</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="factor-dimension">
+                                        <h5>고객적 요인 (25%)</h5>
+                                        <div class="factor-items">
+                                            <div class="factor-item high">
+                                                <div class="factor-name">고객 만족도</div>
+                                                <div class="factor-score">85점</div>
+                                                <div class="factor-impact">높음</div>
+                                                <div class="factor-desc">제품 사용 후 효과와 경험 만족도</div>
+                                            </div>
+                                            <div class="factor-item medium">
+                                                <div class="factor-name">고객 서비스</div>
+                                                <div class="factor-score">72점</div>
+                                                <div class="factor-impact">중간</div>
+                                                <div class="factor-desc">24/7 고객 지원 및 AS 서비스</div>
+                                            </div>
+                                            <div class="factor-item low">
+                                                <div class="factor-name">고객 교육</div>
+                                                <div class="factor-score">55점</div>
+                                                <div class="factor-impact">낮음</div>
+                                                <div class="factor-desc">제품 사용법 교육 및 콘텐츠 제공</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="success-strategies">
+                                <h4>성공 전략 제안</h4>
+                                <div class="strategies-recommendation">
+                                    <div class="strategy-priority">
+                                        <h5>최우선 전략</h5>
+                                        <div class="priority-item">
+                                            <div class="priority-title">AI 기술 고도화</div>
+                                            <div class="priority-desc">머신러닝 알고리즘의 정확도 향상과 새로운 피부 분석 기능 개발</div>
+                                            <div class="priority-investment">예상 투자: 연 300억원</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="strategy-priority">
+                                        <h5>고우선 전략</h5>
+                                        <div class="priority-item">
+                                            <div class="priority-title">데이터 인프라 구축</div>
+                                            <div class="priority-desc">클라우드 기반 데이터 수집 및 분석 시스템 구축</div>
+                                            <div class="priority-investment">예상 투자: 연 150억원</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="strategy-priority">
+                                        <h5>중우선 전략</h5>
+                                        <div class="priority-item">
+                                            <div class="priority-title">브랜드 마케팅</div>
+                                            <div class="priority-desc">KOL 협업과 콘텐츠 마케팅을 통한 브랜드 인지도 향상</div>
+                                            <div class="priority-investment">예상 투자: 연 100억원</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="success-factors">닫기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4단계: 트렌드 및 기회 분석 -->
+                <div class="content-section" id="trend-analysis">
+                    <div class="section-header">
+                        <h2 class="section-title">4단계: 트렌드 및 기회 분석</h2>
+                        <p class="section-desc">소비자, 기술, 사회문화적 트렌드를 분석하여 시장 기회를 발견합니다.</p>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>주요 트렌드 데이터</h3>
+                        <div class="stats-content">
+                            <p><strong>홈케어 선호도:</strong> <span class="stats-highlight">78%</span>의 20-30대 여성이 홈케어 선호</p>
+                            <p><strong>AI 기술 신뢰도:</strong> 피부 분석에 AI 활용 시 <span class="stats-highlight">85%</span> 만족도</p>
+                            <p><strong>개인화 서비스 요구:</strong> <span class="stats-highlight">92%</span>가 맞춤형 케어 추천 원함</p>
+                            <p><strong>데이터 공유 의향:</strong> <span class="stats-highlight">67%</span>가 피부 데이터 공유 동의</p>
+                            <p><strong>모바일 앱 사용률:</strong> 뷰티 관련 앱 일평균 <span class="stats-highlight">23분</span> 사용</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box clearfix">
+                        <div class="info-text">
+                            <span class="info-highlight">개인화 뷰티</span>와 <span class="info-highlight">AI 기술</span>에 대한 관심이 증가하고 있습니다. 
+                            특히 20-30대 여성층은 <span class="info-highlight">편리한 홈케어</span>와 <span class="info-highlight">정확한 분석</span>을 중요하게 생각하며, 
+                            <span class="info-highlight">데이터 기반 케어</span>에도 관심이 높아지고 있습니다.
+                        </div>
+                        <button class="action-button">트렌드 분석 보기 →</button>
+                    </div>
+
+                    <div class="gpt-section">
+                        <h2 class="gpt-title">트렌드 및 기회 분석 결과</h2>
+                        
+                        <div class="gpt-cards">
+                            <div class="gpt-card" data-target="consumer-trends">
+                                <div class="gpt-card-content">
+                                    <strong>👥 소비자 트렌드</strong><br>
+                                    <small>MZ세대의 <span class="stats-highlight">개인화 요구</span> 증가, 
+                                    <span class="stats-highlight">홈케어 문화</span> 확산, 
+                                    <span class="stats-highlight">데이터 기반</span> 의사결정 선호도가 높아지고 있습니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="technology-trends">
+                                <div class="gpt-card-content">
+                                    <strong>기술 트렌드</strong><br>
+                                    <small>AI/ML 기술 고도화, <span class="stats-highlight">IoT 센서</span> 발전, 
+                                    <span class="stats-highlight">5G/6G</span> 네트워크 확산으로 
+                                    실시간 데이터 처리와 연결성이 크게 향상되었습니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="sociocultural-trends">
+                                <div class="gpt-card-content">
+                                    <strong>사회문화적 트렌드</strong><br>
+                                    <small>웰빙 라이프스타일 확산, <span class="stats-highlight">지속가능성</span> 중시, 
+                                    <span class="stats-highlight">디지털 네이티브</span> 문화로 
+                                    기술 친화적 소비 패턴이 주류가 되었습니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                        </div>
+
+                        <!-- 소비자 트렌드 상세분석 -->
+                        <div class="expanded-card" id="consumer-trends">
+                            <div class="expanded-title">👥 소비자 트렌드 분석</div>
+                            
+                            <div class="consumer-demographics">
+                                <h4>소비자 세분화 분석</h4>
+                                <div class="demographics-grid">
+                                    <div class="demographic-group">
+                                        <h5>MZ세대 (20-40대)</h5>
+                                        <div class="demographic-stats">
+                                            <div class="stat-item">
+                                                <div class="stat-label">시장 점유율</div>
+                                                <div class="stat-value">68.5%</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-label">성장률</div>
+                                                <div class="stat-value">+24.3%</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-label">평균 구매액</div>
+                                                <div class="stat-value">18.7만원</div>
+                                            </div>
+                                        </div>
+                                        <div class="demographic-features">
+                                            <div class="feature-tag">개인화 선호</div>
+                                            <div class="feature-tag">디지털 네이티브</div>
+                                            <div class="feature-tag">브랜드 인식</div>
+                                            <div class="feature-tag">소셜미디어 영향</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="demographic-group">
+                                        <h5>X세대 (40-60대)</h5>
+                                        <div class="demographic-stats">
+                                            <div class="stat-item">
+                                                <div class="stat-label">시장 점유율</div>
+                                                <div class="stat-value">23.2%</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-label">성장률</div>
+                                                <div class="stat-value">+15.7%</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-label">평균 구매액</div>
+                                                <div class="stat-value">25.3만원</div>
+                                            </div>
+                                        </div>
+                                        <div class="demographic-features">
+                                            <div class="feature-tag">품질 중시</div>
+                                            <div class="feature-tag">안전성 고려</div>
+                                            <div class="feature-tag">효과 검증</div>
+                                            <div class="feature-tag">브랜드 신뢰</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="demographic-group">
+                                        <h5>베이비붐 세대 (60대+)</h5>
+                                        <div class="demographic-stats">
+                                            <div class="stat-item">
+                                                <div class="stat-label">시장 점유율</div>
+                                                <div class="stat-value">8.3%</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-label">성장률</div>
+                                                <div class="stat-value">+8.9%</div>
+                                            </div>
+                                            <div class="stat-item">
+                                                <div class="stat-label">평균 구매액</div>
+                                                <div class="stat-value">12.1만원</div>
+                                            </div>
+                                        </div>
+                                        <div class="demographic-features">
+                                            <div class="feature-tag">사용 편의성</div>
+                                            <div class="feature-tag">건강 관리</div>
+                                            <div class="feature-tag">가격 민감</div>
+                                            <div class="feature-tag">기존 브랜드</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="consumer-behavior">
+                                <h4>소비 행동 패턴 분석</h4>
+                                <div class="behavior-chart">
+                                    <div class="behavior-item">
+                                        <div class="behavior-title">구매 결정 요인</div>
+                                        <div class="behavior-bars">
+                                            <div class="behavior-bar">
+                                                <div class="bar-label">개인화 서비스</div>
+                                                <div class="bar-container">
+                                                    <div class="bar-fill" style="width: 95%; background: #4285f4;">
+                                                        <span class="bar-value">95%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="behavior-bar">
+                                                <div class="bar-label">AI 기술력</div>
+                                                <div class="bar-container">
+                                                    <div class="bar-fill" style="width: 88%; background: #34a853;">
+                                                        <span class="bar-value">88%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="behavior-bar">
+                                                <div class="bar-label">브랜드 인지도</div>
+                                                <div class="bar-container">
+                                                    <div class="bar-fill" style="width: 82%; background: #fbbc05;">
+                                                        <span class="bar-value">82%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="behavior-bar">
+                                                <div class="bar-label">가격 경쟁력</div>
+                                                <div class="bar-container">
+                                                    <div class="bar-fill" style="width: 75%; background: #ea4335;">
+                                                        <span class="bar-value">75%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="behavior-bar">
+                                                <div class="bar-label">친환경 소재</div>
+                                                <div class="bar-container">
+                                                    <div class="bar-fill" style="width: 68%; background: #9c27b0;">
+                                                        <span class="bar-value">68%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="consumer-opportunities">
+                                <h4>기회 요인 분석</h4>
+                                <div class="opportunities-grid">
+                                    <div class="opportunity-item high">
+                                        <div class="opportunity-icon">📱</div>
+                                        <div class="opportunity-title">모바일 퍼스트</div>
+                                        <div class="opportunity-desc">스마트폰을 통한 개인화 케어 서비스 요구 증가</div>
+                                        <div class="opportunity-potential">잠재력: 매우 높음</div>
+                                    </div>
+                                    <div class="opportunity-item high">
+                                        <div class="opportunity-icon">🤖</div>
+                                        <div class="opportunity-title">AI 개인화</div>
+                                        <div class="opportunity-desc">개인 맞춤형 케어 추천 시스템에 대한 높은 기대</div>
+                                        <div class="opportunity-potential">잠재력: 매우 높음</div>
+                                    </div>
+                                    <div class="opportunity-item medium">
+                                        <div class="opportunity-icon">🏠</div>
+                                        <div class="opportunity-title">홈케어 문화</div>
+                                        <div class="opportunity-desc">집에서 전문적인 케어를 받고 싶어하는 니즈</div>
+                                        <div class="opportunity-potential">잠재력: 높음</div>
+                                    </div>
+                                    <div class="opportunity-item medium">
+                                        <div class="opportunity-icon">🌱</div>
+                                        <div class="opportunity-title">지속가능성</div>
+                                        <div class="opportunity-desc">환경 친화적 제품과 서비스에 대한 관심 증가</div>
+                                        <div class="opportunity-potential">잠재력: 높음</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="consumer-trends">닫기</button>
+                        </div>
+
+                        <!-- 기술 트렌드 상세분석 -->
+                        <div class="expanded-card" id="technology-trends">
+                            <div class="expanded-title">🤖 기술 트렌드 분석</div>
+                            
+                            <div class="tech-overview">
+                                <h4>핵심 기술 발전 현황</h4>
+                                <div class="tech-matrix">
+                                    <div class="tech-category">
+                                        <h5>AI/머신러닝</h5>
+                                        <div class="tech-items">
+                                            <div class="tech-item">
+                                                <div class="tech-name">딥러닝 알고리즘</div>
+                                                <div class="tech-status">성숙도: 85%</div>
+                                                <div class="tech-impact">영향도: 매우 높음</div>
+                                                <div class="tech-desc">피부 분석 정확도 95% 이상 달성, 실시간 처리 가능</div>
+                                            </div>
+                                            <div class="tech-item">
+                                                <div class="tech-name">컴퓨터 비전</div>
+                                                <div class="tech-status">성숙도: 78%</div>
+                                                <div class="tech-impact">영향도: 높음</div>
+                                                <div class="tech-desc">고해상도 카메라와 결합하여 정밀한 피부 상태 진단</div>
+                                            </div>
+                                            <div class="tech-item">
+                                                <div class="tech-name">자연어 처리</div>
+                                                <div class="tech-status">성숙도: 72%</div>
+                                                <div class="tech-impact">영향도: 중간</div>
+                                                <div class="tech-desc">고객 문의 자동 응답 및 개인화 케어 가이드</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tech-category">
+                                        <h5>IoT & 센서</h5>
+                                        <div class="tech-items">
+                                            <div class="tech-item">
+                                                <div class="tech-name">바이오센서</div>
+                                                <div class="tech-status">성숙도: 68%</div>
+                                                <div class="tech-impact">영향도: 높음</div>
+                                                <div class="tech-desc">피부 수분, 유분, 탄력 등 생체 신호 측정</div>
+                                            </div>
+                                            <div class="tech-item">
+                                                <div class="tech-name">환경센서</div>
+                                                <div class="tech-status">성숙도: 82%</div>
+                                                <div class="tech-impact">영향도: 중간</div>
+                                                <div class="tech-desc">온도, 습도, 자외선 등 환경 요인 모니터링</div>
+                                            </div>
+                                            <div class="tech-item">
+                                                <div class="tech-name">모션센서</div>
+                                                <div class="tech-status">성숙도: 90%</div>
+                                                <div class="tech-impact">영향도: 중간</div>
+                                                <div class="tech-desc">사용자 동작 인식 및 자동 타이머 설정</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="tech-category">
+                                        <h5>네트워크 & 연결</h5>
+                                        <div class="tech-items">
+                                            <div class="tech-item">
+                                                <div class="tech-name">5G/6G 네트워크</div>
+                                                <div class="tech-status">성숙도: 75%</div>
+                                                <div class="tech-impact">영향도: 높음</div>
+                                                <div class="tech-desc">실시간 데이터 전송 및 클라우드 연동</div>
+                                            </div>
+                                            <div class="tech-item">
+                                                <div class="tech-name">블루투스 5.0+</div>
+                                                <div class="tech-status">성숙도: 88%</div>
+                                                <div class="tech-impact">영향도: 높음</div>
+                                                <div class="tech-desc">저전력 고속 데이터 전송 및 멀티 디바이스 연결</div>
+                                            </div>
+                                            <div class="tech-item">
+                                                <div class="tech-name">WiFi 6/7</div>
+                                                <div class="tech-status">성숙도: 65%</div>
+                                                <div class="tech-impact">영향도: 중간</div>
+                                                <div class="tech-desc">고대역폭 무선 연결 및 IoT 디바이스 지원</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tech-roadmap">
+                                <h4>기술 발전 로드맵</h4>
+                                <div class="roadmap-timeline">
+                                    <div class="roadmap-item current">
+                                        <div class="roadmap-year">2024년</div>
+                                        <div class="roadmap-tech">AI 기반 피부 분석</div>
+                                        <div class="roadmap-desc">기본적인 AI 분석 기능 탑재, 정확도 85% 달성</div>
+                                        <div class="roadmap-status">현재 단계</div>
+                                    </div>
+                                    <div class="roadmap-item near">
+                                        <div class="roadmap-year">2025년</div>
+                                        <div class="roadmap-tech">고도화 AI + IoT</div>
+                                        <div class="roadmap-desc">실시간 모니터링, 예측 분석, 정확도 92% 달성</div>
+                                        <div class="roadmap-status">1년 내</div>
+                                    </div>
+                                    <div class="roadmap-item future">
+                                        <div class="roadmap-year">2026년</div>
+                                        <div class="roadmap-tech">AI + 바이오테크</div>
+                                        <div class="roadmap-desc">유전자 분석 기반 맞춤형 케어, 정확도 96% 달성</div>
+                                        <div class="roadmap-status">2년 내</div>
+                                    </div>
+                                    <div class="roadmap-item future">
+                                        <div class="roadmap-year">2027년</div>
+                                        <div class="roadmap-tech">메타버스 통합</div>
+                                        <div class="roadmap-desc">가상 피부 컨설팅, AR/VR 기반 케어 가이드</div>
+                                        <div class="roadmap-status">3년 내</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tech-investment">
+                                <h4>기술 투자 현황</h4>
+                                <div class="investment-chart">
+                                    <div class="investment-item">
+                                        <div class="investment-area">AI/ML 연구개발</div>
+                                        <div class="investment-bar">
+                                            <div class="investment-fill" style="width: 100%; background: #4285f4;">
+                                                <span class="investment-value">연 1,200억원</span>
+                                            </div>
+                                        </div>
+                                        <div class="investment-share">35.2%</div>
+                                    </div>
+                                    <div class="investment-item">
+                                        <div class="investment-area">IoT 센서 개발</div>
+                                        <div class="investment-bar">
+                                            <div class="investment-fill" style="width: 85%; background: #34a853;">
+                                                <span class="investment-value">연 850억원</span>
+                                            </div>
+                                        </div>
+                                        <div class="investment-share">25.1%</div>
+                                    </div>
+                                    <div class="investment-item">
+                                        <div class="investment-area">소프트웨어 플랫폼</div>
+                                        <div class="investment-bar">
+                                            <div class="investment-fill" style="width: 70%; background: #fbbc05;">
+                                                <span class="investment-value">연 700억원</span>
+                                            </div>
+                                        </div>
+                                        <div class="investment-share">20.6%</div>
+                                    </div>
+                                    <div class="investment-item">
+                                        <div class="investment-area">하드웨어 설계</div>
+                                        <div class="investment-bar">
+                                            <div class="investment-fill" style="width: 55%; background: #ea4335;">
+                                                <span class="investment-value">연 450억원</span>
+                                            </div>
+                                        </div>
+                                        <div class="investment-share">13.2%</div>
+                                    </div>
+                                    <div class="investment-item">
+                                        <div class="investment-area">기타</div>
+                                        <div class="investment-bar">
+                                            <div class="investment-fill" style="width: 25%; background: #9c27b0;">
+                                                <span class="investment-value">연 200억원</span>
+                                            </div>
+                                        </div>
+                                        <div class="investment-share">5.9%</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="technology-trends">닫기</button>
+                        </div>
+
+                        <!-- 사회문화적 트렌드 상세분석 -->
+                        <div class="expanded-card" id="sociocultural-trends">
+                            <div class="expanded-title">사회문화적 트렌드 분석</div>
+                            
+                            <div class="social-macro">
+                                <h4>메가트렌드 분석</h4>
+                                <div class="megatrends-grid">
+                                    <div class="megatrend-item">
+                                        <div class="megatrend-icon">🏠</div>
+                                        <div class="megatrend-title">홈센터 라이프</div>
+                                        <div class="megatrend-desc">코로나19 이후 집을 중심으로 한 라이프스타일 변화</div>
+                                        <div class="megatrend-impact">영향도: 매우 높음</div>
+                                        <div class="megatrend-examples">
+                                            <div class="example-item">• 홈오피스 확산</div>
+                                            <div class="example-item">• 홈케어 서비스 증가</div>
+                                            <div class="example-item">• 온라인 쇼핑 성장</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="megatrend-item">
+                                        <div class="megatrend-icon">🌿</div>
+                                        <div class="megatrend-title">지속가능성</div>
+                                        <div class="megatrend-desc">환경 보호와 사회적 책임에 대한 인식 확산</div>
+                                        <div class="megatrend-impact">영향도: 높음</div>
+                                        <div class="megatrend-examples">
+                                            <div class="example-item">• 친환경 소재 선호</div>
+                                            <div class="example-item">• 순환 경제 모델</div>
+                                            <div class="example-item">• 탄소 중립 추구</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="megatrend-item">
+                                        <div class="megatrend-icon">📱</div>
+                                        <div class="megatrend-title">디지털 네이티브</div>
+                                        <div class="megatrend-desc">디지털 기술에 익숙한 세대의 소비 패턴 변화</div>
+                                        <div class="megatrend-impact">영향도: 매우 높음</div>
+                                        <div class="megatrend-examples">
+                                            <div class="example-item">• 모바일 퍼스트</div>
+                                            <div class="example-item">• 소셜미디어 영향</div>
+                                            <div class="example-item">• 즉시 만족 추구</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="megatrend-item">
+                                        <div class="megatrend-icon">💎</div>
+                                        <div class="megatrend-title">프리미엄화</div>
+                                        <div class="megatrend-desc">품질과 경험에 대한 가치 인식 증가</div>
+                                        <div class="megatrend-impact">영향도: 높음</div>
+                                        <div class="megatrend-examples">
+                                            <div class="example-item">• 맞춤형 서비스</div>
+                                            <div class="example-item">• 브랜드 가치 중시</div>
+                                            <div class="example-item">• 고급화 선호</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="cultural-shifts">
+                                <h4>문화적 변화 동향</h4>
+                                <div class="cultural-chart">
+                                    <div class="cultural-item">
+                                        <div class="cultural-title">웰빙 문화 확산</div>
+                                        <div class="cultural-trend">
+                                            <div class="trend-indicator positive">+32.5%</div>
+                                            <div class="trend-desc">건강 관리와 자기 케어에 대한 관심 증가</div>
+                                        </div>
+                                        <div class="cultural-drivers">
+                                            <div class="driver-tag">건강 인식</div>
+                                            <div class="driver-tag">자기 관리</div>
+                                            <div class="driver-tag">예방 의학</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="cultural-item">
+                                        <div class="cultural-title">개인화 추구</div>
+                                        <div class="cultural-trend">
+                                            <div class="trend-indicator positive">+28.7%</div>
+                                            <div class="trend-desc">개인 맞춤형 제품과 서비스에 대한 요구 증가</div>
+                                        </div>
+                                        <div class="cultural-drivers">
+                                            <div class="driver-tag">개성 표현</div>
+                                            <div class="driver-tag">맞춤형 케어</div>
+                                            <div class="driver-tag">독창성</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="cultural-item">
+                                        <div class="cultural-title">데이터 기반 의사결정</div>
+                                        <div class="cultural-trend">
+                                            <div class="trend-indicator positive">+41.2%</div>
+                                            <div class="trend-desc">객관적 데이터를 통한 합리적 선택 선호</div>
+                                        </div>
+                                        <div class="cultural-drivers">
+                                            <div class="driver-tag">투명성</div>
+                                            <div class="driver-tag">객관성</div>
+                                            <div class="driver-tag">효율성</div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="cultural-item">
+                                        <div class="cultural-title">소셜미디어 영향</div>
+                                        <div class="cultural-trend">
+                                            <div class="trend-indicator positive">+35.8%</div>
+                                            <div class="trend-desc">인플루언서와 커뮤니티를 통한 정보 공유</div>
+                                        </div>
+                                        <div class="cultural-drivers">
+                                            <div class="driver-tag">커뮤니티</div>
+                                            <div class="driver-tag">인플루언서</div>
+                                            <div class="driver-tag">트렌드</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="social-opportunities">
+                                <h4>사회문화적 기회 요인</h4>
+                                <div class="opportunities-analysis">
+                                    <div class="opportunity-dimension">
+                                        <h5>라이프스타일 변화 (40%)</h5>
+                                        <div class="opportunity-factors">
+                                            <div class="factor-item high">
+                                                <div class="factor-name">홈케어 문화</div>
+                                                <div class="factor-score">92점</div>
+                                                <div class="factor-desc">집에서 전문적인 케어를 받고 싶어하는 니즈</div>
+                                            </div>
+                                            <div class="factor-item high">
+                                                <div class="factor-name">웰빙 트렌드</div>
+                                                <div class="factor-score">88점</div>
+                                                <div class="factor-desc">건강과 아름다움에 대한 관심 증가</div>
+                                            </div>
+                                            <div class="factor-item medium">
+                                                <div class="factor-name">개인화 선호</div>
+                                                <div class="factor-score">75점</div>
+                                                <div class="factor-desc">개인 맞춤형 서비스에 대한 요구</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="opportunity-dimension">
+                                        <h5>가치관 변화 (35%)</h5>
+                                        <div class="opportunity-factors">
+                                            <div class="factor-item high">
+                                                <div class="factor-name">지속가능성</div>
+                                                <div class="factor-score">85점</div>
+                                                <div class="factor-desc">환경 친화적 제품과 서비스 선호</div>
+                                            </div>
+                                            <div class="factor-item medium">
+                                                <div class="factor-name">투명성</div>
+                                                <div class="factor-score">72점</div>
+                                                <div class="factor-desc">제품 성분과 효과에 대한 투명한 정보 요구</div>
+                                            </div>
+                                            <div class="factor-item medium">
+                                                <div class="factor-name">사회적 책임</div>
+                                                <div class="factor-score">68점</div>
+                                                <div class="factor-desc">기업의 사회적 가치 창출에 대한 관심</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="opportunity-dimension">
+                                        <h5>기술 수용성 (25%)</h5>
+                                        <div class="opportunity-factors">
+                                            <div class="factor-item high">
+                                                <div class="factor-name">디지털 친화</div>
+                                                <div class="factor-score">90점</div>
+                                                <div class="factor-desc">새로운 기술에 대한 높은 수용성</div>
+                                            </div>
+                                            <div class="factor-item medium">
+                                                <div class="factor-name">데이터 활용</div>
+                                                <div class="factor-score">78점</div>
+                                                <div class="factor-desc">개인 데이터를 통한 맞춤형 서비스 기대</div>
+                                            </div>
+                                            <div class="factor-item low">
+                                                <div class="factor-name">자동화 선호</div>
+                                                <div class="factor-score">65점</div>
+                                                <div class="factor-desc">편의성을 위한 자동화 기능 요구</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="sociocultural-trends">닫기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5단계: 타겟 시장 선정 -->
+                <section id="target-selection" class="content-section">
+                    <div class="section-header">
+                        <h1 class="section-title">타겟 시장 선정</h1>
+                        <p class="section-desc">시장 분석 결과를 바탕으로 타겟 시장을 선정하고 고객 세분화를 통해 최적의 타겟을 도출합니다.</p>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>타겟 시장 세분화</h3>
+                        <div class="stats-content">
+                            <p>뷰티테크 시장에서 <span class="stats-highlight">2030 여성</span>을 주요 타겟으로 선정하고, 소득 수준과 라이프스타일에 따른 세분화를 진행했습니다.</p>
+                            <div class="card-data">
+                                <small>
+                                    <strong>주요 세분화 기준:</strong> 연령대(20-30대), 소득 수준(월 300-500만원), 라이프스타일(건강/뷰티 관심도 높음), 기술 친숙도(스마트폰 앱 활용 능숙)
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gpt-section">
+                        <h2 class="gpt-title">타겟 시장 선정 결과</h2>
+                        <div class="gpt-cards">
+                            <div class="gpt-card" data-target="customer-segmentation">
+                                <div class="gpt-card-content">
+                                    <strong>고객 세분화</strong><br>
+                                    <small>고객 세분화를 통해 주요 타겟 그룹을 식별하고 각 그룹의 특성과 니즈를 분석합니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="target-selection-details">
+                                <div class="gpt-card-content">
+                                    <strong>타겟 선택</strong><br>
+                                    <small>세분화된 고객 그룹 중에서 최적의 타겟을 선정하고 선정 근거를 제시합니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="market-potential">
+                                <div class="gpt-card-content">
+                                    <strong>시장 잠재력 평가</strong><br>
+                                    <small>선정된 타겟 시장의 잠재력과 성장 가능성을 정량적으로 평가합니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 고객 세분화 상세분석 -->
+                    <div class="expanded-card" id="customer-segmentation">
+                        <h3 class="expanded-title">고객 세분화 분석</h3>
+                        
+                        <div class="segmentation-overview">
+                            <h4>세분화 기준 및 결과</h4>
+                            <div class="segmentation-criteria">
+                                <div class="criteria-grid">
+                                    <div class="criteria-item">
+                                        <h5>연령대별 세분화</h5>
+                                        <div class="age-segments">
+                                            <div class="segment-item">
+                                                <span class="segment-name">20-24세 (Z세대)</span>
+                                                <span class="segment-size">25%</span>
+                                                <span class="segment-characteristics">SNS 활발, 트렌드 민감, 가격 민감</span>
+                                            </div>
+                                            <div class="segment-item">
+                                                <span class="segment-name">25-29세 (밀레니얼)</span>
+                                                <span class="segment-size">35%</span>
+                                                <span class="segment-characteristics">프리미엄 선호, 브랜드 가치 중시, 편의성 추구</span>
+                                            </div>
+                                            <div class="segment-item">
+                                                <span class="segment-name">30-34세 (젊은 성인)</span>
+                                                <span class="segment-size">40%</span>
+                                                <span class="segment-characteristics">효과성 중시, 투자 의향 높음, 시간 효율성 추구</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="criteria-item">
+                                        <h5>소득 수준별 세분화</h5>
+                                        <div class="income-segments">
+                                            <div class="segment-item">
+                                                <span class="segment-name">월 300-400만원</span>
+                                                <span class="segment-size">45%</span>
+                                                <span class="segment-characteristics">가성비 중시, 할인 혜택 선호, 분할 결제 활용</span>
+                                            </div>
+                                            <div class="segment-item">
+                                                <span class="segment-name">월 400-500만원</span>
+                                                <span class="segment-size">35%</span>
+                                                <span class="segment-characteristics">품질 중시, 프리미엄 제품 선호, 브랜드 가치 인식</span>
+                                            </div>
+                                            <div class="segment-item">
+                                                <span class="segment-name">월 500만원 이상</span>
+                                                <span class="segment-size">20%</span>
+                                                <span class="segment-characteristics">최고급 제품 선호, 서비스 품질 중시, 충성도 높음</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="lifestyle-analysis">
+                            <h4>라이프스타일별 특성 분석</h4>
+                            <div class="lifestyle-grid">
+                                <div class="lifestyle-item">
+                                    <h5>건강/뷰티 관심도</h5>
+                                    <div class="interest-chart">
+                                        <div class="interest-bar">
+                                            <span class="interest-label">매우 높음</span>
+                                            <div class="interest-fill" style="width: 65%">65%</div>
+                                        </div>
+                                        <div class="interest-bar">
+                                            <span class="interest-label">높음</span>
+                                            <div class="interest-fill" style="width: 25%">25%</div>
+                                        </div>
+                                        <div class="interest-bar">
+                                            <span class="interest-label">보통</span>
+                                            <div class="interest-fill" style="width: 10%">10%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="lifestyle-item">
+                                    <h5>기술 친숙도</h5>
+                                    <div class="tech-chart">
+                                        <div class="tech-bar">
+                                            <span class="tech-label">스마트폰 앱</span>
+                                            <div class="tech-fill" style="width: 90%">90%</div>
+                                        </div>
+                                        <div class="tech-bar">
+                                            <span class="tech-label">웨어러블 기기</span>
+                                            <div class="tech-fill" style="width: 45%">45%</div>
+                                        </div>
+                                        <div class="tech-bar">
+                                            <span class="tech-label">IoT 기기</span>
+                                            <div class="tech-fill" style="width: 30%">30%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="close-btn" data-close-target="customer-segmentation">닫기</button>
+                    </div>
+
+                    <!-- 타겟 선택 상세분석 -->
+                    <div class="expanded-card" id="target-selection-details">
+                        <h3 class="expanded-title">타겟 선택 분석</h3>
+                        
+                        <div class="target-priority">
+                            <h4>타겟 우선순위 분석</h4>
+                            <div class="priority-matrix">
+                                <div class="priority-item primary">
+                                    <h5>1차 타겟: 핵심 타겟</h5>
+                                    <div class="target-profile">
+                                        <div class="profile-header">
+                                            <span class="profile-title">25-29세 프리미엄 뷰티러버</span>
+                                            <span class="profile-score">우선순위: 1순위</span>
+                                        </div>
+                                        <div class="profile-details">
+                                            <div class="profile-char">
+                                                <strong>인구통계:</strong> 25-29세 여성, 월 소득 400-500만원, 대학졸업 이상
+                                            </div>
+                                            <div class="profile-char">
+                                                <strong>심리적 특성:</strong> 자기관리 중시, 프리미엄 브랜드 선호, 트렌드 민감
+                                            </div>
+                                            <div class="profile-char">
+                                                <strong>구매 행동:</strong> 온라인 쇼핑 선호, 리뷰 중시, 분할 결제 활용
+                                            </div>
+                                            <div class="profile-char">
+                                                <strong>시장 잠재력:</strong> 연간 뷰티 기기 구매 예산 50-100만원
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="priority-item secondary">
+                                    <h5>2차 타겟: 확장 타겟</h5>
+                                    <div class="target-profile">
+                                        <div class="profile-header">
+                                            <span class="profile-title">30-34세 건강관리 중시층</span>
+                                            <span class="profile-score">우선순위: 2순위</span>
+                                        </div>
+                                        <div class="profile-details">
+                                            <div class="profile-char">
+                                                <strong>인구통계:</strong> 30-34세 여성, 월 소득 500만원 이상, 직장인
+                                            </div>
+                                            <div class="profile-char">
+                                                <strong>심리적 특성:</strong> 건강 관리 중시, 효율성 추구, 투자 의향 높음
+                                            </div>
+                                            <div class="profile-char">
+                                                <strong>구매 행동:</strong> 품질 중시, 전문가 추천 신뢰, 충성도 높음
+                                            </div>
+                                            <div class="profile-char">
+                                                <strong>시장 잠재력:</strong> 연간 건강 기기 구매 예산 100-200만원
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="selection-criteria">
+                            <h4>타겟 선정 근거</h4>
+                            <div class="criteria-analysis">
+                                <div class="criteria-item">
+                                    <h5>시장 규모</h5>
+                                    <div class="criteria-score">9/10</div>
+                                    <p>2030 여성 뷰티테크 시장 규모 약 2조원, 연평균 성장률 15%</p>
+                                </div>
+                                <div class="criteria-item">
+                                    <h5>구매력</h5>
+                                    <div class="criteria-score">8/10</div>
+                                    <p>월 평균 뷰티 관련 지출 15-20만원, 프리미엄 제품 수용도 높음</p>
+                                </div>
+                                <div class="criteria-item">
+                                    <h5>기술 수용도</h5>
+                                    <div class="criteria-score">9/10</div>
+                                    <p>스마트폰 활용도 높음, 새로운 기술에 대한 호기심과 시도 의향 강함</p>
+                                </div>
+                                <div class="criteria-item">
+                                    <h5>경쟁 강도</h5>
+                                    <div class="criteria-score">7/10</div>
+                                    <p>기존 브랜드 다수 존재하나 혁신적 기능으로 차별화 가능</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="close-btn" data-close-target="target-selection-details">닫기</button>
+                    </div>
+
+                    <!-- 시장 잠재력 평가 상세분석 -->
+                    <div class="expanded-card" id="market-potential">
+                        <h3 class="expanded-title">시장 잠재력 평가</h3>
+                        
+                        <div class="market-size-analysis">
+                            <h4>시장 규모 및 성장성</h4>
+                            <div class="size-charts">
+                                <div class="size-chart">
+                                    <h5>국내 뷰티테크 시장 규모</h5>
+                                    <div class="market-timeline">
+                                        <div class="timeline-item">
+                                            <span class="year">2023</span>
+                                            <span class="market-value">1.8조원</span>
+                                            <span class="growth">+12%</span>
+                                        </div>
+                                        <div class="timeline-item">
+                                            <span class="year">2024</span>
+                                            <span class="market-value">2.1조원</span>
+                                            <span class="growth">+17%</span>
+                                        </div>
+                                        <div class="timeline-item future">
+                                            <span class="year">2025</span>
+                                            <span class="market-value">2.5조원</span>
+                                            <span class="growth">+19%</span>
+                                        </div>
+                                        <div class="timeline-item future">
+                                            <span class="year">2026</span>
+                                            <span class="market-value">3.0조원</span>
+                                            <span class="growth">+20%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="size-chart">
+                                    <h5>세분 시장별 점유율</h5>
+                                    <div class="segment-share">
+                                        <div class="share-item">
+                                            <span class="segment-name">스킨케어 기기</span>
+                                            <div class="share-bar">
+                                                <div class="share-fill" style="width: 40%">40%</div>
+                                            </div>
+                                            <span class="share-value">8,400억원</span>
+                                        </div>
+                                        <div class="share-item">
+                                            <span class="segment-name">메이크업 기기</span>
+                                            <div class="share-bar">
+                                                <div class="share-fill" style="width: 25%">25%</div>
+                                            </div>
+                                            <span class="share-value">5,250억원</span>
+                                        </div>
+                                        <div class="share-item">
+                                            <span class="segment-name">헤어케어 기기</span>
+                                            <div class="share-bar">
+                                                <div class="share-fill" style="width: 20%">20%</div>
+                                            </div>
+                                            <span class="share-value">4,200억원</span>
+                                        </div>
+                                        <div class="share-item">
+                                            <span class="segment-name">기타 뷰티 기기</span>
+                                            <div class="share-bar">
+                                                <div class="share-fill" style="width: 15%">15%</div>
+                                            </div>
+                                            <span class="share-value">3,150억원</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="growth-drivers">
+                            <h4>성장 동력 분석</h4>
+                            <div class="drivers-grid">
+                                <div class="driver-item">
+                                    <div class="driver-icon">📱</div>
+                                    <h5>스마트폰 보급률</h5>
+                                    <p>20-30대 여성 스마트폰 보급률 98% 이상, 앱 활용도 높음</p>
+                                    <div class="driver-impact">영향도: 높음</div>
+                                </div>
+                                <div class="driver-item">
+                                    <div class="driver-icon">💄</div>
+                                    <h5>뷰티 관심도 증가</h5>
+                                    <p>SNS 영향으로 뷰티 트렌드 민감도 증가, 자기관리 투자 확대</p>
+                                    <div class="driver-impact">영향도: 높음</div>
+                                </div>
+                                <div class="driver-item">
+                                    <div class="driver-icon">🏠</div>
+                                    <h5>홈케어 트렌드</h5>
+                                    <p>코로나19 이후 홈에서의 뷰티 관리 선호, 전문가 방문 감소</p>
+                                    <div class="driver-impact">영향도: 중간</div>
+                                </div>
+                                <div class="driver-item">
+                                    <div class="driver-icon">💰</div>
+                                    <h5>소득 수준 향상</h5>
+                                    <p>2030 여성의 경제력 향상, 프리미엄 제품 수용도 증가</p>
+                                    <div class="driver-impact">영향도: 중간</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="risk-assessment">
+                            <h4>리스크 평가</h4>
+                            <div class="risk-matrix">
+                                <div class="risk-item high">
+                                    <h5>높은 리스크</h5>
+                                    <div class="risk-content">
+                                        <div class="risk-factor">
+                                            <span class="risk-name">경쟁사 진입</span>
+                                            <span class="risk-desc">대기업의 뷰티테크 시장 진입으로 경쟁 심화</span>
+                                        </div>
+                                        <div class="risk-factor">
+                                            <span class="risk-name">기술 변화</span>
+                                            <span class="risk-desc">AI 기술 발전으로 제품 생명주기 단축</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="risk-item medium">
+                                    <h5>중간 리스크</h5>
+                                    <div class="risk-content">
+                                        <div class="risk-factor">
+                                            <span class="risk-name">경기 변동</span>
+                                            <span class="risk-desc">경기 침체 시 뷰티 관련 지출 감소</span>
+                                        </div>
+                                        <div class="risk-factor">
+                                            <span class="risk-name">규제 변화</span>
+                                            <span class="risk-desc">의료기기 관련 규제 강화 가능성</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="risk-item low">
+                                    <h5>낮은 리스크</h5>
+                                    <div class="risk-content">
+                                        <div class="risk-factor">
+                                            <span class="risk-name">인구 변화</span>
+                                            <span class="risk-desc">2030 여성 인구는 안정적 유지</span>
+                                        </div>
+                                        <div class="risk-factor">
+                                            <span class="risk-name">기술 수용도</span>
+                                            <span class="risk-desc">기술 친숙도는 지속적 향상</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button class="close-btn" data-close-target="market-potential">닫기</button>
+                    </div>
+                </section>
+
+                <!-- 6단계: 포지셔닝 전략 -->
+                <div class="content-section" id="positioning">
+                    <div class="section-header">
+                        <h2 class="section-title">6단계: 포지셔닝 전략</h2>
+                        <p class="section-desc">타겟 고객에게 어떻게 인식되고 싶은지 명확한 포지셔닝을 설정합니다.</p>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>핵심 포지셔닝</h3>
+                        <div class="stats-content">
+                            <p><strong>핵심 가치:</strong> <span class="stats-highlight">"AI 기반 맞춤형 홈케어 솔루션"</span></p>
+                            <p><strong>차별화 포인트:</strong> <span class="stats-highlight">실시간 피부 분석 + 맞춤형 케어 추천</span></p>
+                            <p><strong>브랜드 컨셉:</strong> <span class="stats-highlight">"당신만의 뷰티 전문가"</span></p>
+                            <p><strong>경쟁 우위:</strong> <span class="stats-highlight">AI 정확도 95%</span> + <span class="stats-highlight">홈케어 디바이스 연동</span></p>
+                            <p><strong>감정적 가치:</strong> <span class="stats-highlight">자신감</span>, <span class="stats-highlight">편의성</span>, <span class="stats-highlight">전문성</span></p>
+                        </div>
+                    </div>
+
+                    <div class="info-box clearfix">
+                        <div class="info-text">
+                            <span class="info-highlight">"AI 기반 맞춤형 홈케어 솔루션"</span>으로 포지셔닝합니다. 
+                            25-35세 여성층이 중요하게 생각하는 <span class="info-highlight">개인화</span>, 
+                            <span class="info-highlight">편의성</span>, 그리고 <span class="info-highlight">전문적인 케어</span>를 제공하는 브랜드로 자리잡습니다.
+                        </div>
+                        <button class="action-button" id="showPositioningDetails">포지셔닝 전략 보기 →</button>
+                    </div>
+
+                    <div class="gpt-section">
+                        <h2 class="gpt-title">포지셔닝 전략 결과</h2>
+                        
+                        <div class="gpt-cards">
+                            <div class="gpt-card" data-target="differentiation">
+                                <div class="gpt-card-content">
+                                    <strong>차별화 포인트</strong><br>
+                                    <small><span class="stats-highlight">AI 정확도 95%</span> + <span class="stats-highlight">홈케어 디바이스 연동</span>으로 
+                                    경쟁사 대비 독특한 가치를 제공합니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="brand-concept">
+                                <div class="gpt-card-content">
+                                    <strong>브랜드 컨셉</strong><br>
+                                    <small><span class="stats-highlight">"당신만의 뷰티 전문가"</span>라는 핵심 메시지로 
+                                    개인화와 전문성을 강조합니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card" data-target="positioning-map">
+                                <div class="gpt-card-content">
+                                    <strong>포지셔닝 맵</strong><br>
+                                    <small>가격 대비 <span class="stats-highlight">기술력</span>과 <span class="stats-highlight">편의성</span>에서 
+                                    경쟁사 대비 우위를 점합니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                        </div>
+
+                        <!-- 차별화 포인트 확장 카드 -->
+                        <div class="expanded-card" id="differentiation">
+                            <div class="expanded-title">🌟 차별화 포인트</div>
+                            
+                            <div class="features-grid">
+                                <div class="feature-item">
+                                    <div class="feature-title">🤖 AI 피부 분석 정확도 95%</div>
+                                    <div class="feature-desc">딥러닝 알고리즘을 활용한 고정밀 피부 상태 분석으로 전문가 수준의 진단을 제공합니다.</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">🔗 홈케어 디바이스 완벽 연동</div>
+                                    <div class="feature-desc">AI 분석 결과를 바탕으로 홈케어 디바이스와 실시간 연동하여 맞춤형 케어를 실행합니다.</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">📱 개인화 모바일 앱</div>
+                                    <div class="feature-desc">사용자별 맞춤 대시보드와 AI 케어 추천 시스템으로 개인화된 뷰티 경험을 제공합니다.</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">📊 실시간 데이터 추적</div>
+                                    <div class="feature-desc">피부 상태 변화를 실시간으로 모니터링하고 장기적인 케어 효과를 데이터로 증명합니다.</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">🌿 성분 맞춤 추천</div>
+                                    <div class="feature-desc">피부 타입과 상태에 맞는 화장품 성분을 AI가 분석하여 최적의 제품을 추천합니다.</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">💡 스마트 라이프스타일 연동</div>
+                                    <div class="feature-desc">수면, 스트레스, 식습관 등 생활 패턴을 분석하여 종합적인 뷰티 솔루션을 제공합니다.</div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="differentiation">닫기</button>
+                        </div>
+
+                        <!-- 브랜드 컨셉 확장 카드 -->
+                        <div class="expanded-card" id="brand-concept">
+                            <div class="expanded-title">브랜드 컨셉</div>
+                            
+                            <div class="brand-concept">
+                                <h3>"당신만의 뷰티 전문가"</h3>
+                                <p>우리는 단순한 피부 관리 기기가 아닙니다. 25-35세 여성의 개인화된 뷰티 니즈를 AI로 해결하는 라이프스타일 파트너입니다.</p>
+                            </div>
+
+                            <div class="features-grid">
+                                <div class="feature-item">
+                                    <div class="feature-title">브랜드 미션</div>
+                                    <div class="feature-desc">"AI 기술로 모든 여성이 전문가 수준의 맞춤형 피부 케어를 집에서 경험할 수 있도록 한다"</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">브랜드 가치</div>
+                                    <div class="feature-desc">개인화 · 전문성 · 편의성 · 혁신성 · 신뢰성 · 라이프스타일</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">핵심 메시지</div>
+                                    <div class="feature-desc">"AI가 알아주는 당신만의 아름다움"</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">브랜드 페르소나</div>
+                                    <div class="feature-desc">친근하면서도 전문적인 뷰티 컨설턴트 같은 존재, 언제든지 믿고 의지할 수 있는 파트너</div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="brand-concept">닫기</button>
+                        </div>
+
+                        <!-- 포지셔닝 맵 확장 카드 -->
+                        <div class="expanded-card" id="positioning-map">
+                            <div class="expanded-title">뷰티테크 시장 포지셔닝 맵</div>
+                            
+                            <div class="positioning-map">
+                                <!-- 축 라벨 -->
+                                <div class="axis-label x-axis">기술력</div>
+                                <div class="axis-label y-axis">편의성</div>
+                                <div class="axis-label" style="top: 380px; left: 50%; transform: translateX(-50%); font-size: 11px;">기본 기능</div>
+                                <div class="axis-label" style="top: 50%; right: 10px; transform: translateY(-50%) rotate(90deg); font-size: 11px;">복잡함</div>
+                                
+                                <!-- 중앙선 -->
+                                <div style="position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: #ccc;"></div>
+                                <div style="position: absolute; left: 50%; top: 0; bottom: 0; width: 1px; background: #ccc;"></div>
+                                
+                                <!-- 경쟁사들 -->
+                                <!-- L'Oreal Perso - 높은 기술력, 높은 편의성 -->
+                                <div class="competitor-dot" style="background: #ff6b6b; border-color: #ff6b6b; top: 25%; left: 75%;"></div>
+                                <div class="competitor-label" style="top: 20%; left: 77%;">L'Oreal<br>Perso</div>
+                                
+                                <!-- 우리 제품 - 최고 기술력, 최고 편의성 -->
+                                <div class="competitor-dot us" style="top: 20%; left: 80%;"></div>
+                                <div class="competitor-label" style="top: 15%; left: 82%; background: #4285f4; color: white; border-color: #4285f4;">AI 스마트<br>피부 분석기</div>
+                                
+                                <!-- Samsung Beauty Mirror - 높은 기술력, 중간 편의성 -->
+                                <div class="competitor-dot" style="background: #00a86b; border-color: #00a86b; top: 50%; left: 70%;"></div>
+                                <div class="competitor-label" style="top: 45%; left: 72%;">Samsung<br>Beauty Mirror</div>
+                                
+                                <!-- LG Pra.L - 중간 기술력, 높은 편의성 -->
+                                <div class="competitor-dot" style="background: #ffa500; border-color: #ffa500; top: 30%; left: 50%;"></div>
+                                <div class="competitor-label" style="top: 25%; left: 52%;">LG Pra.L</div>
+                                
+                                <!-- Glowpick - 낮은 기술력, 높은 편의성 -->
+                                <div class="competitor-dot" style="background: #8b4513; border-color: #8b4513; top: 35%; left: 25%;"></div>
+                                <div class="competitor-label" style="top: 30%; left: 27%;">Glowpick</div>
+                                
+                                <!-- Hwahae - 낮은 기술력, 중간 편의성 -->
+                                <div class="competitor-dot" style="background: #9932cc; border-color: #9932cc; top: 60%; left: 30%;"></div>
+                                <div class="competitor-label" style="top: 55%; left: 32%;">Hwahae</div>
+                                
+                                <!-- 일반 뷰티 디바이스 - 낮은 기술력, 낮은 편의성 -->
+                                <div class="competitor-dot" style="background: #ff4500; border-color: #ff4500; top: 80%; left: 20%;"></div>
+                                <div class="competitor-label" style="top: 75%; left: 22%;">일반 뷰티<br>디바이스</div>
+                            </div>
+
+                            <div class="features-grid">
+                                <div class="feature-item">
+                                    <div class="feature-title">우리의 포지셔닝</div>
+                                    <div class="feature-desc">최고 수준의 AI 기술력과 사용자 편의성을 동시에 제공하는 프리미엄 뷰티테크 솔루션</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">차별화 전략</div>
+                                    <div class="feature-desc">L'Oreal과 경쟁하되, 홈케어 디바이스 연동이라는 독특한 차별점으로 시장을 선도</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">경쟁 분석</div>
+                                    <div class="feature-desc">L'Oreal은 화장품 제조에 특화, Samsung은 하드웨어 품질에 집중, 우리는 통합 솔루션 제공</div>
+                                </div>
+                                
+                                <div class="feature-item">
+                                    <div class="feature-title">성장 기회</div>
+                                    <div class="feature-desc">AI 기술 고도화와 새로운 홈케어 디바이스 개발을 통해 기술력과 편의성 모두 향상</div>
+                                </div>
+                            </div>
+                            
+                            <button class="close-btn" data-close-target="positioning-map">닫기</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 7단계: 통합 마케팅 전략 -->
+                <div class="content-section" id="marketing-strategy">
+                    <div class="section-header">
+                        <h2 class="section-title">7단계: 통합 마케팅 전략</h2>
+                        <p class="section-desc">제품, 가격, 유통, 프로모션의 통합적 마케팅 믹스를 구성합니다.</p>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>마케팅 믹스 전략</h3>
+                        <div class="stats-content">
+                            <p><strong>제품 전략:</strong> <span class="stats-highlight">AI 스마트 피부 분석기</span> + <span class="stats-highlight">홈케어 디바이스</span> + <span class="stats-highlight">모바일 앱</span></p>
+                            <p><strong>가격 전략:</strong> <span class="stats-highlight">프리미엄 가격</span> (25-35만원) + <span class="stats-highlight">구독 모델</span> (월 3-5만원)</p>
+                            <p><strong>유통 전략:</strong> <span class="stats-highlight">온라인 직접 판매</span> + <span class="stats-highlight">뷰티 전문점</span> + <span class="stats-highlight">대형 마트</span></p>
+                            <p><strong>프로모션 전략:</strong> <span class="stats-highlight">인플루언서 마케팅</span> + <span class="stats-highlight">SNS 광고</span> + <span class="stats-highlight">체험 이벤트</span></p>
+                            <p><strong>예산 배분:</strong> <span class="stats-highlight">디지털 마케팅 40%</span> + <span class="stats-highlight">인플루언서 30%</span> + <span class="stats-highlight">오프라인 30%</span></p>
+                        </div>
+                    </div>
+
+                    <div class="info-box clearfix">
+                        <div class="info-text">
+                            <span class="info-highlight">프리미엄 가격 정책</span>과 <span class="info-highlight">구독 모델</span>을 중심으로 마케팅 전략을 수립합니다. 
+                            25-35세 여성층이 선호하는 <span class="info-highlight">디지털 플랫폼</span>과 
+                            <span class="info-highlight">인플루언서</span>를 활용한 통합적 접근을 통해 브랜드 인지도를 높입니다.
+                        </div>
+                        <button class="action-button">마케팅 전략 보기 →</button>
+                    </div>
+
+                    <div class="gpt-section">
+                        <h2 class="gpt-title">통합 마케팅 전략 결과</h2>
+                        
+                        <div class="gpt-cards">
+                            <div class="gpt-card">
+                                <div class="gpt-card-content">
+                                    <strong>제품 전략</strong><br>
+                                    <small><span class="stats-highlight">AI 기술</span>과 <span class="stats-highlight">홈케어 연동</span>으로 
+                                    경쟁사 대비 차별화된 제품 포트폴리오를 구성합니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card">
+                                <div class="gpt-card-content">
+                                    <strong>가격 전략</strong><br>
+                                    <small><span class="stats-highlight">프리미엄 가격</span>과 <span class="stats-highlight">구독 모델</span>을 통해 
+                                    지속적인 수익 창출과 고객 유지율을 높입니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                            
+                            <div class="gpt-card">
+                                <div class="gpt-card-content">
+                                    <strong>유통 및 프로모션 전략</strong><br>
+                                    <small><span class="stats-highlight">온라인 중심</span>의 유통과 <span class="stats-highlight">인플루언서</span>를 활용한 
+                                    통합적 커뮤니케이션 전략을 구성합니다.</small>
+                                </div>
+                                <a href="#" class="gpt-link">상세분석 보기 ››</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 8단계: 실행 계획 및 성과 지표 -->
+                <div class="content-section" id="implementation">
+                    <div class="section-header">
+                        <h2 class="section-title">8단계: 실행 계획 및 성과 지표</h2>
+                        <p class="section-desc">구체적인 실행 로드맵과 성과 측정 지표를 설정합니다.</p>
+                    </div>
+
+                    <div class="stats-section">
+                        <h3>실행 로드맵 (2024-2026)</h3>
+                        <div class="stats-content">
+                            <p><strong>2024년 Q1-Q2:</strong> <span class="stats-highlight">제품 개발 및 테스트</span> (AI 알고리즘 개발, 프로토타입 제작)</p>
+                            <p><strong>2024년 Q3-Q4:</strong> <span class="stats-highlight">시장 테스트 및 피드백</span> (베타 테스터 500명, 초기 마케팅)</p>
+                            <p><strong>2025년 Q1-Q2:</strong> <span class="stats-highlight">정식 출시 및 확산</span> (전국 출시, 인플루언서 캠페인)</p>
+                            <p><strong>2025년 Q3-Q4:</strong> <span class="stats-highlight">시장 확장 및 개선</span> (해외 진출, 제품 업그레이드)</p>
+                            <p><strong>2026년:</strong> <span class="stats-highlight">시장 점유율 확대</span> (목표: 국내 시장 15%, 해외 진출 3개국)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="analysis-grid">
+                        <div class="analysis-card">
+                            <div class="card-icon">📅</div>
+                            <h3 class="card-title">실행 로드맵</h3>
+                            <p class="card-desc">단계별 실행 계획과 일정을 구체적으로 수립합니다.</p>
+                            <div class="card-data">
+                                <small>✅ 2024년 제품 개발 완료<br>
+                                ✅ 2025년 정식 출시<br>
+                                ✅ 2026년 시장 확장</small>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-card">
+                            <div class="card-icon">📊</div>
+                            <h3 class="card-title">성과 지표 (KPI)</h3>
+                            <p class="card-desc">매출, 시장점유율, 고객만족도 등 핵심 성과 지표를 설정합니다.</p>
+                            <div class="card-data">
+                                <small>🎯 1년차: 매출 50억원<br>
+                                🎯 2년차: 매출 150억원<br>
+                                🎯 3년차: 매출 300억원</small>
+                            </div>
+                        </div>
+                        
+                        <div class="analysis-card">
+                            <div class="card-icon">⚠️</div>
+                            <h3 class="card-title">리스크 관리</h3>
+                            <p class="card-desc">예상 위험 요소와 대응 방안을 미리 준비합니다.</p>
+                            <div class="card-data">
+                                <small>⚠️ 기술 리스크: 백업 기술 확보<br>
+                                ⚠️ 시장 리스크: 다각화 전략<br>
+                                ⚠️ 경쟁 리스크: 차별화 강화</small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-box clearfix">
+                        <div class="info-text">
+                            <span class="info-highlight">3년간의 체계적인 실행 계획</span>을 통해 목표 매출 달성과 시장 점유율 확대를 목표로 합니다.<br>
+                            <span class="info-highlight">단계별 성과 측정</span>과 <span class="info-highlight">리스크 관리</span>를 통해 안정적인 성장을 추구합니다.
+                        </div>
+                        <button class="action-button">실행 계획 보기 →</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- 푸터 영역 -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <h3>i know you AI</h3>
+                    <p>AI 기반 상품화 전략 서비스</p>
+                </div>
+                <div class="footer-description">
+                    <p>상품기획자, 디자이너, 마케터를 위한<br>
+                    시장분석 기반 상품화 전략 AI 서비스</p>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+                <div class="company-info">
+                    <div class="address">
+                        <p>서울특별시 성북구 삼양로 22, 기린빌딩 106-2호</p>
+                    </div>
+                    <div class="company-details">
+                        <p>(주)아이디이노랩 | 360-88-00948 | pibuchi@gmail.com<br>
+                        </p>
+                    </div>
+                    <div class="footer-links">
+                        <a href="#">이용약관</a> | <a href="#">개인정보취급방침</a> | <a href="#">서비스 이용문의</a>
+                        <div class="copyright">
+                            © idinnolab co., ltd. All rights reserved.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="js/app.js"></script>
+</body>
+</html>

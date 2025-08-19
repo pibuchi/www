@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>새 페르소나 생성 - PersonaSync™</title>
+    <!-- 상대경로 수정: pages 폴더에서 상위로 이동 -->
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="../index.html" class="logo">PersonaSync™</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="../index.html">대시보드</a></li>
+                <li class="nav-item"><a href="./persona-create.html" class="active">페르소나 생성</a></li>
+                <li class="nav-item"><a href="./analytics.html">분석</a></li>
+                <li class="nav-item"><a href="./reports.html">리포트</a></li>
+            </ul>
+            <div class="user-info"></div>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="card mb-20">
+            <div class="card-header">
+                <h1 class="card-title">🎯 새 페르소나 생성</h1>
+                <p class="card-subtitle">"우리만의 데이터 + 검증된 시장 데이터"로 정확한 페르소나를 만들어보세요</p>
+            </div>
+        </div>
+
+        <!-- Progress Steps -->
+        <div class="card mb-20">
+            <div class="progress-steps">
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-title">데이터 소스 선택</div>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-title">타깃 세그먼트</div>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-title">AI 분석</div>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-title">페르소나 완성</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Data Source Selection -->
+        <div id="step-1" class="step-content">
+            <div class="grid-2">
+                <!-- CRM Data Selection -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">💾 내부 데이터 선택</h2>
+                        <p class="card-subtitle">기존 CRM/DMP 데이터를 선택하세요</p>
+                    </div>
+                    
+                    <div class="data-source-selection">
+                        <label class="data-source-item">
+                            <input type="checkbox" checked>
+                            <div class="source-info">
+                                <span class="source-icon">💾</span>
+                                <div>
+                                    <h4>Samsung CRM</h4>
+                                    <p>고객 구매 이력 • 2.3M 레코드</p>
+                                </div>
+                            </div>
+                            <span class="status-badge status-connected">선택됨</span>
+                        </label>
+
+                        <label class="data-source-item">
+                            <input type="checkbox" checked>
+                            <div class="source-info">
+                                <span class="source-icon">🛒</span>
+                                <div>
+                                    <h4>온라인몰 DMP</h4>
+                                    <p>웹 행동 데이터 • 실시간</p>
+                                </div>
+                            </div>
+                            <span class="status-badge status-connected">선택됨</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Market Data Selection -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">🔍 시장 데이터 매칭</h2>
+                        <p class="card-subtitle">아이노유 에스노그라피 데이터와 매칭</p>
+                    </div>
+
+                    <div class="market-data-preview">
+                        <div class="market-segment">
+                            <h4>🎯 스마트폰 얼리어답터</h4>
+                            <div class="segment-stats">
+                                <span class="stat">관찰 데이터: 1,247건</span>
+                                <span class="stat">신뢰도: 94.2%</span>
+                            </div>
+                            <p>신제품 출시 초기 구매 패턴, 기술 혁신 반응성, 소셜 영향력 등을 실제 관찰한 데이터</p>
+                        </div>
+
+                        <div class="market-segment">
+                            <h4>💰 가성비 추구 그룹</h4>
+                            <div class="segment-stats">
+                                <span class="stat">관찰 데이터: 2,156건</span>
+                                <span class="stat">신뢰도: 91.8%</span>
+                            </div>
+                            <p>가격 대비 성능 중시, 리뷰 의존도, 할인 이벤트 반응 패턴 등의 실측 데이터</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-20">
+                <button class="btn btn-primary" onclick="nextStep()">
+                    다음 단계 ➡️
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Target Segment -->
+        <div id="step-2" class="step-content" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🎯 타깃 세그먼트 정의</h2>
+                    <p class="card-subtitle">생성할 페르소나의 특성을 정의해주세요</p>
+                </div>
+
+                <div class="grid-2">
+                    <div class="form-section">
+                        <h3>기본 정보</h3>
+                        <div class="form-group">
+                            <label class="form-label">페르소나 이름</label>
+                            <input type="text" class="form-input" placeholder="예: 김얼리 (얼리어답터)" id="persona-name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">타깃 세그먼트</label>
+                            <select class="form-select" id="persona-segment">
+                                <option value="early-adopter">얼리어답터</option>
+                                <option value="practical">실용주의자</option>
+                                <option value="premium">프리미엄 추구</option>
+                                <option value="budget">가성비 중심</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>분석 범위</h3>
+                        <div class="form-group">
+                            <label class="form-label">분석 기간</label>
+                            <select class="form-select" id="analysis-period">
+                                <option value="3months">최근 3개월</option>
+                                <option value="6months">최근 6개월</option>
+                                <option value="1year">최근 1년</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-20">
+                    <button class="btn btn-secondary" onclick="prevStep()">⬅️ 이전</button>
+                    <button class="btn btn-primary" onclick="nextStep()">AI 분석 시작 🚀</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: AI Analysis -->
+        <div id="step-3" class="step-content" style="display: none;">
+            <div class="card text-center">
+                <div class="card-header">
+                    <h2 class="card-title">🤖 AI 분석 진행중</h2>
+                    <p class="card-subtitle">데이터를 융합하여 페르소나를 생성하고 있습니다</p>
+                </div>
+
+                <div class="analysis-progress">
+                    <div class="analysis-step">
+                        <div class="step-icon completed">✅</div>
+                        <h4>CRM 데이터 분석</h4>
+                        <p>고객 구매 패턴 및 행동 분석 완료</p>
+                    </div>
+                    <div class="analysis-step">
+                        <div class="step-icon processing">🔄</div>
+                        <h4>시장 데이터 매칭</h4>
+                        <p>에스노그라피 데이터와 융합 중...</p>
+                    </div>
+                    <div class="analysis-step">
+                        <div class="step-icon pending">⏳</div>
+                        <h4>인사이트 생성</h4>
+                        <p>WHY & NEXT 예측 분석 대기중</p>
+                    </div>
+                </div>
+
+                <div class="mt-20">
+                    <button class="btn btn-primary" onclick="nextStep()">
+                        분석 완료 후 계속 ➡️
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Persona Complete -->
+        <div id="step-4" class="step-content" style="display: none;">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🎉 페르소나 생성 완료</h2>
+                </div>
+
+                <div class="generated-persona">
+                    <div class="persona-profile">
+                        <div class="persona-avatar">김</div>
+                        <div class="persona-info">
+                            <h3>김얼리 (얼리어답터)</h3>
+                            <span class="persona-tag">프리미엄 세그먼트</span>
+                            <p>신기술에 민감하고 트렌드를 선도하는 25-35세 직장인</p>
+                        </div>
+                    </div>
+
+                    <div class="persona-insights-final">
+                        <h4>💡 핵심 인사이트</h4>
+                        <div class="insight-list">
+                            <div class="insight-final">
+                                <strong>WHO:</strong> 수도권 거주 25-35세 고소득 직장인
+                            </div>
+                            <div class="insight-final">
+                                <strong>WHY:</strong> 남들보다 먼저 경험하는 것에서 자부심을 느끼며, 기술적 우위를 중시
+                            </div>
+                            <div class="insight-final">
+                                <strong>NEXT:</strong> 프리오더 참여 확률 85%, 소셜 미디어 리뷰 작성 가능성 높음
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-20">
+                    <button class="btn btn-success" onclick="savePersona()">💾 페르소나 저장</button>
+                    <button class="btn btn-secondary" onclick="goHome()">🏠 대시보드로</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 경로 수정 -->
+    <script src="../js/common.js"></script>
+    <script>
+        let currentStep = 1;
+
+        function nextStep() {
+            if (currentStep < 4) {
+                document.getElementById(`step-${currentStep}`).style.display = 'none';
+                currentStep++;
+                document.getElementById(`step-${currentStep}`).style.display = 'block';
+                updateProgressSteps();
+                
+                if (currentStep === 3) {
+                    simulateAnalysis();
+                }
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step-${currentStep}`).style.display = 'none';
+                currentStep--;
+                document.getElementById(`step-${currentStep}`).style.display = 'block';
+                updateProgressSteps();
+            }
+        }
+
+        function updateProgressSteps() {
+            document.querySelectorAll('.step').forEach((step, index) => {
+                if (index + 1 <= currentStep) {
+                    step.classList.add('active');
+                } else {
+                    step.classList.remove('active');
+                }
+            });
+        }
+
+        function simulateAnalysis() {
+            setTimeout(() => {
+                document.querySelector('.step-icon.processing').innerHTML = '✅';
+                document.querySelector('.step-icon.pending').innerHTML = '✅';
+                window.personaSync?.showNotification('페르소나 분석이 완료되었습니다!', 'success');
+            }, 3000);
+        }
+
+        function savePersona() {
+            window.personaSync?.showNotification('페르소나가 성공적으로 저장되었습니다!', 'success');
+            setTimeout(() => {
+                window.location.href = '../index.html';
+            }, 2000);
+        }
+
+        function goHome() {
+            window.location.href = '../index.html';
+        }
+    </script>
+
+    <style>
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            opacity: 0.5;
+            transition: all 0.3s ease;
+        }
+
+        .step.active {
+            opacity: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #4a5074;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .step.active .step-number {
+            background: #667eea;
+        }
+
+        .step-title {
+            font-size: 14px;
+            color: #b8bcc8;
+            text-align: center;
+        }
+
+        .step.active .step-title {
+            color: #ffffff;
+        }
+
+        .data-source-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: rgba(42, 45, 62, 0.6);
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .market-segment {
+            background: rgba(42, 45, 62, 0.6);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+        }
+
+        .segment-stats {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+        }
+
+        .stat {
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .form-section {
+            background: rgba(42, 45, 62, 0.6);
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .form-section h3 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            color: #ffffff;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(42, 45, 62, 0.8);
+            border: 1px solid #4a5074;
+            border-radius: 10px;
+            color: #ffffff;
+            font-size: 14px;
+        }
+
+        .analysis-progress {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+        }
+
+        .analysis-step {
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin: 0 auto 15px;
+            background: #4a5074;
+        }
+
+        .step-icon.completed {
+            background: #4CAF50;
+        }
+
+        .step-icon.processing {
+            background: #FF9800;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        .generated-persona {
+            background: rgba(42, 45, 62, 0.6);
+            padding: 25px;
+            border-radius: 12px;
+        }
+
+        .persona-profile {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .persona-profile .persona-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+        }
+
+        .insight-final {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .insight-final strong {
+            color: #667eea;
+        }
+    </style>
+</body>
+</html>

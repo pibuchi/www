@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>DB 스키마 브라우저</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background-color: #f9f9f9;
+      padding: 40px;
+    }
+    h2 {
+      color: #333;
+    }
+    .accordion {
+      background-color: #ffffff;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      padding: 15px 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .panel {
+      display: none;
+      background-color: #fff;
+      border: 1px solid #eee;
+      border-top: none;
+      border-radius: 0 0 10px 10px;
+      padding: 10px 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      font-size: 14px;
+    }
+    th {
+      background-color: #f0f0f0;
+      text-align: left;
+    }
+  </style>
+</head>
+<body>
+
+<h2>📘 데이터베이스 스키마 브라우저</h2>
+
+<div class="accordion">상권분석정보_전체</div>
+<div class="panel">
+  <table>
+    <tr><th>필드명</th><th>한글명</th><th>데이터 타입</th><th>설명</th></tr>
+    <tr><td>sido_cd</td><td>시도코드</td><td>INT</td><td>행정구역 상의 시/도 코드</td></tr>
+    <tr><td>sigungu_nm</td><td>시군구명</td><td>TEXT</td><td>시/군/구 이름</td></tr>
+    <tr><td>dong_nm</td><td>행정동명</td><td>TEXT</td><td>동 단위의 행정명칭</td></tr>
+    <tr><td>longitude</td><td>경도</td><td>FLOAT</td><td>위치 정보 (경도)</td></tr>
+    <tr><td>latitude</td><td>위도</td><td>FLOAT</td><td>위치 정보 (위도)</td></tr>
+  </table>
+</div>
+
+<div class="accordion">상권분석정보_소분류별점포수</div>
+<div class="panel">
+  <table>
+    <tr><th>필드명</th><th>한글명</th><th>데이터 타입</th><th>설명</th></tr>
+    <tr><td>store_cd</td><td>상권업종소분류코드</td><td>TEXT</td><td>상세 업종 코드</td></tr>
+    <tr><td>store_cnt</td><td>점포수</td><td>INT</td><td>해당 업종의 점포 수</td></tr>
+    <tr><td>dong_nm</td><td>행정동명</td><td>TEXT</td><td>동 단위의 행정명칭</td></tr>
+  </table>
+</div>
+
+<script>
+  const acc = document.getElementsByClassName("accordion");
+  for (let i = 0; i < acc.length; i++) {
+    acc[i].addEventListener("click", function () {
+      this.classList.toggle("active");
+      const panel = this.nextElementSibling;
+      panel.style.display = (panel.style.display === "block") ? "none" : "block";
+    });
+  }
+</script>
+
+</body>
+</html>

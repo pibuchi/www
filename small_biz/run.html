@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>서버 실행기</title></head>
+<body>
+    <h2>🚀 소상공인 고객분석 서비스 실행</h2>
+    <p>아래 버튼을 클릭하면 자동으로 서버가 실행됩니다.</p>
+    <button onclick="runServer()">서버 실행 및 브라우저 열기</button>
+    
+    <script>
+    function runServer() {
+        // Python 서버 실행 명령어 복사
+        navigator.clipboard.writeText('python -m http.server 8000').then(() => {
+            alert('명령어가 복사되었습니다!\n\n1. 윈도우 키 + R\n2. cmd 입력 후 엔터\n3. Ctrl + V로 붙여넣기\n4. 엔터\n5. http://localhost:8000 접속');
+        });
+    }
+    </script>
+</body>
+</html>

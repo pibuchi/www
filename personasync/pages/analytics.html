@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>상세 분석 - PersonaSync™</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="../index.html" class="logo">PersonaSync™</a>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="../index.html">대시보드</a></li>
+                <li class="nav-item"><a href="./persona-create.html">페르소나 생성</a></li>
+                <li class="nav-item"><a href="./analytics.html" class="active">분석</a></li>
+                <li class="nav-item"><a href="./reports.html">리포트</a></li>
+            </ul>
+            <div class="user-info"></div>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="card mb-20">
+            <div class="card-header">
+                <h1 class="card-title">📈 상세 분석 대시보드</h1>
+                <p class="card-subtitle">WHO → WHY → NEXT 분석을 통한 깊이 있는 고객 이해</p>
+            </div>
+        </div>
+
+        <!-- WHO-WHY-NEXT Analysis -->
+        <div class="grid-3">
+            <!-- WHO Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">👥 WHO 분석</h2>
+                    <p class="card-subtitle">고객이 누구인지</p>
+                </div>
+                <div class="analysis-content">
+                    <div class="metric">
+                        <div class="metric-value">34%</div>
+                        <div class="metric-label">얼리어답터</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">52%</div>
+                        <div class="metric-label">실용주의자</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-value">14%</div>
+                        <div class="metric-label">시니어</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- WHY Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🧠 WHY 분석</h2>
+                    <p class="card-subtitle">왜 그런 선택을 하는지</p>
+                </div>
+                <div class="analysis-content">
+                    <div class="motivation-item">
+                        <span class="motivation-icon">🎯</span>
+                        <div>
+                            <strong>기술 우위성</strong>
+                            <p>남들보다 앞선 기술 경험</p>
+                        </div>
+                    </div>
+                    <div class="motivation-item">
+                        <span class="motivation-icon">💡</span>
+                        <div>
+                            <strong>혁신 추구</strong>
+                            <p>새로운 경험과 변화</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NEXT Analysis -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">🔮 NEXT 분석</h2>
+                    <p class="card-subtitle">다음에 무엇을 할지</p>
+                </div>
+                <div class="analysis-content">
+                    <div class="prediction-item">
+                        <div class="prediction-prob">85%</div>
+                        <div>
+                            <strong>신제품 프리오더</strong>
+                            <p>출시 1주 내 구매 예상</p>
+                        </div>
+                    </div>
+                    <div class="prediction-item">
+                        <div class="prediction-prob">72%</div>
+                        <div>
+                            <strong>소셜 미디어 리뷰</strong>
+                            <p>구매 후 24시간 내</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Back Button -->
+        <div class="text-center mt-20">
+            <button class="btn btn-secondary" onclick="goHome()">🏠 대시보드로 돌아가기</button>
+        </div>
+    </div>
+
+    <script src="../js/common.js"></script>
+    <script>
+        function goHome() {
+            window.location.href = '../index.html';
+        }
+    </script>
+
+    <style>
+        .analysis-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .motivation-item,
+        .prediction-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(42, 45, 62, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .motivation-icon {
+            font-size: 24px;
+        }
+
+        .prediction-prob {
+            background: #667eea;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+            min-width: 50px;
+            text-align: center;
+        }
+
+        .motivation-item strong,
+        .prediction-item strong {
+            color: #ffffff;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .motivation-item p,
+        .prediction-item p {
+            color: #b8bcc8;
+            font-size: 13px;
+            margin: 0;
+        }
+    </style>
+</body>
+</html>

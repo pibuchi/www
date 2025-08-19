@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>i know you_AI디자인 전략 리포트</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    // 페이지 로드 시 자동으로 AI 추천 페이지로 리다이렉트 (첫 방문 시에만)
+    if (!localStorage.getItem('hasVisitedItemSelection')) {
+      localStorage.setItem('hasVisitedItemSelection', 'true');
+      window.location.href = 'ai-recommendation.html';
+    }
+  </script>
+  <style>
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    
+    .section-actions {
+      display: flex;
+      gap: 8px;
+    }
+    
+    .btn-preview, .btn-pdf {
+      padding: 6px 12px;
+      font-size: 12px;
+      border: 1px solid #2a2a3a;
+      border-radius: 4px;
+      background: #1e1e2a;
+      color: #b7b7c7;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .btn-preview:hover, .btn-pdf:hover {
+      background: #2a2a3a;
+      color: #ffffff;
+    }
+    
+    .btn-preview {
+      background: #1a3a5f;
+      border-color: #2a5a8a;
+      color: #7bb3ff;
+    }
+    
+    .btn-preview:hover {
+      background: #2a5a8a;
+      color: #ffffff;
+    }
+    
+    .btn-pdf {
+      background: #5f1a1a;
+      border-color: #8a2a2a;
+      color: #ff7b7b;
+    }
+    
+    .btn-pdf:hover {
+      background: #8a2a2a;
+      color: #ffffff;
+    }
+    
+    .preview-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      display: none;
+    }
+    
+    .preview-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #1e1e2a;
+      border: 1px solid #2a2a3a;
+      border-radius: 8px;
+      padding: 20px;
+      max-width: 90%;
+      max-height: 90%;
+      overflow-y: auto;
+      color: #ffffff;
+    }
+    
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #2a2a3a;
+    }
+    
+    .preview-close {
+      background: none;
+      border: none;
+      color: #b7b7c7;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .preview-close:hover {
+      color: #ffffff;
+    }
+    
+    .pdf-section {
+      page-break-inside: avoid;
+      margin-bottom: 30px;
+    }
+    
+    .pdf-section h2 {
+      color: #2a2a3a;
+      border-bottom: 2px solid #2a2a3a;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    
+    @media print {
+      .sidebar, .toolbar, .section-actions, .btn-preview, .btn-pdf {
+        display: none !important;
+      }
+      
+      body {
+        background: white !important;
+        color: black !important;
+      }
+      
+      .card {
+        border: 1px solid #ccc !important;
+        box-shadow: none !important;
+        background: white !important;
+        color: black !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-container">
+    <!-- 좌측 메뉴 -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h3>i know you_AI</h3>
+        <p>비즈니스 전략 지원 AI</p>
+      </div>
+      
+      <nav class="sidebar-nav">
+        <div class="nav-section current-step-section">
+          <h4>현재 단계: 리서치</h4>
+          <div class="step-progress-indicator">
+            <div class="progress-bar">
+              <div class="progress-fill" style="width: 40%"></div>
+            </div>
+            <span class="progress-text">2/5 단계 완료</span>
+          </div>
+          <ul>
+            <li><a href="ai-recommendation.html" class="nav-item" data-section="ai-recommendation">
+              AI 추천
+              <span class="nav-status">완료</span>
+            </a></li>
+            <li><a href="item-selection.html" class="nav-item" data-section="item-selection">
+              아이템 및 타겟 선정
+              <span class="nav-status completed">완료</span>
+            </a></li>
+            <li><a href="#trend-analysis" class="nav-item current" data-section="trend-analysis">
+              트렌드 키워드 분석
+              <span class="nav-status current">진행 중</span>
+            </a></li>
+            <li><a href="#brand-analysis" class="nav-item" data-section="brand-analysis">
+              선도기업 & 제품 분석
+              <span class="nav-status">진행 중</span>
+            </a></li>
+            <li><a href="#persona-analysis" class="nav-item" data-section="persona-analysis">
+              주요 타겟 페르소나 분석
+              <span class="nav-status">진행 중</span>
+            </a></li>
+            <li><a href="#market-analysis" class="nav-item" data-section="market-analysis">
+              산업 규모 현황
+              <span class="nav-status">진행 중</span>
+            </a></li>
+          </ul>
+        </div>
+        
+        <div class="nav-section next-step-section">
+          <h4>다음 단계: 아이데이션</h4>
+          <p class="next-step-desc">리서치 결과를 바탕으로 창의적인 아이디어를 생성합니다</p>
+          <ul>
+            <li><a href="#ideation" class="nav-item" data-section="ideation">
+              아이데이션
+              <span class="nav-status locked">잠김</span>
+            </a></li>
+          </ul>
+        </div>
+        
+        <div class="nav-section future-step-section">
+          <h4>향후 단계</h4>
+          <p class="next-step-desc">아이데이션 결과를 바탕으로 컨셉을 개발하고 평가합니다</p>
+          <ul>
+            <li><a href="#concept-development" class="nav-item" data-section="concept-development">
+              컨셉 개발
+              <span class="nav-status locked">잠김</span>
+            </a></li>
+            <li><a href="#evaluation-feedback" class="nav-item" data-section="evaluation-feedback">
+              평가 및 피드백
+              <span class="nav-status locked">잠김</span>
+            </a></li>
+          </ul>
+        </div>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">홍</div>
+          <div class="user-details">
+            <div class="user-name">홍길동</div>
+            <div class="user-status premium">Premium</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="main-content">
+      <div class="container" id="app">
+        <header>
+          <div class="header-content">
+            <div>
+              <h1 id="reportTitle">2025 스마트폰 디자인전략 인사이트 리포트</h1>
+              <p id="reportSubtitle">트렌드 · 선도기업 · 산업규모 · 타겟 페르소나 해석 (Infographic) — 데이터 기준: 2023Q1–2025Q2</p>
+            </div>
+            <div class="header-right">
+              <div class="progress-tracker">
+                <div class="progress-steps">
+                  <div class="step completed" data-step="research">
+                    <span class="step-text">리서치</span>
+                    <span class="step-check">✓</span>
+                  </div>
+                  <div class="step active" data-step="ideation">
+                    <span class="step-text">아이데이션</span>
+                    <button class="step-progress-btn" onclick="progressToNextStep()">다음 단계</button>
+                  </div>
+                  <div class="step" data-step="evaluation-feedback">
+                    <span class="step-text">평가 및 피드백</span>
+                    <span class="step-preview">준비 중...</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </header>
+
+
+
+        <!-- ===== 기본 리포트 ===== -->
+        <section class="card">
+          <div class="kpi">
+            <div class="item"><div class="label">국내 시장 규모(추정)</div><div class="value">₩ 45조</div></div>
+            <div class="item"><div class="label">국내 CAGR ('23→'27)</div><div class="value">3.8%</div></div>
+            <div class="item"><div class="label">글로벌 시장 규모(추정)</div><div class="value">$ 580B</div></div>
+            <div class="item"><div class="label">글로벌 CAGR ('23→'27)</div><div class="value">4.1%</div></div>
+          </div>
+        </section>
+
+        <!-- ===== 고급 분석 기능 ===== -->
+        <!-- 트렌드 키워드 심화 분석 -->
+        <section class="card trend-analysis-section" id="trend-analysis">
+          <div class="section-header">
+            <h2>트렌드 키워드 분석</h2>
+            <div class="section-actions">
+              <a href="keyword-details.html" class="button" style="min-height:auto;min-width:auto;padding:6px 12px;font-size:12px;background:var(--primary);color:white;text-decoration:none;display:inline-flex;align-items:center;">키워드 상세보기</a>
+              <button class="btn-preview" onclick="showPreview('trend-analysis', '트렌드 키워드 분석')">미리보기</button>
+              <button class="btn-pdf" onclick="exportToPDF('trend-analysis', '트렌드 키워드 분석')">PDF 출력</button>
+              <button class="button info-btn" id="btnDataInfo" style="min-height:auto;min-width:auto;padding:6px 10px;font-size:11px;background:var(--muted);color:var(--text)">데이터가공정보</button>
+            </div>
+          </div>
+          <div class="toolbar">
+             <select id="trendRange" class="select"><option value="8">최근 8분기</option><option value="12">최근 12분기</option></select>
+             <select id="trendPersonaFilter" class="select">
+               <option value="ALL">전체 페르소나</option>
+               <option value="P1">P1 · 트렌드 민감 MZ</option>
+               <option value="P2">P2 · 실용 중심 직장인</option>
+               <option value="P3">P3 · 친환경 가치 지향</option>
+             </select>
+             <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)"><input type="checkbox" id="trendOnlyFav"> 관심 키워드만</label>
+             <button class="button" id="btnHot">급상승만</button>
+           </div>
+          <div id="trendChart" class="chart"></div>
+          <div class="legend" id="trendLegend"></div>
+          
+          <!-- 선택된 키워드에 대한 페르소나 반응 -->
+          <div id="keywordPersonaReactions" class="keyword-reactions hidden">
+            <div class="reactions-header">
+              <h4><span id="selectedKeywordName">선택된 키워드</span>에 대한 페르소나별 반응(AI_연동)</h4>
+              <button class="button close-btn" id="closeReactions">닫기</button>
+            </div>
+            
+            <div class="persona-reactions-grid">
+              <!-- P1: 트렌드 민감 MZ -->
+              <div class="persona-reaction-card">
+                <div class="persona-header">
+                  <div class="persona-avatar">P1</div>
+                  <div class="persona-info">
+                    <h5>트렌드 민감 MZ</h5>
+                    <span class="reaction-score" id="p1Score">-</span>
+                  </div>
+                </div>
+                <div class="reaction-content">
+                  <div class="reaction-quote" id="p1Quote">키워드를 선택하면 페르소나의 실제 반응을 볼 수 있습니다.</div>
+                  <div class="reaction-metrics">
+                    <div class="metric">
+                      <span class="metric-label">관심도</span>
+                      <span class="metric-value" id="p1Interest">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">구매의도</span>
+                      <span class="metric-value" id="p1Purchase">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">추천도</span>
+                      <span class="metric-value" id="p1Recommend">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- P2: 실용 중심 직장인 -->
+              <div class="persona-reaction-card">
+                <div class="persona-header">
+                  <div class="persona-avatar">P2</div>
+                  <div class="persona-info">
+                    <h5>실용 중심 직장인</h5>
+                    <span class="reaction-score" id="p2Score">-</span>
+                  </div>
+                </div>
+                <div class="reaction-content">
+                  <div class="reaction-quote" id="p2Quote">키워드를 선택하면 페르소나의 실제 반응을 볼 수 있습니다.</div>
+                  <div class="reaction-metrics">
+                    <div class="metric">
+                      <span class="metric-label">관심도</span>
+                      <span class="metric-value" id="p2Interest">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">구매의도</span>
+                      <span class="metric-value" id="p2Purchase">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">추천도</span>
+                      <span class="metric-value" id="p2Recommend">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- P3: 친환경 가치 지향 -->
+              <div class="persona-reaction-card">
+                <div class="persona-header">
+                  <div class="persona-avatar">P3</div>
+                  <div class="persona-info">
+                    <h5>친환경 가치 지향</h5>
+                    <span class="reaction-score" id="p3Score">-</span>
+                  </div>
+                </div>
+                <div class="reaction-content">
+                  <div class="reaction-quote" id="p3Quote">키워드를 선택하면 페르소나의 실제 반응을 볼 수 있습니다.</div>
+                  <div class="reaction-metrics">
+                    <div class="metric">
+                      <span class="metric-label">관심도</span>
+                      <span class="metric-value" id="p3Interest">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">구매의도</span>
+                      <span class="metric-value" id="p3Purchase">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">추천도</span>
+                      <span class="metric-value" id="p3Recommend">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="reactions-summary">
+              <h5>종합 분석(AI_연동)</h5>
+              <div class="summary-content" id="reactionsSummary">
+                키워드를 선택하면 페르소나별 반응을 종합 분석한 결과를 볼 수 있습니다.
+              </div>
+            </div>
+          </div>
+          
+          <div id="trendDetailPremium" class="detail-card hidden">
+            <div class="detail-head"><span class="detail-title" id="trendDetailPremiumTitle">트렌드 상세</span>
+              <button class="button" id="trendDetailPremiumClose" style="min-height:auto;min-width:auto;padding:6px 10px">닫기</button></div>
+            <div id="trendDetailPremiumDesc" style="color:#c9c9d9;font-size:13px"></div>
+            <div class="metrics" id="trendDetailPremiumMetrics"></div>
+            <div class="reactions" id="trendDetailPremiumRx"></div>
+          </div>
+        </section>
+
+        <!-- 선도기업 심화 분석 -->
+        <section class="card" id="brand-analysis">
+          <div class="section-header">
+            <h2>선도기업 & 제품 분석</h2>
+            <div class="section-actions">
+              <button class="btn-preview" onclick="showPreview('brand-analysis', '선도기업 & 제품 분석')">미리보기</button>
+              <button class="btn-pdf" onclick="exportToPDF('brand-analysis', '선도기업 & 제품 분석')">PDF 출력</button>
+            </div>
+          </div>
+          <div class="toolbar">
+            <select id="brandPersonaFilter" class="select">
+              <option value="ALL">전체 페르소나</option>
+              <option value="P1">P1 · 트렌드 민감 MZ</option>
+              <option value="P2">P2 · 실용 중심 직장인</option>
+              <option value="P3">P3 · 친환경 가치 지향</option>
+            </select>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)"><input type="checkbox" id="brandOnlyFav"> 선호 브랜드만</label>
+          </div>
+          <div class="brand-list" id="brandList"></div>
+          
+          <!-- 선택된 브랜드에 대한 페르소나 반응 -->
+          <div id="brandPersonaReactions" class="keyword-reactions hidden">
+            <div class="reactions-header">
+              <h4><span id="selectedBrandName">선택된 브랜드</span>에 대한 페르소나별 반응(AI_연동)</h4>
+              <button class="button close-btn" id="closeBrandReactions">닫기</button>
+            </div>
+            
+            <div class="persona-reactions-grid">
+              <!-- P1: 트렌드 민감 MZ -->
+              <div class="persona-reaction-card">
+                <div class="persona-header">
+                  <div class="persona-avatar">P1</div>
+                  <div class="persona-info">
+                    <h5>트렌드 민감 MZ</h5>
+                    <span class="reaction-score" id="brandP1Score">-</span>
+                  </div>
+                </div>
+                <div class="reaction-content">
+                  <div class="reaction-quote" id="brandP1Quote">브랜드를 선택하면 페르소나의 실제 반응을 볼 수 있습니다.</div>
+                  <div class="reaction-metrics">
+                    <div class="metric">
+                      <span class="metric-label">브랜드 인지도</span>
+                      <span class="metric-value" id="brandP1Awareness">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">구매의도</span>
+                      <span class="metric-value" id="brandP1Purchase">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">추천도</span>
+                      <span class="metric-value" id="brandP1Recommend">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- P2: 실용 중심 직장인 -->
+              <div class="persona-reaction-card">
+                <div class="persona-header">
+                  <div class="persona-avatar">P2</div>
+                  <div class="persona-info">
+                    <h5>실용 중심 직장인</h5>
+                    <span class="reaction-score" id="brandP2Score">-</span>
+                  </div>
+                </div>
+                <div class="reaction-content">
+                  <div class="reaction-quote" id="brandP2Quote">브랜드를 선택하면 페르소나의 실제 반응을 볼 수 있습니다.</div>
+                  <div class="reaction-metrics">
+                    <div class="metric">
+                      <span class="metric-label">브랜드 인지도</span>
+                      <span class="metric-value" id="brandP2Awareness">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">구매의도</span>
+                      <span class="metric-value" id="brandP2Purchase">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">추천도</span>
+                      <span class="metric-value" id="brandP2Recommend">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- P3: 친환경 가치 지향 -->
+              <div class="persona-reaction-card">
+                <div class="persona-header">
+                  <div class="persona-avatar">P3</div>
+                  <div class="persona-info">
+                    <h5>친환경 가치 지향</h5>
+                    <span class="reaction-score" id="brandP3Score">-</span>
+                  </div>
+                </div>
+                <div class="reaction-content">
+                  <div class="reaction-quote" id="brandP3Quote">브랜드를 선택하면 페르소나의 실제 반응을 볼 수 있습니다.</div>
+                  <div class="reaction-metrics">
+                    <div class="metric">
+                      <span class="metric-label">브랜드 인지도</span>
+                      <span class="metric-value" id="brandP3Awareness">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">구매의도</span>
+                      <span class="metric-value" id="brandP3Purchase">-</span>
+                    </div>
+                    <div class="metric">
+                      <span class="metric-label">추천도</span>
+                      <span class="metric-value" id="brandP3Recommend">-</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="reactions-summary">
+              <h5>브랜드 종합 분석</h5>
+              <div class="summary-content" id="brandReactionsSummary">
+                브랜드를 선택하면 페르소나별 반응을 종합 분석한 결과를 볼 수 있습니다.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 주요 타겟 페르소나 분석 -->
+        <section class="card" id="persona-analysis">
+          <div class="section-header">
+            <h2>주요 타겟 페르소나 분석</h2>
+            <div class="section-actions">
+              <button class="btn-preview" onclick="showPreview('persona-analysis', '주요 타겟 페르소나 분석')">미리보기</button>
+              <button class="btn-pdf" onclick="exportToPDF('persona-analysis', '주요 타겟 페르소나 분석')">PDF 출력</button>
+            </div>
+          </div>
+          <div class="toolbar">
+            <select id="personaSelect" class="select">
+              <option value="P1">P1 · 트렌드 민감 MZ</option>
+              <option value="P2">P2 · 실용 중심 직장인</option>
+              <option value="P3">P3 · 친환경 가치 지향</option>
+            </select>
+          </div>
+          <div class="persona-wrap">
+            <div class="persona-card">
+              <div style="display:flex;justify-content:space-between;align-items:center">
+                <strong id="personaTitle">P1 · 트렌드 민감 MZ</strong>
+                <span class="pill">프리미엄 프로필</span>
+              </div>
+              
+              <div class="divider"></div>
+              
+              <!-- 인사이트 텍스트 영역 -->
+              <div class="persona-insights">
+                <div class="insight" id="insightTrend">P1은 'AI 카메라', '폴더블 UX'에 높은 반응. '친환경 소재'는 관심은 있으나 가격 민감 시 이탈.</div>
+                <div class="insight" id="insightBrand">Galaxy Z의 신기능에 FOMO 반응. iPhone의 촬영·편집 워크플로우 선호.</div>
+                <div class="insight" id="insightStrategy"><b>전략:</b> CMF Satin Glass + 미세 텍스처 메탈 · 메시지 "AI가 사진을 완성한다".</div>
+              </div>
+            </div>
+            
+                         <!-- 페르소나 신조어 분석 -->
+             <div class="persona-card" id="persona-buzzwords-section">
+               <div class="buzzword-header">
+                 <h3 style="margin:0 0 16px 0;font-size:16px;color:var(--text)">페르소나 신조어 분석</h3>
+               </div>
+               
+               <div class="persona-buzzwords">
+                <div class="buzzword-section">
+                  <small class="pill">라이프스타일 신조어</small>
+                  <div class="buzzword-tags" id="lifestyleBuzzwords">
+                    <span class="buzzword-tag" data-tooltip="You Only Live Once - 인생은 한 번뿐이니 지금 당장 즐기자" data-category="lifestyle">#YOLO</span>
+                    <span class="buzzword-tag" data-tooltip="Fear Of Missing Out - 놓칠까봐 두려워하는 심리" data-category="lifestyle">#FOMO</span>
+                    <span class="buzzword-tag" data-tooltip="Instagram Wish - 인스타그램에서 본 것을 사고 싶어하는 욕구" data-category="lifestyle">#인스타워시</span>
+                    <span class="buzzword-tag" data-tooltip="Trendy - 최신 트렌드를 따르는 스타일" data-category="lifestyle">#트렌디</span>
+                  </div>
+                </div>
+                <div class="buzzword-section">
+                  <small class="pill">구매 행동 신조어</small>
+                  <div class="buzzword-tags" id="purchaseBuzzwords">
+                    <span class="buzzword-tag" data-tooltip="Snap Deal - 즉석에서 결정하는 구매 행동" data-category="purchase">#스냅딜</span>
+                    <span class="buzzword-tag" data-tooltip="Reviewer - 리뷰를 중시하는 구매 성향" data-category="purchase">#리뷰어</span>
+                    <span class="buzzword-tag" data-tooltip="Unboxing - 제품 개봉 과정을 즐기는 행동" data-category="purchase">#언박싱</span>
+                    <span class="buzzword-tag" data-tooltip="Hot Deal - 핫한 할인 상품을 찾아 구매하는 행동" data-category="purchase">#핫딜</span>
+                  </div>
+                </div>
+              </div>
+              
+              <!-- 신조어 상세 정보 모달 -->
+              <div id="buzzwordModal" class="buzzword-modal">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 id="modalTitle">신조어 상세 정보</h4>
+                    <button class="modal-close" onclick="closeBuzzwordModal()">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <div id="modalContent"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+       <!-- 현장 조사 의견 -->
+        <section class="card" id="field-research">
+          <div class="section-header">
+            <h2>현장 조사 의견(AI 가공)</h2>
+            <div class="section-actions">
+              <button class="btn-preview" onclick="showPreview('field-research', '현장 조사 의견(AI 가공)')">미리보기</button>
+              <button class="btn-pdf" onclick="exportToPDF('field-research', '현장 조사 의견(AI 가공)')">PDF 출력</button>
+            </div>
+          </div>
+          <div class="toolbar">
+            <select id="fieldPersonaSelect" class="select">
+              <option value="AUTO">(자동) 상단 선택값 사용</option>
+              <option value="P1">P1 · 트렌드 민감 MZ</option>
+              <option value="P2">P2 · 실용 중심 직장인</option>
+              <option value="P3">P3 · 친환경 가치 지향</option>
+            </select>
+            <select id="fieldCount" class="select">
+              <option value="2">샘플 2개</option>
+              <option value="3" selected>샘플 3개</option>
+              <option value="5">샘플 5개</option>
+            </select>
+            <label style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)"><input type="checkbox" id="fieldCounter"> 반대 의견 포함</label>
+            <button class="button" id="btnGenField">샘플 생성</button>
+            <button class="button" id="btnFieldTheme">테마 요약</button>
+          </div>
+          <div id="fieldQuotes"></div>
+          <div id="fieldTheme" class="bubble" style="display:none; margin-top:8px"><small>테마 요약</small><span id="fieldThemeText"></span></div>
+        </section>
+
+        <!-- 산업 규모 현황 (하단으로 이동) -->
+        <section class="card" id="market-analysis">
+          <div class="section-header">
+            <h2>산업 규모 현황</h2>
+            <div class="section-actions">
+              <button class="btn-preview" onclick="showPreview('market-analysis', '산업 규모 현황')">미리보기</button>
+              <button class="btn-pdf" onclick="exportToPDF('market-analysis', '산업 규모 현황')">PDF 출력</button>
+            </div>
+          </div>
+                 <div class="toolbar">
+             <select id="marketRegion" class="select">
+               <option value="DOMESTIC" selected>국내 시장</option>
+               <option value="GLOBAL">글로벌 시장</option>
+             </select>
+             <select id="marketPeriod" class="select">
+               <option value="5Y">5년 추이 (2021-2025E)</option>
+               <option value="3Y">3년 추이 (2023-2025E)</option>
+               <option value="QUARTERLY">분기별 추이</option>
+             </select>
+           </div>
+          
+          <!-- 산업 규모 차트 -->
+          <div id="marketChart" class="chart" style="height:280px; margin-bottom:20px;"></div>
+          
+          <!-- 산업 규모 분석 데이터 -->
+          <div class="market-analysis">
+            <div class="analysis-grid">
+              <div class="analysis-item">
+                <h4>시장 규모 현황</h4>
+                <div class="analysis-content">
+                  <p><strong>2025년 예상 규모:</strong> ₩580조 (글로벌 기준)</p>
+                  <p><strong>CAGR (2023-2027):</strong> 4.1%</p>
+                  <p><strong>주요 성장 동력:</strong> AI 카메라, 폴더블 디바이스, 친환경 소재</p>
+                </div>
+              </div>
+              
+              <div class="analysis-item">
+                <h4>지역별 성장률</h4>
+                <div class="analysis-content">
+                  <p><strong>서울/경기:</strong> 연평균 4.2% 성장, 최고 성장세</p>
+                  <p><strong>부산/울산:</strong> 연평균 3.8% 성장, 제조업 중심</p>
+                  <p><strong>대구/경북:</strong> 연평균 3.5% 성장, 안정적 성장</p>
+                  <p><strong>인천/충청:</strong> 연평균 3.6% 성장, 물류/유통 중심</p>
+                  <p><strong>광주/전라:</strong> 연평균 3.3% 성장, 신흥 시장</p>
+                </div>
+              </div>
+              
+              <div class="analysis-item">
+                <h4>지역별 실제 수치</h4>
+                <div class="analysis-content">
+                  <div id="regionalChart" class="chart" style="height:150px; margin-top:10px;"></div>
+                </div>
+              </div>
+              
+
+            </div>
+          </div>
+        </section>
+        
+        <footer style="color:var(--muted);font-size:12px;margin:26px 0 40px">※ 본 서비스는 (주)아이디이노랩의 페르소나 프로파일링 데이터를 기반으로 구성되었습니다.</footer>
+      </div>
+
+         <!-- 데이터가공정보 팝업 -->
+       <div id="dataInfoPopup" class="popup-overlay hidden">
+         <div class="popup-content" style="max-width:800px;max-height:80vh;overflow-y:auto">
+           <div class="popup-header">
+             <h3>트렌드 키워드 데이터가공정보</h3>
+             <button class="popup-close" id="dataInfoClose">&times;</button>
+           </div>
+           <div class="popup-body">
+             <div class="data-info-content">
+               <h4>1. 키워드 선정 원칙</h4>
+               <ul>
+                 <li>해당 업종/아이템에서 시장 변화와 수요에 직접적인 영향을 주는 주제 우선</li>
+                 <li>제품 특성, 기술 요소, 소비 트렌드, 규제/정책 변화 등 다양한 영역을 포함</li>
+                 <li>데이터 수집 및 비교 가능성이 높은 키워드로 선정</li>
+                 <li>기본적으로 6개 내외의 핵심 키워드를 고정 유지하여 시계열 비교 가능성 확보</li>
+               </ul>
+               
+               <h4>2. 데이터 수집 지표</h4>
+               <h5>기본 지표</h5>
+               <ul>
+                 <li>검색량 지수 (Google Trends, Naver Data Lab 등)</li>
+                 <li>뉴스·기사 언급량 (포털 뉴스 검색 API, 빅카인즈 등)</li>
+               </ul>
+               
+               <h5>부가 지표(가능 시)</h5>
+               <ul>
+                 <li>온라인 커뮤니티 언급량 (네이버 카페/블로그, 디시인사이드, 레딧 등)</li>
+                 <li>주요 리포트·연구 보고서 내 키워드 출현 빈도</li>
+               </ul>
+               
+               <h4>3. 데이터 처리 및 시각화</h4>
+               <h5>정규화</h5>
+               <ul>
+                 <li>분기별 키워드별 데이터 합계를 총합=100 기준으로 변환하여 상대 점유율 계산</li>
+               </ul>
+               
+               <h5>절대치 분석</h5>
+               <ul>
+                 <li>키워드별 실제 검색량·언급량 합계를 시계열로 분석</li>
+               </ul>
+               
+               <h5>변화량 분석</h5>
+               <ul>
+                 <li>QoQ(전분기 대비) 및 YoY(전년 동분기 대비) 변화율 산출</li>
+               </ul>
+               
+               <h5>시각화 구성</h5>
+               <ul>
+                 <li>절대치 스택 막대 + 총합 라인 → 시장 전체 관심 변화와 구성 비중 동시 파악</li>
+                 <li>100% 스택 막대 → 분기별 점유율 변화 확인</li>
+                 <li>키워드별 라인 그래프 → 개별 트렌드 추이 분석</li>
+               </ul>
+             </div>
+           </div>
+         </div>
+       </div>
+
+       <!-- 프리미엄 업그레이드 팝업 -->
+       <div id="premiumPopup" class="popup-overlay hidden" style="display: none;">
+        <div class="popup-content">
+          <div class="popup-header">
+            <h3>프리미엄 업그레이드</h3>
+            <button class="popup-close" id="popupClose">&times;</button>
+          </div>
+          <div class="popup-body">
+            <div class="upgrade-message">
+              <h4>본 서비스는 프리미엄 사용자에게만 제공됩니다</h4>
+            </div>
+            <div class="upgrade-options">
+              <div class="option-card">
+                <div class="option-header">
+                  <h5>월간 플랜</h5>
+                  <div class="price">₩29,900<span>/월</span></div>
+                </div>
+                <ul class="option-features">
+                  <li>✓ 모든 프리미엄 기능</li>
+                  <li>✓ 실시간 데이터 업데이트</li>
+                </ul>
+                <button class="button upgrade-btn" data-plan="monthly">월간 구독</button>
+              </div>
+              <div class="option-card featured">
+                <div class="option-badge">인기</div>
+                <div class="option-header">
+                  <h5>연간 플랜</h5>
+                  <div class="price">₩299,900<span>/년</span></div>
+                  <div class="discount">2개월 무료!</div>
+                </div>
+                <ul class="option-features">
+                  <li>✓ 모든 프리미엄 기능</li>
+                  <li>✓ 실시간 업데이트 및 우선 지원</li>
+                </ul>
+                <button class="button upgrade-btn featured" data-plan="yearly">연간 구독</button>
+              </div>
+                             <div class="option-card">
+                 <div class="option-header">
+                   <h5>친구 추천 보상</h5>
+                   <div class="price">무료<span>/1개월</span></div>
+                   <div class="discount">친구 가입 시</div>
+                 </div>
+                 <ul class="option-features">
+                   <li>✓ 모든 프리미엄 기능, 1개월 무료 체험</li>
+                 </ul>
+                 <button class="button upgrade-btn" data-plan="referral">친구 추천하기</button>
+               </div>
+            </div>
+            <div class="upgrade-footer">
+              <p>모든 플랜은 언제든지 취소 가능합니다. 7일 무료 체험으로 시작해보세요.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- 미리보기 모달 -->
+  <div id="previewModal" class="preview-modal">
+    <div class="preview-content">
+      <div class="preview-header">
+        <h3 id="previewTitle">섹션 미리보기</h3>
+        <button class="preview-close" onclick="closePreview()">&times;</button>
+      </div>
+      <div id="previewBody"></div>
+    </div>
+  </div>
+
+  <!-- JavaScript 파일들을 순서대로 로드 -->
+  <script src="data.js"></script>
+  <script src="charts.js"></script>
+  <script src="persona.js"></script>
+  <script src="app.js"></script>
+  
+  <script>
+    // 미리보기 기능
+    function showPreview(sectionId, sectionTitle) {
+      const section = document.getElementById(sectionId);
+      const modal = document.getElementById('previewModal');
+      const title = document.getElementById('previewTitle');
+      const body = document.getElementById('previewBody');
+      
+      if (section) {
+        title.textContent = sectionTitle + ' - 미리보기';
+        
+        // 섹션 내용을 복사하여 미리보기에 표시
+        const sectionClone = section.cloneNode(true);
+        
+        // 미리보기에서 불필요한 요소들 제거
+        const actionsToRemove = sectionClone.querySelectorAll('.section-actions, .toolbar');
+        actionsToRemove.forEach(el => el.remove());
+        
+        body.innerHTML = '';
+        body.appendChild(sectionClone);
+        
+        modal.style.display = 'block';
+      }
+    }
+    
+    function closePreview() {
+      const modal = document.getElementById('previewModal');
+      modal.style.display = 'none';
+    }
+    
+    // PDF 출력 기능
+    function exportToPDF(sectionId, sectionTitle) {
+      const section = document.getElementById(sectionId);
+      
+      if (!section) {
+        alert('섹션을 찾을 수 없습니다.');
+        return;
+      }
+      
+      // PDF용 섹션 복사
+      const pdfSection = section.cloneNode(true);
+      
+      // PDF에서 제거할 요소들
+      const elementsToRemove = pdfSection.querySelectorAll('.section-actions, .toolbar, .btn-preview, .btn-pdf');
+      elementsToRemove.forEach(el => el.remove());
+      
+      // PDF용 스타일 적용
+      pdfSection.style.background = 'white';
+      pdfSection.style.color = 'black';
+      pdfSection.style.padding = '20px';
+      pdfSection.style.margin = '0';
+      pdfSection.style.border = '1px solid #ccc';
+      pdfSection.style.borderRadius = '0';
+      pdfSection.style.boxShadow = 'none';
+      
+      // PDF 옵션 설정
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `${sectionTitle}_${new Date().toISOString().split('T')[0]}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { 
+          scale: 2,
+          useCORS: true,
+          allowTaint: true
+        },
+        jsPDF: { 
+          unit: 'mm', 
+          format: 'a4', 
+          orientation: 'portrait' 
+        }
+      };
+      
+      // PDF 생성
+      html2pdf().set(opt).from(pdfSection).save();
+    }
+    
+    // 모달 외부 클릭 시 닫기
+    window.onclick = function(event) {
+      const modal = document.getElementById('previewModal');
+      if (event.target === modal) {
+        closePreview();
+      }
+    }
+    
+    // ESC 키로 모달 닫기
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closePreview();
+      }
+    });
+  </script>
+</body>
+</html>

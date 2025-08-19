@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AINOYU - 비즈니스 워크스페이스</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h1>AINOYU Business</h1>
+                <span>트렌드 기반 신사업 기회 탐색</span>
+            </div>
+            <div class="nav-actions">
+                <button class="nav-btn" onclick="showSettings()">⚙️ 설정</button>
+                <button class="nav-btn" onclick="exportData()">📊 내보내기</button>
+                <a href="../index.html" class="nav-btn home-btn">🏠 홈으로</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-container">
+        <div class="workspace-grid">
+            <!-- 좌측 패널 -->
+            <div class="left-panel">
+                <div class="panel-section">
+                    <h3>📈 시장 동향</h3>
+                    <div class="trend-cards">
+                        <div class="trend-card">
+                            <div class="trend-label">성장률</div>
+                            <div class="trend-value">+15.3%</div>
+                            <div class="trend-desc">전년 대비 증가</div>
+                        </div>
+                        <div class="trend-card">
+                            <div class="trend-label">시장 규모</div>
+                            <div class="trend-value">2.8조원</div>
+                            <div class="trend-desc">국내 시장 기준</div>
+                        </div>
+                        <div class="trend-card">
+                            <div class="trend-label">핵심 트렌드</div>
+                            <div class="trend-value">친환경</div>
+                            <div class="trend-desc">지속가능성</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>🎯 타겟 분석</h3>
+                    <div class="target-analysis">
+                        <div class="target-item">
+                            <span class="target-label">주요 연령대</span>
+                            <span class="target-value">25-35세</span>
+                        </div>
+                        <div class="target-item">
+                            <span class="target-label">관심 분야</span>
+                            <span class="target-value">라이프스타일</span>
+                        </div>
+                        <div class="target-item">
+                            <span class="target-label">구매력</span>
+                            <span class="target-value">중상위층</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 중앙 패널 -->
+            <div class="center-panel">
+                <div class="panel-header">
+                    <h2>🚀 사업 기회 발굴</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="analyzeOpportunity()">
+                            ✨ 기회 분석
+                        </button>
+                        <button class="action-btn secondary" onclick="generateReport()">
+                            📋 리포트 생성
+                        </button>
+                    </div>
+                </div>
+
+                <div class="opportunity-grid">
+                    <div class="opportunity-card high">
+                        <div class="opp-header">
+                            <span class="opp-priority">높음</span>
+                            <span class="opp-score">92점</span>
+                        </div>
+                        <h4>친환경 패키징 솔루션</h4>
+                        <p>지속가능한 패키징에 대한 수요 급증으로 새로운 시장 기회 발견</p>
+                        <div class="opp-metrics">
+                            <span class="metric">시장 잠재력: 높음</span>
+                            <span class="metric">진입 장벽: 보통</span>
+                        </div>
+                        <button class="explore-btn" onclick="exploreOpportunity('eco-packaging')">
+                            자세히 보기
+                        </button>
+                    </div>
+
+                    <div class="opportunity-card medium">
+                        <div class="opp-header">
+                            <span class="opp-priority">보통</span>
+                            <span class="opp-score">78점</span>
+                        </div>
+                        <h4>스마트 홈 액세서리</h4>
+                        <p>IoT 기술과 결합한 라이프스타일 제품의 성장 가능성</p>
+                        <div class="opp-metrics">
+                            <span class="metric">시장 잠재력: 보통</span>
+                            <span class="metric">진입 장벽: 높음</span>
+                        </div>
+                        <button class="explore-btn" onclick="exploreOpportunity('smart-accessories')">
+                            자세히 보기
+                        </button>
+                    </div>
+
+                    <div class="opportunity-card low">
+                        <div class="opp-header">
+                            <span class="opp-priority">낮음</span>
+                            <span class="opp-score">65점</span>
+                        </div>
+                        <h4>개인화 서비스</h4>
+                        <p>맞춤형 경험을 제공하는 B2C 서비스 모델</p>
+                        <div class="opp-metrics">
+                            <span class="metric">시장 잠재력: 낮음</span>
+                            <span class="metric">진입 장벽: 낮음</span>
+                        </div>
+                        <button class="explore-btn" onclick="exploreOpportunity('personalization')">
+                            자세히 보기
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 우측 패널 -->
+            <div class="right-panel">
+                <div class="panel-section">
+                    <h3>📊 AI 인사이트</h3>
+                    <div class="insights-list">
+                        <div class="insight-item">
+                            <div class="insight-icon">🔥</div>
+                            <div class="insight-content">
+                                <strong>트렌드 급상승</strong>
+                                <p>친환경 소재 관련 검색량이 3개월간 240% 증가</p>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-icon">⚡</div>
+                            <div class="insight-content">
+                                <strong>시장 기회</strong>
+                                <p>25-35세 여성층의 프리미엄 제품 구매력 상승</p>
+                            </div>
+                        </div>
+                        <div class="insight-item">
+                            <div class="insight-icon">🎯</div>
+                            <div class="insight-content">
+                                <strong>경쟁 분석</strong>
+                                <p>경쟁사 대비 차별화 포인트 3개 영역 발견</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-section">
+                    <h3>📈 성과 지표</h3>
+                    <div class="kpi-dashboard">
+                        <div class="kpi-item">
+                            <div class="kpi-value">156%</div>
+                            <div class="kpi-label">ROI 예측</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">8.2개월</div>
+                            <div class="kpi-label">투자 회수</div>
+                        </div>
+                        <div class="kpi-item">
+                            <div class="kpi-value">4.7/5</div>
+                            <div class="kpi-label">시장 적합성</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 상세 분석 모달 -->
+    <div id="detail-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">기회 상세 분석</h3>
+                <button onclick="closeModal()" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-content">
+                    <!-- 동적으로 생성됩니다 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

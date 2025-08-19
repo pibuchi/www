@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>에스노그라피 데이터 수집 및 가공 플랫폼</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>에스노그라피 데이터 수집 및 가공 플랫폼</h1>
+            <p>체계적인 정성 조사를 위한 통합 데이터 관리 시스템</p>
+        </div>
+
+        <div class="dashboard">
+            <div class="sidebar">
+                <h3>연구 기법</h3>
+                <button class="nav-btn active" data-section="observation">관찰조사</button>
+                <button class="nav-btn" data-section="interview">심층인터뷰</button>
+                <button class="nav-btn" data-section="shadow">쉐도우 트래킹</button>
+                <button class="nav-btn" data-section="photo">포토다이어리</button>
+                <button class="nav-btn" data-section="ideation">아이디에이션</button>
+                <button class="nav-btn" data-section="webcrawling">웹크롤링</button>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="observationCount">0</div>
+                        <div class="stat-label">관찰조사</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="interviewCount">0</div>
+                        <div class="stat-label">심층인터뷰</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="shadowCount">0</div>
+                        <div class="stat-label">쉐도우 트래킹</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="photoCount">0</div>
+                        <div class="stat-label">포토다이어리</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="ideaCount">0</div>
+                        <div class="stat-label">아이디에이션</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="webcrawlingCount">0</div>
+                        <div class="stat-label">웹크롤링</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main-content">
+                <!-- 관찰조사 섹션 -->
+                <div class="method-section active" id="observation-section">
+                    <div class="section-header">
+                        <h2>관찰조사</h2>
+                        <div class="section-badge">Observation Research</div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3>📝 데이터 수집</h3>
+                            <div class="form-group">
+                                <label for="observationTime">관찰 시간</label>
+                                <input type="datetime-local" id="observationTime" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="observationLocation">관찰 장소</label>
+                                <input type="text" id="observationLocation" class="form-control" placeholder="관찰이 이루어진 구체적인 장소">
+                            </div>
+                            <div class="form-group">
+                                <label for="observationNotes">관찰 내용</label>
+                                <textarea id="observationNotes" class="form-control" placeholder="객관적이고 상세한 관찰 내용을 기록하세요. 행동의 순서, 시간, 상황, 참여자들의 반응을 구체적으로 기록해주세요."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="observationTagInput">태그 추가</label>
+                                <input type="text" id="observationTagInput" class="form-control" placeholder="Enter로 태그 추가">
+                                <div class="tags-display" id="observationTags"></div>
+                            </div>
+                            <button onclick="saveObservation()" class="btn btn-primary">관찰 기록 저장</button>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>📊 가공 및 분석</h3>
+                            <div class="analysis-section">
+                                <h4>코딩 분석</h4>
+                                <div class="analysis-grid">
+                                    <div class="analysis-card">
+                                        <div class="analysis-value" id="observationPatterns">0</div>
+                                        <div class="analysis-label">반복 패턴</div>
+                                    </div>
+                                    <div class="analysis-card">
+                                        <div class="analysis-value" id="observationFrequency">0</div>
+                                        <div class="analysis-label">행동 빈도</div>
+                                    </div>
+                                </div>
+                                <button onclick="analyzeObservations()" class="btn btn-secondary">패턴 분석 실행</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-visualization">
+                        <h3>최근 관찰 기록</h3>
+                        <div id="observationList"></div>
+                    </div>
+                </div>
+
+                <!-- 심층인터뷰 섹션 -->
+                <div class="method-section" id="interview-section">
+                    <div class="section-header">
+                        <h2>심층인터뷰</h2>
+                        <div class="section-badge">In-depth Interview</div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3>🎤 인터뷰 가이드</h3>
+                            <div class="form-group">
+                                <label for="interviewGuide">인터뷰 질문 가이드</label>
+                                <textarea id="interviewGuide" class="form-control" placeholder="개방형 질문들을 작성하세요. 예: '어떻게 생각하세요?', '더 자세히 말씀해 주시겠어요?'"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="interviewParticipant">참여자 정보</label>
+                                <input type="text" id="interviewParticipant" class="form-control" placeholder="참여자 익명 코드 (예: P001)">
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>📝 전사 및 분석</h3>
+                            <div class="form-group">
+                                <label for="interviewTranscript">인터뷰 전사</label>
+                                <textarea id="interviewTranscript" class="form-control" placeholder="인터뷰 내용을 정확히 전사하세요. 비언어적 표현도 함께 기록해주세요."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="interviewThemes">주요 주제</label>
+                                <input type="text" id="interviewThemes" class="form-control" placeholder="주제 분석을 통해 도출된 주요 테마">
+                            </div>
+                            <button onclick="saveInterview()" class="btn btn-primary">인터뷰 저장</button>
+                        </div>
+                    </div>
+
+                    <div class="data-visualization">
+                        <h3>인터뷰 기록</h3>
+                        <div id="interviewList"></div>
+                    </div>
+                </div>
+
+                <!-- 쉐도우 트래킹 섹션 -->
+                <div class="method-section" id="shadow-section">
+                    <div class="section-header">
+                        <h2>쉐도우 트래킹</h2>
+                        <div class="section-badge">Shadow Tracking</div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3>🚶 활동 추적</h3>
+                            <div class="form-group">
+                                <label for="shadowStartTime">시작 시간</label>
+                                <input type="datetime-local" id="shadowStartTime" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="shadowActivity">활동 내용</label>
+                                <input type="text" id="shadowActivity" class="form-control" placeholder="현재 수행중인 활동">
+                            </div>
+                            <div class="form-group">
+                                <label for="shadowLocation">위치</label>
+                                <input type="text" id="shadowLocation" class="form-control" placeholder="활동이 이루어지는 장소">
+                            </div>
+                            <div class="form-group">
+                                <label for="shadowTools">사용 도구/기기</label>
+                                <input type="text" id="shadowTools" class="form-control" placeholder="사용하는 도구나 기기">
+                            </div>
+                            <button onclick="addShadowActivity()" class="btn btn-primary">활동 추가</button>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>📈 여정 지도</h3>
+                            <div class="analysis-section">
+                                <div class="analysis-grid">
+                                    <div class="analysis-card">
+                                        <div class="analysis-value" id="shadowDuration">0h</div>
+                                        <div class="analysis-label">총 추적 시간</div>
+                                    </div>
+                                    <div class="analysis-card">
+                                        <div class="analysis-value" id="shadowLocations">0</div>
+                                        <div class="analysis-label">방문 장소</div>
+                                    </div>
+                                </div>
+                                <button onclick="generateJourneyMap()" class="btn btn-secondary">여정 지도 생성</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-visualization">
+                        <h3>활동 타임라인</h3>
+                        <div class="timeline" id="shadowTimeline"></div>
+                    </div>
+                </div>
+
+                <!-- 포토다이어리 섹션 -->
+                <div class="method-section" id="photo-section">
+                    <div class="section-header">
+                        <h2>포토다이어리</h2>
+                        <div class="section-badge">Photo Diary</div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3>📷 사진 업로드</h3>
+                            <div class="photo-upload-area" onclick="document.getElementById('photoUpload').click()">
+                                <p>클릭하여 사진을 업로드하세요</p>
+                                <small>JPG, PNG 파일 지원</small>
+                            </div>
+                            <input type="file" id="photoUpload" accept="image/*" multiple style="display: none;">
+                            <div class="photo-grid" id="photoGrid"></div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>✍️ 기록 및 분석</h3>
+                            <div class="form-group">
+                                <label for="photoDescription">사진 설명</label>
+                                <textarea id="photoDescription" class="form-control" placeholder="사진에 담긴 상황, 경험, 생각을 자세히 기록하세요"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="photoEmotion">감정 상태</label>
+                                <select id="photoEmotion" class="form-control">
+                                    <option value="">감정을 선택하세요</option>
+                                    <option value="매우 긍정적">매우 긍정적</option>
+                                    <option value="긍정적">긍정적</option>
+                                    <option value="중립적">중립적</option>
+                                    <option value="부정적">부정적</option>
+                                    <option value="매우 부정적">매우 부정적</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="photoContext">맥락 정보</label>
+                                <input type="text" id="photoContext" class="form-control" placeholder="시간, 장소, 함께한 사람 등">
+                            </div>
+                            <button onclick="savePhotoDiary()" class="btn btn-primary">포토다이어리 저장</button>
+                        </div>
+                    </div>
+
+                    <div class="data-visualization">
+                        <h3>포토다이어리 기록</h3>
+                        <div id="photoDiaryList"></div>
+                    </div>
+                </div>
+
+                <!-- 아이디에이션 섹션 -->
+                <div class="method-section" id="ideation-section">
+                    <div class="section-header">
+                        <h2>아이디에이션</h2>
+                        <div class="section-badge">Ideation</div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3>💡 아이디어 수집</h3>
+                            <div class="form-group">
+                                <label for="ideaTitle">아이디어 제목</label>
+                                <input type="text" id="ideaTitle" class="form-control" placeholder="간단하고 명확한 제목">
+                            </div>
+                            <div class="form-group">
+                                <label for="ideaDescription">상세 설명</label>
+                                <textarea id="ideaDescription" class="form-control" placeholder="아이디어의 구체적인 내용과 적용 방안"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="ideaCategory">카테고리</label>
+                                <select id="ideaCategory" class="form-control">
+                                    <option value="">카테고리 선택</option>
+                                    <option value="문제점 발견">문제점 발견</option>
+                                    <option value="개선 아이디어">개선 아이디어</option>
+                                    <option value="새로운 기회">새로운 기회</option>
+                                    <option value="사용자 니즈">사용자 니즈</option>
+                                    <option value="기타">기타</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="ideaPriority">우선순위</label>
+                                <select id="ideaPriority" class="form-control">
+                                    <option value="높음">높음</option>
+                                    <option value="보통">보통</option>
+                                    <option value="낮음">낮음</option>
+                                </select>
+                            </div>
+                            <button onclick="saveIdea()" class="btn btn-primary">아이디어 저장</button>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>📋 아이디어 관리</h3>
+                            <div class="analysis-section">
+                                <div class="analysis-grid">
+                                    <div class="analysis-card">
+                                        <div class="analysis-value" id="totalIdeas">0</div>
+                                        <div class="analysis-label">총 아이디어</div>
+                                    </div>
+                                    <div class="analysis-card">
+                                        <div class="analysis-value" id="highPriorityIdeas">0</div>
+                                        <div class="analysis-label">높은 우선순위</div>
+                                    </div>
+                                </div>
+                                <button onclick="categorizeIdeas()" class="btn btn-secondary">카테고리별 분류</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-visualization">
+                        <h3>아이디어 목록</h3>
+                        <div id="ideaList"></div>
+                    </div>
+                </div>
+
+                <!-- 웹크롤링 섹션 -->
+                <div class="method-section" id="webcrawling-section">
+                    <div class="section-header">
+                        <h2>웹크롤링</h2>
+                        <div class="section-badge">Web Crawling</div>
+                    </div>
+
+                    <div class="form-grid">
+                        <div class="form-section">
+                            <h3>🕷️ 크롤링 설정</h3>
+                            <div class="form-group">
+                                <label for="crawlUrl">대상 URL</label>
+                                <input type="url" id="crawlUrl" class="form-control" placeholder="https://example.com">
+                            </div>
+                            <div class="form-group">
+                                <label for="crawlType">크롤링 유형</label>
+                                <select id="crawlType" class="form-control">
+                                    <option value="social_media">소셜미디어</option>
+                                    <option value="forum">온라인 포럼</option>
+                                    <option value="review">리뷰 사이트</option>
+                                    <option value="news">뉴스 사이트</option>
+                                    <option value="blog">블로그</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="crawlKeywords">검색 키워드</label>
+                                <input type="text" id="crawlKeywords" class="form-control" placeholder="관련 키워드를 쉼표로 구분">
+                            </div>
+                            <div class="form-group">
+                                <label for="crawlMaxResults">최대 수집 개수</label>
+                                <input type="number" id="crawlMaxResults" class="form-control" value="100" min="10" max="1000">
+                            </div>
+                            <button onclick="startWebCrawling()" class="btn btn-primary">크롤링 시작</button>
+                        </div>
+
+                        <div class="form-section">
+                            <h3>📊 수집 현황</h3>
+                            <div class="analysis-section">
+                                <div class="analysis-grid">
+                                    <div class="analysis-card">
+                                        <div class="analysis-value" id="crawlProgress">0%</div>
+                                        <div class="analysis-label">진행률</div>
+                                    </div>
+                                    <div class="analysis-card">
+                                        <div class="analysis-value" id="collectedCount">0</div>
+                                        <div class="analysis-label">수집된 데이터</div>
+                                    </div>
+                                </div>
+                                <div style="margin-top: 15px;">
+                                    <div class="progress-bar-container" style="background: #e9ecef; border-radius: 10px; height: 20px; overflow: hidden;">
+                                        <div id="progressBar" style="background: #667eea; height: 100%; width: 0%; transition: width 0.3s ease;"></div>
+                                    </div>
+                                </div>
+                                <button onclick="analyzeCrawledData()" class="btn btn-secondary" style="margin-top: 15px;">데이터 분석</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-visualization">
+                        <h3>📈 분석 결과</h3>
+                        <div class="analysis-tabs" style="margin-bottom: 20px;">
+                            <button class="tab-btn active" data-tab="keywords" onclick="showAnalysisTab('keywords')">키워드 분석</button>
+                            <button class="tab-btn" data-tab="sentiment" onclick="showAnalysisTab('sentiment')">감정 분석</button>
+                            <button class="tab-btn" data-tab="timeline" onclick="showAnalysisTab('timeline')">시간대별 분석</button>
+                            <button class="tab-btn" data-tab="source" onclick="showAnalysisTab('source')">출처별 분석</button>
+                        </div>
+                        <div id="crawlAnalysisContent">
+                            <div id="keywordsTab" class="analysis-tab-content active">
+                                <div id="keywordCloud"></div>
+                            </div>
+                            <div id="sentimentTab" class="analysis-tab-content">
+                                <div id="sentimentChart"></div>
+                            </div>
+                            <div id="timelineTab" class="analysis-tab-content">
+                                <div id="timelineChart"></div>
+                            </div>
+                            <div id="sourceTab" class="analysis-tab-content">
+                                <div id="sourceChart"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="data-visualization">
+                        <h3>📝 수집된 데이터</h3>
+                        <div id="crawledDataList"></div>
+                    </div>
+                </div>
+
+                <!-- 통합 분석 섹션 -->
+                <div class="method-section" id="analysis-section">
+                    <div class="section-header">
+                        <h2>통합 분석</h2>
+                        <div class="section-badge">Triangulation Analysis</div>
+                    </div>
+
+                    <div class="analysis-section">
+                        <h3>🔍 삼각측정법 분석</h3>
+                        <p>다양한 연구 기법을 통해 수집된 데이터를 종합적으로 분석합니다.</p>
+                        
+                        <div class="analysis-grid">
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="totalDataPoints">0</div>
+                                <div class="analysis-label">총 데이터 포인트</div>
+                            </div>
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="dataConsistency">0%</div>
+                                <div class="analysis-label">데이터 일관성</div>
+                            </div>
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="keyInsights">0</div>
+                                <div class="analysis-label">주요 인사이트</div>
+                            </div>
+                            <div class="analysis-card">
+                                <div class="analysis-value" id="researchProgress">0%</div>
+                                <div class="analysis-label">연구 진행도</div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 30px;">
+                            <button onclick="generateIntegratedReport()" class="btn btn-primary">통합 분석 보고서 생성</button>
+                            <button onclick="exportData()" class="btn btn-secondary">데이터 내보내기</button>
+                        </div>
+
+                        <div id="integratedReport" class="data-visualization" style="margin-top: 30px; display: none;">
+                            <h4>📊 통합 분석 결과</h4>
+                            <div id="reportContent"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="alertContainer"></div>
+    </div>
+
+    <!-- JavaScript 파일들 -->
+    <script src="js/utils.js"></script>
+    <script src="js/data-manager.js"></script>
+    <script src="js/ui-manager.js"></script>
+    <script src="js/observation.js"></script>
+    <script src="js/interview.js"></script>
+    <script src="js/shadow-tracking.js"></script>
+    <script src="js/photo-diary.js"></script>
+    <script src="js/ideation.js"></script>
+    <script src="js/webcrawling.js"></script>
+    <script src="js/analysis.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

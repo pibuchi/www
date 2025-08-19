@@ -1,0 +1,2400 @@
+<script>
+        let isTyping = false;
+        let currentSetupStep = 1;
+        let selectedPersona = '';
+        let selectedProductName = '';
+        let selectedProductDesc = '';
+        let selectedGoal = '';
+
+        // Setup functions
+        function selectPersona(persona) {
+            // Remove previous selection
+            document.querySelectorAll('.persona-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to clicked card
+            event.currentTarget.classList.add('selected');
+            selectedPersona = persona;
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+
+        function selectProductExample(name, description) {
+            // 이전 선택 제거
+            document.querySelectorAll('.example-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // 클릭된 카드 선택
+            event.currentTarget.classList.add('selected');
+            
+            // 입력 필드 업데이트
+            const productNameInput = document.getElementById('productName');
+            const productDescInput = document.getElementById('productDescription');
+            
+            if (productNameInput) {
+                productNameInput.value = name;
+            }
+            if (productDescInput) {
+                productDescInput.value = description;
+            }
+            
+            selectedProductName = name;
+            selectedProductDesc = description;
+            
+            // Enable next button
+            const nextBtn = document.getElementById('nextBtn');
+            if (nextBtn) {
+                nextBtn.disabled = false;
+            }
+        }
+
+        function selectGoal(goal) {
+            // Remove previous selection
+            document.querySelectorAll('.goal-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to clicked card
+            event.currentTarget.classList.add('selected');
+            selectedGoal = goal;
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+            document.getElementById('nextBtn').textContent = '프로젝트 시작';
+        }
+
+        function nextStep() {
+            if (currentSetupStep === 1) {
+                if (!selectedPersona) return;
+                
+                // Update progress
+                document.getElementById('indicator1').classList.remove('active');
+                document.getElementById('indicator1').classList.add('completed');
+                document.getElementById('indicator2').classList.add('active');
+                
+                // Switch steps
+                document.getElementById('step1').classList.remove('active');
+                document.getElementById('step2').classList.add('active');
+                
+                currentSetupStep = 2;
+                document.getElementById('backBtn').disabled = false;
+                document.getElementById('nextBtn').disabled = true;
+                
+            } else if (currentSetupStep === 2) {
+                selectedProductName = document.getElementById('productName').value.trim();
+                selectedProductDesc = document.getElementById('productDescription').value.trim();
+                
+                if (!selectedProductName) {
+                    alert('제품명을 입력해주세요.');
+                    return;
+                }
+                
+                // Update progress
+                document.getElementById('indicator2').classList.remove('active');
+                document.getElementById('indicator2').classList.add('completed');
+                document.getElementById('indicator3').classList.add('active');
+                
+                // Switch steps
+                document.getElementById('step2').classList.remove('active');
+                document.getElementById('step3').classList.add('active');
+                
+                currentSetupStep = 3;
+                document.getElementById('nextBtn').disabled = true;
+                
+            } else if (currentSetupStep === 3) {
+                if (!selectedGoal) return;
+                
+                // Complete setup
+                completeSetup();
+            }
+        }
+
+        function previousStep() {
+            if (currentSetupStep === 2) {
+                // Update progress
+                document.getElementById('indicator2').classList.remove('active');
+                document.getElementById('indicator1').classList.remove('completed');
+                document.getElementById('indicator1').classList.add('active');
+                
+                // Switch steps
+                document.getElementById('step2').classList.remove('active');
+                document.getElementById('step1').classList.add('active');
+                
+                currentSetupStep = 1;
+                document.getElementById('backBtn').disabled = true;
+                document.getElementById('nextBtn').disabled = selectedPersona ? false : true;
+                
+            } else if (currentSetupStep === 3) {
+                // Update progress
+                document.getElementById('indicator3').classList.remove('active');
+                document.getElementById('indicator2').classList.remove('completed');
+                document.getElementById('indicator2').classList.add('active');
+                
+                // Switch steps
+                document.getElementById('step3').classList.remove('active');
+                document.getElementById('step2').classList.add('active');
+                
+                currentSetupStep = 2;
+                document.getElementById('nextBtn').disabled = false;
+                document.getElementById('nextBtn').textContent = '다음';
+            }
+        }
+
+        function skipSetup() {
+            // Set default values
+            selectedPersona = 'senior';
+            selectedProductName = '스마트워치 헬스케어 제품';
+            selectedProductDesc = '운동 추적과 건강 관리를 위한 웨어러블 제품';
+            selectedGoal = '새로운 제품 만들기';
+            
+            completeSetup();
+        }
+
+        function completeSetup() {
+            // Hide setup overlay
+            const overlay = document.getElementById('setupOverlay');
+            if (overlay) {
+                overlay.classList.add('hidden');
+            }
+            
+            // Update project info in header
+            const projectTitle = document.querySelector('.project-details h1');
+            if (projectTitle) {
+                projectTitle.textContent = selectedProductName;
+            }
+            
+            const personaNames = {
+                'junior': '주니어 디자이너',
+                'senior': '시니어 디자이너',
+                'pm': '제품 기획자'
+            };
+            
+            const projectMeta = document.querySelector('.project-meta');
+            if (projectMeta) {
+                projectMeta.innerHTML = `
+                    <span class="project-status">설정 완료</span>
+                    <span>•</span>
+                    <span>${personaNames[selectedPersona]}</span>
+                    <span>•</span>
+                    <span>시작: ${new Date().toLocaleDateString('ko-KR')}</span>
+                `;
+            }
+            
+            // Start initial conversation
+            setTimeout(() => {
+                startInitialConversation();
+            }, 1000);
+        }
+
+        function startInitialConversation() {
+            const personaGreetings = {
+                'junior': `안녕하세요! ${selectedProductName} 프로젝트를 함께 진행하게 되어 기쁩니다. 😊 
+
+                ${selectedGoal}을 목표로, 기초부터 차근차근 배워가며 진행해보겠습니다. 궁금한 점이 있으면 언제든 물어보세요!`,
+                
+                'senior': `${selectedProductName} 프로젝트 킥오프를 시작하겠습니다.
+
+                ${selectedGoal}을 위한 전략적 접근을 통해 비즈니스 임팩트를 최대화하는 방향으로 진행하겠습니다.`,
+                
+                'pm': `${selectedProductName} 프로젝트 설정이 완료되었습니다.
+
+                ${selectedGoal}의 효율적인 실행을 위해 우선순위와 일정을 중심으로 체계적으로 진행하겠습니다.`
+            };
+
+            // Clear existing messages
+            const chatContainer = document.getElementById('chatMessages');
+            if (chatContainer) {
+                chatContainer.innerHTML = '';
+            }
+            
+            // Add initial AI message
+            addAIMessageWithDetailedInsight(
+                personaGreetings[selectedPersona] || '프로젝트를 시작합니다!',
+                `현재 AI 기반 개인화 헬스케어가 45% 성장하고 있으며, 소셜 피트니스 기능의 사용자 참여도가 60% 증가했습니다. 주요 타겟층인 헬스 비기너(25-35세)는 쉬운 시작과 성취감을 가장 중요하게 생각합니다.`,
+                [
+                    {value: '45%', label: 'AI 헬스케어 성장률'},
+                    {value: '89%', label: '쉬운 시작 선호도'},
+                    {value: '76%', label: '성취감 중요도'}
+                ],
+                [
+                    '🌱 헬스 비기너 (25-35세) - 시작하는 직장인 • 쉬운 접근 선호',
+                    '🎯 액티브 시니어 (50-65세) - 건강 관리 중심 • 정확성 중시',
+                    '💪 피트니스 마니아 (20-40세) - 운동 애호가 • 고급 기능 선호'
+                ]
+            );
+            
+            // Update initial progress to 50%
+            updateProgress(50);
+        }
+
+        // Monitor product input changes
+        document.addEventListener('DOMContentLoaded', function() {
+            const productNameInput = document.getElementById('productName');
+            const productDescInput = document.getElementById('productDescription');
+            
+            function checkProductInputs() {
+                const name = productNameInput.value.trim();
+                document.getElementById('nextBtn').disabled = !name;
+            }
+            
+            if (productNameInput) {
+                productNameInput.addEventListener('input', checkProductInputs);
+            }
+            if (productDescInput) {
+                productDescInput.addEventListener('input', checkProductInputs);
+            }
+        });
+
+        // Toggle RAG sections
+        function toggleSection(sectionId) {
+            const content = document.getElementById(`${sectionId}-content`);
+            const chevron = document.getElementById(`${sectionId}-chevron`);
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                chevron.textContent = '▼';
+                chevron.classList.add('expanded');
+            } else {
+                content.classList.add('collapsed');
+                chevron.textContent = '▶';
+                chevron.classList.remove('expanded');
+            }
+        }
+
+        // Target selection
+        function selectTarget(target) {
+            // Visual feedback
+            event.target.classList.add('selected');
+            
+            // Disable other buttons
+            const buttons = event.target.parentNode.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => {
+                if (btn !== event.target) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                }
+            });
+
+            // Send user message
+            setTimeout(() => {
+                addUserMessage(`${target} 타겟으로 진행하겠습니다.`);
+                
+                setTimeout(() => {
+                    // Update progress to 65%
+                    updateProgress(65);
+                    
+                    // AI response with RAG data
+                    const responses = {
+                        '헬스 비기너': {
+                            message: `헬스 비기너 타겟으로 설정되었습니다!`,
+                            insight: '이 타겟층은 10분 내 완료 가능한 간단한 운동을 선호하며, 평균 3주 시점에서 포기율이 높아 초기 습관 형성이 매우 중요합니다. 성취감을 통한 동기부여가 지속 사용의 핵심 요소입니다.',
+                            metrics: [
+                                {value: '10분', label: '선호 운동 시간'},
+                                {value: '68%', label: '습관 형성 니즈'},
+                                {value: '3주', label: '평균 포기 시점'}
+                            ],
+                            choices: [
+                                '간단한 운동 가이드 - 10분 내 완료 가능한 초보자용 루틴',
+                                '습관 형성 도우미 - 작은 목표와 보상 시스템으로 지속성 확보', 
+                                '친구 챌린지 - 함께하는 동기부여와 소셜 기능'
+                            ]
+                        },
+                        '액티브 시니어': {
+                            message: `액티브 시니어 타겟으로 설정되었습니다!`,
+                            insight: '이 타겟층은 정확성(92%), 건강 모니터링(85%), 의료진 연계(71%)를 가장 중요하게 생각하며, 안전한 운동과 건강 데이터의 신뢰성을 최우선으로 여깁니다.',
+                            metrics: [
+                                {value: '92%', label: '정확성 중시'},
+                                {value: '85%', label: '모니터링 선호'},
+                                {value: '71%', label: '의료진 연계 니즈'}
+                            ],
+                            choices: [
+                                '건강 지표 모니터링 - 심박수, 혈압 등 정확한 측정',
+                                '의료진 연계 기능 - 건강 데이터 공유 시스템',
+                                '안전한 운동 가이드 - 부상 방지 중심 프로그램'
+                            ]
+                        },
+                        '피트니스 마니아': {
+                            message: `피트니스 마니아 타겟으로 설정되었습니다!`,
+                            insight: '이 타겟층은 상세 분석(94%), 소셜 기능(82%), 목표 달성(89%)을 핵심으로 여기며, 고급 운동 데이터와 다른 사용자와의 경쟁 요소를 강하게 선호합니다.',
+                            metrics: [
+                                {value: '94%', label: '상세 분석 선호'},
+                                {value: '82%', label: '소셜 기능 중시'},
+                                {value: '89%', label: '목표 달성 욕구'}
+                            ],
+                            choices: [
+                                '고급 운동 분석 - 상세한 퍼포먼스 데이터 제공',
+                                '경쟁 및 랭킹 시스템 - 리더보드와 성과 비교',
+                                '커뮤니티 기능 - 운동 파트너 매칭과 정보 공유'
+                            ]
+                        }
+                    };
+                    
+                    const response = responses[target];
+                    addAIMessageWithDetailedInsight(response.message, response.insight, response.metrics, response.choices);
+                }, 2000);
+            }, 500);
+        }
+
+        // Feature selection
+        function selectFeature(feature) {
+            event.target.classList.add('selected');
+            
+            const buttons = event.target.parentNode.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => {
+                if (btn !== event.target) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                }
+            });
+
+            setTimeout(() => {
+                addUserMessage(`${feature} 기능을 우선적으로 개발하겠습니다.`);
+                
+                setTimeout(() => {
+                    updateProgress(85); // 85%로 증가
+                    
+                    const featureInsights = {
+                        '간단한 운동 가이드': {
+                            message: '간단한 운동 가이드를 핵심 기능으로 선정했습니다!',
+                            insight: '10분 이내 완료 가능한 운동이 초보자 완주율을 85% 향상시키며, 단계별 가이드가 있는 앱의 사용자 만족도가 73% 더 높습니다.',
+                            metrics: [
+                                {value: '85%', label: '완주율 향상'},
+                                {value: '73%', label: '만족도 증가'},
+                                {value: '10분', label: '최적 운동 시간'}
+                            ]
+                        },
+                        '습관 형성 도우미': {
+                            message: '습관 형성 도우미를 핵심 기능으로 선정했습니다!',
+                            insight: '작은 목표 설정과 보상 시스템이 있는 앱의 30일 리텐션률이 67% 더 높으며, 게임화 요소가 포함된 습관 앱의 지속 사용률이 2.3배 증가합니다.',
+                            metrics: [
+                                {value: '67%', label: '리텐션 향상'},
+                                {value: '2.3배', label: '지속 사용률'},
+                                {value: '21일', label: '습관 형성 기간'}
+                            ]
+                        },
+                        '친구 챌린지': {
+                            message: '친구 챌린지를 핵심 기능으로 선정했습니다!',
+                            insight: '소셜 기능이 포함된 피트니스 앱의 사용자 참여도가 60% 증가하며, 친구와 함께하는 운동의 지속률이 90% 더 높습니다.',
+                            metrics: [
+                                {value: '60%', label: '참여도 증가'},
+                                {value: '90%', label: '지속률 향상'},
+                                {value: '4.2배', label: '추천 확률'}
+                            ]
+                        }
+                    };
+                    
+                    const cleanFeatureName = feature.split(' - ')[0];
+                    const insight = featureInsights[cleanFeatureName];
+                    
+                    if (insight) {
+                        addAIMessageWithDetailedInsight(
+                            insight.message,
+                            insight.insight,
+                            insight.metrics,
+                            []
+                        );
+                        
+                        setTimeout(() => {
+                            addAIMessage('좋습니다! 이제 이 기능의 구체적인 사용자 플로우를 설계해보겠습니다. 사용자가 제품을 처음 사용할 때부터 목표 달성까지의 여정을 함께 만들어가요. 어떤 단계부터 시작하고 싶으신가요?');
+                        }, 3000);
+                    }
+                }, 2000);
+            }, 500);
+        }
+
+        // Message functions
+        function addUserMessage(text) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">👤</div>
+                <div class="message-content">
+                    <div class="message-bubble">${text}</div>
+                    <div class="message-time">방금 전</div>
+                </div>
+            `;
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addAIMessage(text) {
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                const messagesContainer = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message ai';
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-bubble">${text}</div>
+                        <div class="message-time">방금 전</div>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageDiv);
+                scrollToBottom();
+            }, 1500);
+        }
+
+        function addAIMessageWithDetailedInsight(message, insight, metrics, choices) {
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                const messagesContainer = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message ai';
+                
+                let metricsHtml = '';
+                if (metrics && metrics.length > 0) {
+                    metricsHtml = '<div class="rag-metrics">';
+                    metrics.forEach(metric => {
+                        metricsHtml += `
+                            <div class="metric-item">
+                                <div class="metric-value">${metric.value}</div>
+                                <div class="metric-label">${metric.label}</div>
+                            </div>
+                        `;
+                    });
+                    metricsHtml += '</div>';
+                }
+                
+                let choiceButtons = '';
+                if (choices && choices.length > 0) {
+                    choiceButtons = '<div class="choice-buttons">';
+                    choices.forEach(choice => {
+                        const parts = choice.split(' - ');
+                        const title = parts[0];
+                        const desc = parts[1] || '';
+                        choiceButtons += `
+                            <button class="choice-btn" onclick="selectTarget('${title}')">
+                                ${choice}
+                            </button>
+                        `;
+                    });
+                    choiceButtons += '</div>';
+                }
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            ${message}
+                            
+                            <div class="rag-insight">
+                                <div class="rag-insight-header">
+                                    📊 RAG 분석 결과
+                                </div>
+                                <div class="rag-insight-content">
+                                    ${insight}
+                                </div>
+                                ${metricsHtml}
+                            </div>
+
+                            ${choices.length > 0 ? '어떤 사용자층에 먼저 집중하시겠습니까?' : ''}
+
+                            ${choiceButtons}
+                        </div>
+                        <div class="message-time">방금 전</div>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageDiv);
+                scrollToBottom();
+            }, 1500);
+        }
+
+        // Input handling
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text || isTyping) return;
+            
+            addUserMessage(text);
+            input.value = '';
+            autoResize(input);
+            
+            // Generate AI response
+            setTimeout(() => {
+                generateRAGResponse(text);
+            }, 1000);
+        }
+
+        function generateRAGResponse(userText) {
+            // Simulate RAG-enhanced responses based on user input
+            const ragResponses = [
+                {
+                    message: '좋은 아이디어네요! 최신 트렌드 데이터를 반영해보겠습니다.',
+                    insight: '현재 AI 기반 개인화 헬스케어가 45% 성장하고 있어, 사용자 맞춤형 기능이 핵심 트렌드입니다. 특히 개인의 운동 패턴을 학습하여 최적화된 루틴을 제공하는 기능의 만족도가 높습니다.',
+                    metrics: [
+                        {value: '45%', label: '성장률'},
+                        {value: '78%', label: '개인화 선호도'},
+                        {value: '2.1배', label: '만족도 증가'}
+                    ]
+                },
+                {
+                    message: '사용자 중심적인 접근이군요! 타겟 페르소나 분석을 활용해보겠습니다.',
+                    insight: '헬스 비기너들의 89%가 쉬운 시작을 원하고, 76%가 성취감을 중요하게 생각합니다. 또한 첫 2주간의 경험이 장기 사용률을 결정하는 핵심 기간입니다.',
+                    metrics: [
+                        {value: '89%', label: '쉬운 시작 선호'},
+                        {value: '76%', label: '성취감 중시'},
+                        {value: '2주', label: '결정적 기간'}
+                    ]
+                },
+                {
+                    message: '트렌드에 맞는 방향입니다! 업계 데이터를 확인해보겠습니다.',
+                    insight: '소셜 피트니스 기능의 사용자 참여도가 60% 증가했고, 예방 중심 헬스케어가 32% 시장 점유율을 차지하고 있습니다. 커뮤니티 기반 동기부여가 효과적입니다.',
+                    metrics: [
+                        {value: '60%', label: '참여도 증가'},
+                        {value: '32%', label: '시장 점유율'},
+                        {value: '3.4배', label: '동기부여 효과'}
+                    ]
+                }
+            ];
+
+            const randomResponse = ragResponses[Math.floor(Math.random() * ragResponses.length)];
+            addAIMessageWithDetailedInsight(randomResponse.message, randomResponse.insight, randomResponse.metrics, []);
+
+            // Update progress occasionally
+            if (Math.random() > 0.6) { // 더 자주 진행률 업데이트
+                setTimeout(() => {
+                    const currentProgress = getCurrentProgress();
+                    const newProgress = Math.min(100, currentProgress + Math.floor(Math.random() * 10) + 5);
+                    updateProgress(newProgress);
+                }, 2000);
+            }
+        }
+
+        // Progress management
+        function updateProgress(percentage) {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const steps = document.querySelectorAll('#progressSteps .step');
+            
+            // Update progress bar
+            progressFill.style.width = percentage + '%';
+            
+            // Calculate current step
+            const currentStep = Math.ceil((percentage / 100) * 6);
+            const stepNames = ['리서치', '아이디어', '기획', '디자인', '프로토타입', '검증'];
+            
+            // Update progress text
+            progressText.textContent = `${Math.min(currentStep, 6)}/6 단계 완료 (${percentage}%)`;
+            
+            // Update step indicators
+            steps.forEach((step, index) => {
+                // Remove all classes
+                step.classList.remove('active', 'completed');
+                
+                if (index < currentStep - 1) {
+                    // Completed steps
+                    step.classList.add('completed');
+                    step.innerHTML = `✅ ${stepNames[index]}`;
+                } else if (index === currentStep - 1 && currentStep <= 6) {
+                    // Current active step
+                    step.classList.add('active');
+                    step.innerHTML = `🔄 ${stepNames[index]}`;
+                } else {
+                    // Pending steps
+                    step.innerHTML = `⏳ ${stepNames[index]}`;
+                }
+            });
+            
+            // Add visual feedback for progress update
+            progressFill.style.transition = 'width 0.8s ease-in-out';
+            
+            // Show completion animation if 100%
+            if (percentage >= 100) {
+                setTimeout(() => {
+                    progressText.textContent = '🎉 프로젝트 완료! (100%)';
+                    steps.forEach((step, index) => {
+                        step.classList.remove('active');
+                        step.classList.add('completed');
+                        step.innerHTML = `✅ ${stepNames[index]}`;
+                    });
+                }, 500);
+            }
+        }
+
+        function getCurrentProgress() {
+            const progressFill = document.getElementById('progressFill');
+            const width = progressFill.style.width;
+            return parseInt(width) || 50; // 기본값 50%
+        }
+
+        // UI utilities
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chatMessages');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+
+        function showTypingIndicator() {
+            if (isTyping) return;
+            isTyping = true;
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                        RAG 데이터 분석 중...
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            isTyping = false;
+        }
+
+        // RAG data simulation - Update trends and personas periodically
+        function updateRAGData() {
+            // Simulate real-time data updates
+            const trendValues = document.querySelectorAll('.trend-value');
+            trendValues.forEach(item => {
+                if (Math.random() > 0.8) {
+                    const currentText = item.textContent;
+                    if (currentText.includes('%')) {
+                        const baseValue = parseInt(currentText);
+                        const newValue = baseValue + Math.floor(Math.random() * 3 - 1); // ±1% variation
+                        item.textContent = `${newValue}%`;
+                        
+                        // Visual feedback for update
+                        item.style.background = '#FEF3C7';
+                        setTimeout(() => {
+                            item.style.background = '';
+                        }, 2000);
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // 설정 오버레이를 처음에 표시 (hidden 클래스 제거)
+            const setupOverlay = document.getElementById('setupOverlay');
+            if (setupOverlay && setupOverlay.classList.contains('hidden')) {
+                setupOverlay.classList.remove('hidden');
+            }
+            
+            // 메시지 입력창 포커스
+            const messageInput = document.getElementById('messageInput');
+            if (messageInput) {
+                messageInput.focus();
+            }
+            
+            // 제품 입력 필드 이벤트 리스너
+            const productNameInput = document.getElementById('productName');
+            const productDescInput = document.getElementById('productDescription');
+            
+            function checkProductInputs() {
+                const name = productNameInput ? productNameInput.value.trim() : '';
+                const nextBtn = document.getElementById('nextBtn');
+                if (nextBtn && currentSetupStep === 2) {
+                    nextBtn.disabled = !name;
+                }
+            }
+            
+            if (productNameInput) {
+                productNameInput.addEventListener('input', checkProductInputs);
+            }
+            if (productDescInput) {
+                productDescInput.addEventListener('input', checkProductInputs);
+            }
+            
+            // RAG 데이터 업데이트
+            setInterval(updateRAGData, 45000);
+            
+            // 실시간 인사이트 시뮬레이션
+            setTimeout(() => {
+                const badges = document.querySelectorAll('.rag-badge');
+                badges.forEach(badge => {
+                    if (badge.textContent === '실시간') {
+                        setInterval(() => {
+                            badge.style.background = badge.style.background === 'rgb(239, 68, 68)' ? '#10B981' : '#EF4444';
+                        }, 5000);
+                    }
+                });
+            }, 3000);
+        });
+    </script><!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductAI - 함께 만드는 제품 디자인</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #F8FAFC;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            height: 100vh;
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 32px rgba(0,0,0,0.08);
+        }
+
+        /* Left Sidebar - RAG Data */
+        .sidebar {
+            width: 320px;
+            background: #FAFBFC;
+            border-right: 1px solid #E2E8F0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 24px;
+            border-bottom: 1px solid #E2E8F0;
+            background: white;
+        }
+
+        .sidebar-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-subtitle {
+            font-size: 14px;
+            color: #64748B;
+        }
+
+        .rag-sections {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .rag-section {
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #E2E8F0;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .rag-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #F1F5F9;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #FAFBFC;
+        }
+
+        .rag-header:hover {
+            background: #F1F5F9;
+        }
+
+        .rag-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .rag-badge {
+            background: #10B981;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .rag-badge.warning {
+            background: #F59E0B;
+        }
+
+        .rag-chevron {
+            color: #9CA3AF;
+            font-size: 12px;
+            transition: transform 0.2s ease;
+        }
+
+        .rag-chevron.expanded {
+            transform: rotate(180deg);
+        }
+
+        .rag-content {
+            padding: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .rag-content.collapsed {
+            display: none;
+        }
+
+        .trend-item, .persona-item {
+            padding: 12px 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .trend-item:last-child, .persona-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .trend-title, .persona-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1F2937;
+            margin-bottom: 4px;
+        }
+
+        .trend-desc, .persona-desc {
+            font-size: 12px;
+            color: #6B7280;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .trend-meta, .persona-meta {
+            font-size: 11px;
+            color: #9CA3AF;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .trend-value {
+            background: #EEF2FF;
+            color: #4338CA;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Main Chat Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #E2E8F0;
+            background: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .project-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .project-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+
+        .project-details h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1E293B;
+            margin-bottom: 4px;
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #64748B;
+        }
+
+        .project-status {
+            background: #EEF2FF;
+            color: #4338CA;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 8px 16px;
+            border: 1px solid #E2E8F0;
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-btn:hover {
+            border-color: #3B82F6;
+            color: #3B82F6;
+        }
+
+        .action-btn.primary {
+            background: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+        }
+
+        .action-btn.primary:hover {
+            background: #2563EB;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            padding: 16px 32px;
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .progress-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .progress-percentage {
+            font-size: 14px;
+            color: #6B7280;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #EDF2F7;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48BB78 0%, #38A169 100%);
+            border-radius: 2px;
+            transition: width 0.8s ease-in-out;
+            width: 33%;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #9CA3AF;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex: 1;
+            text-align: center;
+        }
+
+        .step.completed {
+            color: #10B981;
+        }
+
+        .step.active {
+            color: #3B82F6;
+            font-weight: 600;
+        }
+
+        /* Chat Messages */
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .message {
+            display: flex;
+            gap: 12px;
+            max-width: 100%;
+        }
+
+        .message.user {
+            justify-content: flex-end;
+        }
+
+        .message.ai {
+            justify-content: flex-start;
+        }
+
+        .message-avatar {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .message.ai .message-avatar {
+            background: #5B6BF4;
+            color: white;
+            order: 1;
+        }
+
+        .message.user .message-avatar {
+            background: #10B981;
+            color: white;
+            order: 2;
+        }
+
+        .message-content {
+            max-width: 70%;
+        }
+
+        .message.ai .message-content {
+            order: 2;
+        }
+
+        .message.user .message-content {
+            order: 1;
+        }
+
+        .message-bubble {
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 14px;
+            line-height: 1.5;
+            word-wrap: break-word;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .message.ai .message-bubble {
+            background: white;
+            color: #374151;
+            border: 1px solid #E5E7EB;
+            border-bottom-left-radius: 4px;
+        }
+
+        .message.user .message-bubble {
+            background: #3B82F6;
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-time {
+            font-size: 11px;
+            color: #9CA3AF;
+            margin-top: 4px;
+        }
+
+        .message.ai .message-time {
+            text-align: left;
+        }
+
+        .message.user .message-time {
+            text-align: right;
+        }
+
+        /* RAG Insight Cards */
+        .rag-insight {
+            background: linear-gradient(135deg, #EBF4FF 0%, #E0E7FF 100%);
+            border: 1px solid #C7D2FE;
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+            font-size: 14px;
+        }
+
+        .rag-insight-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            color: #3730A3;
+            margin-bottom: 8px;
+        }
+
+        .rag-insight-content {
+            font-size: 13px;
+            line-height: 1.4;
+            color: #4338CA;
+        }
+
+        .rag-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .metric-item {
+            background: white;
+            border: 1px solid #E0E7FF;
+            border-radius: 6px;
+            padding: 8px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-weight: 700;
+            color: #3730A3;
+            font-size: 16px;
+        }
+
+        .metric-label {
+            font-size: 11px;
+            color: #6366F1;
+            margin-top: 2px;
+        }
+
+        /* Choice Buttons */
+        .choice-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .choice-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: left;
+            color: #374151;
+        }
+
+        .choice-btn:hover {
+            background: #F1F5F9;
+            border-color: #3B82F6;
+        }
+
+        .choice-btn.selected {
+            background: #3B82F6;
+            color: white;
+            border-color: #3B82F6;
+        }
+
+        .choice-btn::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: #94A3B8;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .choice-btn:hover::before {
+            background: #3B82F6;
+        }
+
+        .choice-btn.selected::before {
+            background: white;
+        }
+
+        /* Input Area */
+        .chat-input-area {
+            padding: 16px 32px 20px;
+            background: white;
+            border-top: 1px solid #E2E8F0;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 8px;
+            align-items: flex-end;
+            max-width: 100%;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 24px;
+            padding: 8px 12px;
+        }
+
+        .input-field {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            background: transparent;
+            font-size: 14px;
+            resize: none;
+            outline: none;
+            min-height: 20px;
+            max-height: 120px;
+            font-family: inherit;
+            color: #374151;
+        }
+
+        .input-field::placeholder {
+            color: #9CA3AF;
+        }
+
+        .send-btn {
+            width: 32px;
+            height: 32px;
+            background: #3B82F6;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .send-btn:hover {
+            background: #2563EB;
+            transform: scale(1.05);
+        }
+
+        .send-btn:disabled {
+            background: #D1D5DB;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Typing Indicator */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            border-bottom-left-radius: 4px;
+            font-size: 14px;
+            color: #6B7280;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 3px;
+        }
+
+        .typing-dot {
+            width: 6px;
+            height: 6px;
+            background: #9CA3AF;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% {
+                transform: translateY(0);
+                opacity: 0.4;
+            }
+            30% {
+                transform: translateY(-6px);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 280px;
+            }
+            
+            .chat-messages {
+                padding: 20px 24px;
+            }
+            
+            .chat-input-area {
+                padding: 16px 24px 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .app-container {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                height: 200px;
+                border-right: none;
+                border-bottom: 1px solid #E2E8F0;
+            }
+            
+            .rag-sections {
+                padding: 16px;
+            }
+            
+            .rag-section {
+                margin-bottom: 12px;
+            }
+            
+            .chat-header {
+                padding: 16px 20px;
+            }
+            
+            .progress-container {
+                padding: 12px 20px;
+            }
+            
+            .chat-messages {
+                padding: 16px 20px;
+            }
+            
+            .chat-input-area {
+                padding: 16px 20px;
+            }
+            
+            .message {
+                max-width: 85%;
+            }
+            
+            .choice-buttons {
+                gap: 6px;
+            }
+            
+            .choice-btn {
+                font-size: 12px;
+                padding: 10px 12px;
+            }
+            
+            .setup-modal {
+                width: 95%;
+                margin: 20px;
+            }
+            
+            .setup-header {
+                padding: 24px 24px 20px;
+            }
+            
+            .setup-content {
+                padding: 24px;
+            }
+            
+            .setup-actions {
+                padding: 24px;
+            }
+            
+            .persona-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .goal-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-examples {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .project-info {
+                gap: 12px;
+            }
+            
+            .project-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+            
+            .project-details h1 {
+                font-size: 18px;
+            }
+            
+            .header-actions {
+                flex-direction: column;
+                gap: 4px;
+            }
+            
+            .action-btn {
+                padding: 6px 12px;
+                font-size: 13px;
+            }
+        }
+
+        .rag-sections::-webkit-scrollbar,
+        .chat-messages::-webkit-scrollbar,
+        .rag-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .rag-sections::-webkit-scrollbar-track,
+        .chat-messages::-webkit-scrollbar-track,
+        .rag-content::-webkit-scrollbar-track {
+            background: #F1F5F9;
+        }
+
+        .rag-sections::-webkit-scrollbar-thumb,
+        .chat-messages::-webkit-scrollbar-thumb,
+        .rag-content::-webkit-scrollbar-thumb {
+            background: #CBD5E1;
+            border-radius: 3px;
+        }
+
+        .rag-sections::-webkit-scrollbar-thumb:hover,
+        .chat-messages::-webkit-scrollbar-thumb:hover,
+        .rag-content::-webkit-scrollbar-thumb:hover {
+            background: #94A3B8;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Setup Overlay -->
+        <div class="setup-overlay" id="setupOverlay">
+            <div class="setup-modal">
+                <div class="setup-header">
+                    <h2>새 프로젝트 시작하기</h2>
+                    <div class="setup-subtitle">함께 만들어갈 제품 디자인 프로젝트를 설정해보세요</div>
+                    <div class="setup-progress">
+                        <div class="setup-step-indicator active" id="indicator1"></div>
+                        <div class="setup-step-indicator" id="indicator2"></div>
+                        <div class="setup-step-indicator" id="indicator3"></div>
+                    </div>
+                </div>
+                
+                <div class="setup-content">
+                    <!-- Step 1: Persona Selection -->
+                    <div class="setup-step active" id="step1">
+                        <div class="step-title">어떤 역할로 프로젝트를 진행하시겠습니까?</div>
+                        <div class="step-description">
+                            선택하신 역할에 따라 AI가 맞춤형 가이드와 조언을 제공합니다.<br>
+                            언제든지 설정에서 변경할 수 있어요.
+                        </div>
+                        
+                        <div class="persona-grid">
+                            <div class="persona-card" onclick="selectPersona('junior')" data-persona="junior">
+                                <div class="persona-icon">🌱</div>
+                                <div class="persona-title">주니어 디자이너</div>
+                                <div class="persona-description">기초부터 차근차근 배우면서 체계적으로 진행하고 싶어요</div>
+                            </div>
+                            <div class="persona-card" onclick="selectPersona('senior')" data-persona="senior">
+                                <div class="persona-icon">🎯</div>
+                                <div class="persona-title">시니어 디자이너</div>
+                                <div class="persona-description">전략적 관점에서 비즈니스 임팩트를 고려해 진행하고 싶어요</div>
+                            </div>
+                            <div class="persona-card" onclick="selectPersona('pm')" data-persona="pm">
+                                <div class="persona-icon">📊</div>
+                                <div class="persona-title">제품 기획자</div>
+                                <div class="persona-description">효율적이고 결과 중심적으로 진행하고 싶어요</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Product Definition -->
+                    <div class="setup-step" id="step2">
+                        <div class="step-title">어떤 제품을 디자인하시겠습니까?</div>
+                        <div class="step-description">
+                            구체적인 제품명을 입력하시거나, 아래 예시 중에서 선택해주세요.<br>
+                            명확할수록 더 정확한 인사이트를 제공받을 수 있습니다.
+                        </div>
+                        
+                        <div class="product-form">
+                            <div class="form-group">
+                                <label class="form-label" for="productName">제품명</label>
+                                <input type="text" class="form-input" id="productName" placeholder="예: 스마트워치 헬스케어 제품">
+                                <div class="form-help">구체적인 제품명을 입력해주세요</div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="productDescription">제품 설명 (선택사항)</label>
+                                <textarea class="form-input form-textarea" id="productDescription" placeholder="제품의 주요 기능이나 특징을 간단히 설명해주세요"></textarea>
+                                <div class="form-help">더 정확한 분석을 위해 제품에 대한 간단한 설명을 추가해주세요</div>
+                            </div>
+                        </div>
+                        
+                        <div class="product-examples">
+                            <div class="example-card" onclick="selectProductExample('스마트워치 헬스케어 제품', '운동 추적과 건강 관리를 위한 웨어러블 제품')">
+                                <div class="example-title">⌚ 스마트워치 헬스케어 제품</div>
+                                <div class="example-desc">운동 추적과 건강 관리</div>
+                            </div>
+                            <div class="example-card" onclick="selectProductExample('모바일 음식 주문 서비스', '빠르고 편리한 음식 배달 서비스')">
+                                <div class="example-title">🍔 모바일 음식 주문 서비스</div>
+                                <div class="example-desc">음식 배달 서비스</div>
+                            </div>
+                            <div class="example-card" onclick="selectProductExample('AI 학습 도우미 제품', '개인 맞춤형 학습 관리 시스템')">
+                                <div class="example-title">🤖 AI 학습 도우미 제품</div>
+                                <div class="example-desc">개인 맞춤형 학습 관리</div>
+                            </div>
+                            <div class="example-card" onclick="selectProductExample('스마트홈 제어 시스템', 'IoT 기기 통합 관리 시스템')">
+                                <div class="example-title">🏠 스마트홈 제어 시스템</div>
+                                <div class="example-desc">IoT 기기 통합 관리</div>
+                            </div>
+                            <div class="example-card" onclick="selectProductExample('전기차 대시보드', '차량 정보와 내비게이션 통합 인터페이스')">
+                                <div class="example-title">🚗 전기차 대시보드</div>
+                                <div class="example-desc">차량 정보 인터페이스</div>
+                            </div>
+                            <div class="example-card" onclick="selectProductExample('온라인 협업 플랫폼', '팀 프로젝트 관리 플랫폼')">
+                                <div class="example-title">👥 온라인 협업 플랫폼</div>
+                                <div class="example-desc">팀 프로젝트 관리</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Goal Setting -->
+                    <div class="setup-step" id="step3">
+                        <div class="step-title">프로젝트의 주요 목표는 무엇인가요?</div>
+                        <div class="step-description">
+                            설정하신 목표에 따라 프로젝트 진행 방향과 우선순위가 결정됩니다.<br>
+                            가장 중요한 목표 하나를 선택해주세요.
+                        </div>
+                        
+                        <div class="goal-grid">
+                            <div class="goal-card" onclick="selectGoal('새로운 제품 만들기')" data-goal="새로운 제품 만들기">
+                                <div class="goal-icon">🆕</div>
+                                <div class="goal-title">새로운 제품 만들기</div>
+                                <div class="goal-description">아이디어부터 시작해서 완전히 새로운 제품을 기획하고 디자인하고 싶어요</div>
+                            </div>
+                            <div class="goal-card" onclick="selectGoal('기존 제품 개선하기')" data-goal="기존 제품 개선하기">
+                                <div class="goal-icon">✨</div>
+                                <div class="goal-title">기존 제품 개선하기</div>
+                                <div class="goal-description">현재 있는 제품의 사용자 경험을 분석하고 개선점을 찾아 업그레이드하고 싶어요</div>
+                            </div>
+                            <div class="goal-card" onclick="selectGoal('새로운 기능 추가하기')" data-goal="새로운 기능 추가하기">
+                                <div class="goal-icon">🚀</div>
+                                <div class="goal-title">새로운 기능 추가하기</div>
+                                <div class="goal-description">기존 제품에 새로운 기능을 추가해서 사용자 가치를 높이고 싶어요</div>
+                            </div>
+                            <div class="goal-card" onclick="selectGoal('전체적인 리디자인')" data-goal="전체적인 리디자인">
+                                <div class="goal-icon">🎨</div>
+                                <div class="goal-title">전체적인 리디자인</div>
+                                <div class="goal-description">기존 제품의 전체적인 디자인과 사용자 인터페이스를 새롭게 디자인하고 싶어요</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="setup-actions">
+                    <button class="setup-back" onclick="previousStep()" id="backBtn" disabled>이전</button>
+                    <div>
+                        <button class="setup-next" onclick="nextStep()" id="nextBtn" disabled>다음</button>
+                        <a href="#" class="setup-skip" onclick="skipSetup()">건너뛰기</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Left Sidebar - RAG Data -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">데이터 인사이트</div>
+                <div class="sidebar-subtitle">실시간 트렌드 & 페르소나 분석</div>
+            </div>
+            
+            <div class="rag-sections">
+                <!-- Industry Trends -->
+                <div class="rag-section">
+                    <div class="rag-header" onclick="toggleSection('trends')">
+                        <div class="rag-title">
+                            📈 업종 트렌드
+                            <span class="rag-badge">실시간</span>
+                        </div>
+                        <span class="rag-chevron expanded" id="trends-chevron">▼</span>
+                    </div>
+                    <div class="rag-content" id="trends-content">
+                        <div class="trend-item">
+                            <div class="trend-title">AI 기반 개인화 헬스케어</div>
+                            <div class="trend-desc">머신러닝을 활용한 개인 맞춤형 건강 관리 솔루션이 급성장하고 있으며, 예측 분석 기능이 핵심 차별화 요소로 부상</div>
+                            <div class="trend-meta">
+                                <span>2024.01.15</span>
+                                <span class="trend-value">+45%</span>
+                            </div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-title">예방 중심 헬스케어</div>
+                            <div class="trend-desc">치료보다 예방에 집중하는 웰니스 앱 시장이 확대되며, 사용자의 생활 습관 개선에 초점</div>
+                            <div class="trend-meta">
+                                <span>2024.01.14</span>
+                                <span class="trend-value">32%</span>
+                            </div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-title">소셜 피트니스</div>
+                            <div class="trend-desc">친구들과 함께하는 운동 챌린지와 커뮤니티 기능이 사용자 리텐션의 핵심 요소로 작용</div>
+                            <div class="trend-meta">
+                                <span>2024.01.13</span>
+                                <span class="trend-value">+60%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Target Personas -->
+                <div class="rag-section">
+                    <div class="rag-header" onclick="toggleSection('personas')">
+                        <div class="rag-title">
+                            👥 타겟 페르소나
+                            <span class="rag-badge warning">분석됨</span>
+                        </div>
+                        <span class="rag-chevron expanded" id="personas-chevron">▼</span>
+                    </div>
+                    <div class="rag-content" id="personas-content">
+                        <div class="persona-item">
+                            <div class="persona-name">헬스 비기너 (25-35세)</div>
+                            <div class="persona-desc">운동을 시작하려는 직장인층으로, 간단하고 지속 가능한 운동 루틴을 선호하며 성취감을 통한 동기부여가 중요</div>
+                            <div class="persona-meta">
+                                <span>쉬운 시작 89% • 성취감 76%</span>
+                            </div>
+                        </div>
+                        <div class="persona-item">
+                            <div class="persona-name">액티브 시니어 (50-65세)</div>
+                            <div class="persona-desc">건강 관리에 관심이 많은 중장년층으로, 정확한 건강 데이터와 전문의와의 연계 서비스를 중시</div>
+                            <div class="persona-meta">
+                                <span>정확성 92% • 모니터링 85%</span>
+                            </div>
+                        </div>
+                        <div class="persona-item">
+                            <div class="persona-name">피트니스 마니아 (20-40세)</div>
+                            <div class="persona-desc">운동을 취미로 하는 층으로, 상세한 운동 분석과 다른 사용자와의 경쟁 요소를 선호</div>
+                            <div class="persona-meta">
+                                <span>상세 분석 94% • 소셜 82%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Market Insights -->
+                <div class="rag-section">
+                    <div class="rag-header" onclick="toggleSection('market')">
+                        <div class="rag-title">
+                            📊 시장 분석
+                            <span class="rag-badge">업데이트됨</span>
+                        </div>
+                        <span class="rag-chevron" id="market-chevron">▼</span>
+                    </div>
+                    <div class="rag-content collapsed" id="market-content">
+                        <div class="trend-item">
+                            <div class="trend-title">헬스케어 앱 시장 규모</div>
+                            <div class="trend-desc">글로벌 모바일 헬스 시장이 연평균 12.8% 성장하며 2025년 2,320억 달러 규모 예상</div>
+                            <div class="trend-meta">
+                                <span>2024.01.10</span>
+                                <span class="trend-value">$232B</span>
+                            </div>
+                        </div>
+                        <div class="trend-item">
+                            <div class="trend-title">사용자 선호 기능</div>
+                            <div class="trend-desc">운동 트래킹(78%), 식단 관리(65%), 수면 모니터링(58%) 순으로 선호도 높음</div>
+                            <div class="trend-meta">
+                                <span>설문 기준</span>
+                                <span class="trend-value">N=2,400</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Header -->
+            <div class="chat-header">
+                <div class="project-info">
+                    <div class="project-avatar">🎨</div>
+                    <div class="project-details">
+                        <h1>스마트워치 헬스케어 제품</h1>
+                        <div class="project-meta">
+                            <span class="project-status">진행 중</span>
+                            <span>•</span>
+                            <span>시니어 제품 디자이너</span>
+                            <span>•</span>
+                            <span>시작: 2024.01.15</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="action-btn">💾 저장</button>
+                    <button class="action-btn">📤 공유</button>
+                    <button class="action-btn primary">⚙️ 설정</button>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-container">
+                <div class="progress-header">
+                    <div class="progress-title">프로젝트 진행률</div>
+                    <div class="progress-percentage" id="progressText">2/6 단계 완료 (33%)</div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div class="progress-steps" id="progressSteps">
+                    <div class="step completed">✅ 리서치</div>
+                    <div class="step active">🔄 아이디어</div>
+                    <div class="step">⏳ 기획</div>
+                    <div class="step">⏳ 디자인</div>
+                    <div class="step">⏳ 프로토타입</div>
+                    <div class="step">⏳ 검증</div>
+                </div>
+            </div>
+
+            <!-- Chat Messages -->
+            <div class="chat-messages" id="chatMessages">
+                <!-- AI Message with RAG Insight -->
+                <div class="message ai">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            스마트워치 헬스케어 제품 디자인을 시작하겠습니다! 
+
+                            <div class="rag-insight">
+                                <div class="rag-insight-header">
+                                    📊 최신 시장 데이터 분석
+                                </div>
+                                <div class="rag-insight-content">
+                                    현재 AI 기반 개인화 헬스케어가 45% 성장하고 있으며, 소셜 피트니스 기능의 사용자 참여도가 60% 증가했습니다. 주요 타겟층인 헬스 비기너(25-35세)는 쉬운 시작과 성취감을 가장 중요하게 생각합니다.
+                                </div>
+                                <div class="rag-metrics">
+                                    <div class="metric-item">
+                                        <div class="metric-value">45%</div>
+                                        <div class="metric-label">AI 헬스케어 성장률</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">89%</div>
+                                        <div class="metric-label">쉬운 시작 선호도</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">76%</div>
+                                        <div class="metric-label">성취감 중요도</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            어떤 사용자층에 먼저 집중하시겠습니까?
+
+                            <div class="choice-buttons">
+                                <button class="choice-btn" onclick="selectTarget('헬스 비기너')">
+                                    🌱 헬스 비기너 (25-35세) - 시작하는 직장인 • 쉬운 접근 선호
+                                </button>
+                                <button class="choice-btn" onclick="selectTarget('액티브 시니어')">
+                                    🎯 액티브 시니어 (50-65세) - 건강 관리 중심 • 정확성 중시
+                                </button>
+                                <button class="choice-btn" onclick="selectTarget('피트니스 마니아')">
+                                    💪 피트니스 마니아 (20-40세) - 운동 애호가 • 고급 기능 선호
+                                </button>
+                            </div>
+                        </div>
+                        <div class="message-time">방금 전</div>
+                    </div>
+                </div>
+
+                <!-- User Response -->
+                <div class="message user">
+                    <div class="message-avatar">👤</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            헬스 비기너에 집중해서 진행해볼게요. 운동을 처음 시작하는 사람들이 쉽게 접근할 수 있는 제품을 만들고 싶어요.
+                        </div>
+                        <div class="message-time">2분 전</div>
+                    </div>
+                </div>
+
+                <!-- AI Follow-up with Trend Data -->
+                <div class="message ai">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            훌륭한 선택입니다! 헬스 비기너층은 현재 가장 성장 잠재력이 높은 타겟이에요.
+
+                            <div class="rag-insight">
+                                <div class="rag-insight-header">
+                                    🎯 헬스 비기너 타겟 인사이트
+                                </div>
+                                <div class="rag-insight-content">
+                                    헬스 비기너들의 주요 니즈 분석 결과, 쉬운 시작(89%), 성취감(76%), 습관 형성(68%) 순으로 중요도가 높습니다. 또한 소셜 피트니스 트렌드와도 잘 맞아 친구들과 함께하는 동기부여 요소가 효과적입니다.
+                                </div>
+                                <div class="rag-metrics">
+                                    <div class="metric-item">
+                                        <div class="metric-value">10분</div>
+                                        <div class="metric-label">선호 운동 시간</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">68%</div>
+                                        <div class="metric-label">습관 형성 니즈</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">3주</div>
+                                        <div class="metric-label">평균 포기 시점</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            이들을 위한 핵심 기능을 우선순위별로 정해볼까요?
+
+                            <div class="choice-buttons">
+                                <button class="choice-btn" onclick="selectFeature('간단한 운동 가이드')">
+                                    📝 간단한 운동 가이드 - 10분 내 완료 가능한 초보자용 루틴
+                                </button>
+                                <button class="choice-btn" onclick="selectFeature('습관 형성 도우미')">
+                                    🏆 습관 형성 도우미 - 작은 목표와 보상 시스템으로 지속성 확보
+                                </button>
+                                <button class="choice-btn" onclick="selectFeature('친구 챌린지')">
+                                    👥 친구 챌린지 - 함께하는 동기부여와 소셜 기능
+                                </button>
+                            </div>
+                        </div>
+                        <div class="message-time">방금 전</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="chat-input-area">
+                <div class="input-container">
+                    <textarea 
+                        class="input-field" 
+                        id="messageInput"
+                        placeholder="어떤 방향으로 진행하고 싶으신지 말씀해주세요..."
+                        rows="1"
+                        onkeypress="handleKeyPress(event)"
+                        oninput="autoResize(this)"
+                    ></textarea>
+                    <button class="send-btn" onclick="sendMessage()" id="sendBtn">
+                        ➤
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        let isTyping = false;
+
+        // Toggle RAG sections
+        function toggleSection(sectionId) {
+            const content = document.getElementById(`${sectionId}-content`);
+            const chevron = document.getElementById(`${sectionId}-chevron`);
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                chevron.textContent = '▼';
+                chevron.classList.add('expanded');
+            } else {
+                content.classList.add('collapsed');
+                chevron.textContent = '▶';
+                chevron.classList.remove('expanded');
+            }
+        }
+
+        // Target selection
+        function selectTarget(target) {
+            // Visual feedback
+            event.target.classList.add('selected');
+            
+            // Disable other buttons
+            const buttons = event.target.parentNode.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => {
+                if (btn !== event.target) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                }
+            });
+
+            // Send user message
+            setTimeout(() => {
+                addUserMessage(`${target} 타겟으로 진행하겠습니다.`);
+                
+                setTimeout(() => {
+                    // Update progress
+                    updateProgress(50);
+                    
+                    // AI response with RAG data
+                    const responses = {
+                        '헬스 비기너': {
+                            message: `헬스 비기너 타겟으로 설정되었습니다!`,
+                            insight: '이 타겟층은 10분 내 완료 가능한 간단한 운동을 선호하며, 평균 3주 시점에서 포기율이 높아 초기 습관 형성이 매우 중요합니다. 성취감을 통한 동기부여가 지속 사용의 핵심 요소입니다.',
+                            metrics: [
+                                {value: '10분', label: '선호 운동 시간'},
+                                {value: '68%', label: '습관 형성 니즈'},
+                                {value: '3주', label: '평균 포기 시점'}
+                            ],
+                            choices: [
+                                '간단한 운동 가이드 - 10분 내 완료 가능한 초보자용 루틴',
+                                '습관 형성 도우미 - 작은 목표와 보상 시스템으로 지속성 확보', 
+                                '친구 챌린지 - 함께하는 동기부여와 소셜 기능'
+                            ]
+                        },
+                        '액티브 시니어': {
+                            message: `액티브 시니어 타겟으로 설정되었습니다!`,
+                            insight: '이 타겟층은 정확성(92%), 건강 모니터링(85%), 의료진 연계(71%)를 가장 중요하게 생각하며, 안전한 운동과 건강 데이터의 신뢰성을 최우선으로 여깁니다.',
+                            metrics: [
+                                {value: '92%', label: '정확성 중시'},
+                                {value: '85%', label: '모니터링 선호'},
+                                {value: '71%', label: '의료진 연계 니즈'}
+                            ],
+                            choices: [
+                                '건강 지표 모니터링 - 심박수, 혈압 등 정확한 측정',
+                                '의료진 연계 기능 - 건강 데이터 공유 시스템',
+                                '안전한 운동 가이드 - 부상 방지 중심 프로그램'
+                            ]
+                        },
+                        '피트니스 마니아': {
+                            message: `피트니스 마니아 타겟으로 설정되었습니다!`,
+                            insight: '이 타겟층은 상세 분석(94%), 소셜 기능(82%), 목표 달성(89%)을 핵심으로 여기며, 고급 운동 데이터와 다른 사용자와의 경쟁 요소를 강하게 선호합니다.',
+                            metrics: [
+                                {value: '94%', label: '상세 분석 선호'},
+                                {value: '82%', label: '소셜 기능 중시'},
+                                {value: '89%', label: '목표 달성 욕구'}
+                            ],
+                            choices: [
+                                '고급 운동 분석 - 상세한 퍼포먼스 데이터 제공',
+                                '경쟁 및 랭킹 시스템 - 리더보드와 성과 비교',
+                                '커뮤니티 기능 - 운동 파트너 매칭과 정보 공유'
+                            ]
+                        }
+                    };
+                    
+                    const response = responses[target];
+                    addAIMessageWithDetailedInsight(response.message, response.insight, response.metrics, response.choices);
+                }, 2000);
+            }, 500);
+        }
+
+        // Feature selection
+        function selectFeature(feature) {
+            event.target.classList.add('selected');
+            
+            const buttons = event.target.parentNode.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => {
+                if (btn !== event.target) {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                }
+            });
+
+            setTimeout(() => {
+                addUserMessage(`${feature} 기능을 우선적으로 개발하겠습니다.`);
+                
+                setTimeout(() => {
+                    updateProgress(75);
+                    
+                    const featureInsights = {
+                        '간단한 운동 가이드': {
+                            message: '간단한 운동 가이드를 핵심 기능으로 선정했습니다!',
+                            insight: '10분 이내 완료 가능한 운동이 초보자 완주율을 85% 향상시키며, 단계별 가이드가 있는 앱의 사용자 만족도가 73% 더 높습니다.',
+                            metrics: [
+                                {value: '85%', label: '완주율 향상'},
+                                {value: '73%', label: '만족도 증가'},
+                                {value: '10분', label: '최적 운동 시간'}
+                            ]
+                        },
+                        '습관 형성 도우미': {
+                            message: '습관 형성 도우미를 핵심 기능으로 선정했습니다!',
+                            insight: '작은 목표 설정과 보상 시스템이 있는 앱의 30일 리텐션률이 67% 더 높으며, 게임화 요소가 포함된 습관 앱의 지속 사용률이 2.3배 증가합니다.',
+                            metrics: [
+                                {value: '67%', label: '리텐션 향상'},
+                                {value: '2.3배', label: '지속 사용률'},
+                                {value: '21일', label: '습관 형성 기간'}
+                            ]
+                        },
+                        '친구 챌린지': {
+                            message: '친구 챌린지를 핵심 기능으로 선정했습니다!',
+                            insight: '소셜 기능이 포함된 피트니스 앱의 사용자 참여도가 60% 증가하며, 친구와 함께하는 운동의 지속률이 90% 더 높습니다.',
+                            metrics: [
+                                {value: '60%', label: '참여도 증가'},
+                                {value: '90%', label: '지속률 향상'},
+                                {value: '4.2배', label: '추천 확률'}
+                            ]
+                        }
+                    };
+                    
+                    const cleanFeatureName = feature.split(' - ')[0];
+                    const insight = featureInsights[cleanFeatureName];
+                    
+                    if (insight) {
+                        addAIMessageWithDetailedInsight(
+                            insight.message,
+                            insight.insight,
+                            insight.metrics,
+                            []
+                        );
+                        
+                        setTimeout(() => {
+                            addAIMessage('좋습니다! 이제 이 기능의 구체적인 사용자 플로우를 설계해보겠습니다. 사용자가 앱을 처음 열었을 때부터 목표 달성까지의 여정을 함께 만들어가요. 어떤 단계부터 시작하고 싶으신가요?');
+                        }, 3000);
+                    }
+                }, 2000);
+            }, 500);
+        }
+
+        // Message functions
+        function addUserMessage(text) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message user';
+            messageDiv.innerHTML = `
+                <div class="message-avatar">👤</div>
+                <div class="message-content">
+                    <div class="message-bubble">${text}</div>
+                    <div class="message-time">방금 전</div>
+                </div>
+            `;
+            messagesContainer.appendChild(messageDiv);
+            scrollToBottom();
+        }
+
+        function addAIMessage(text) {
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                const messagesContainer = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message ai';
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-bubble">${text}</div>
+                        <div class="message-time">방금 전</div>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageDiv);
+                scrollToBottom();
+            }, 1500);
+        }
+
+        function addAIMessageWithDetailedInsight(message, insight, metrics, choices) {
+            showTypingIndicator();
+            
+            setTimeout(() => {
+                hideTypingIndicator();
+                
+                const messagesContainer = document.getElementById('chatMessages');
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message ai';
+                
+                let metricsHtml = '';
+                if (metrics && metrics.length > 0) {
+                    metricsHtml = '<div class="rag-metrics">';
+                    metrics.forEach(metric => {
+                        metricsHtml += `
+                            <div class="metric-item">
+                                <div class="metric-value">${metric.value}</div>
+                                <div class="metric-label">${metric.label}</div>
+                            </div>
+                        `;
+                    });
+                    metricsHtml += '</div>';
+                }
+                
+                let choiceButtons = '';
+                if (choices && choices.length > 0) {
+                    choiceButtons = '<div class="choice-buttons">';
+                    choices.forEach(choice => {
+                        const parts = choice.split(' - ');
+                        const title = parts[0];
+                        const desc = parts[1] || '';
+                        choiceButtons += `
+                            <button class="choice-btn" onclick="selectFeature('${choice}')">
+                                ${title}${desc ? ' - ' + desc : ''}
+                            </button>
+                        `;
+                    });
+                    choiceButtons += '</div>';
+                }
+                
+                messageDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            ${message}
+                            
+                            <div class="rag-insight">
+                                <div class="rag-insight-header">
+                                    📊 RAG 분석 결과
+                                </div>
+                                <div class="rag-insight-content">
+                                    ${insight}
+                                </div>
+                                ${metricsHtml}
+                            </div>
+
+                            ${choices.length > 0 ? '이들을 위한 핵심 기능을 우선순위별로 정해볼까요?' : ''}
+
+                            ${choiceButtons}
+                        </div>
+                        <div class="message-time">방금 전</div>
+                    </div>
+                `;
+                messagesContainer.appendChild(messageDiv);
+                scrollToBottom();
+            }, 1500);
+        }
+
+        // Input handling
+        function handleKeyPress(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const text = input.value.trim();
+            
+            if (!text || isTyping) return;
+            
+            addUserMessage(text);
+            input.value = '';
+            autoResize(input);
+            
+            // Generate AI response
+            setTimeout(() => {
+                generateRAGResponse(text);
+            }, 1000);
+        }
+
+        function generateRAGResponse(userText) {
+            // Simulate RAG-enhanced responses based on user input
+            const ragResponses = [
+                {
+                    message: '좋은 아이디어네요! 최신 트렌드 데이터를 반영해보겠습니다.',
+                    insight: '현재 AI 기반 개인화 헬스케어가 45% 성장하고 있어, 사용자 맞춤형 기능이 핵심 트렌드입니다. 특히 개인의 운동 패턴을 학습하여 최적화된 루틴을 제공하는 기능의 만족도가 높습니다.',
+                    metrics: [
+                        {value: '45%', label: '성장률'},
+                        {value: '78%', label: '개인화 선호도'},
+                        {value: '2.1배', label: '만족도 증가'}
+                    ]
+                },
+                {
+                    message: '사용자 중심적인 접근이군요! 타겟 페르소나 분석을 활용해보겠습니다.',
+                    insight: '헬스 비기너들의 89%가 쉬운 시작을 원하고, 76%가 성취감을 중요하게 생각합니다. 또한 첫 2주간의 경험이 장기 사용률을 결정하는 핵심 기간입니다.',
+                    metrics: [
+                        {value: '89%', label: '쉬운 시작 선호'},
+                        {value: '76%', label: '성취감 중시'},
+                        {value: '2주', label: '결정적 기간'}
+                    ]
+                },
+                {
+                    message: '트렌드에 맞는 방향입니다! 업계 데이터를 확인해보겠습니다.',
+                    insight: '소셜 피트니스 기능의 사용자 참여도가 60% 증가했고, 예방 중심 헬스케어가 32% 시장 점유율을 차지하고 있습니다. 커뮤니티 기반 동기부여가 효과적입니다.',
+                    metrics: [
+                        {value: '60%', label: '참여도 증가'},
+                        {value: '32%', label: '시장 점유율'},
+                        {value: '3.4배', label: '동기부여 효과'}
+                    ]
+                }
+            ];
+
+            const randomResponse = ragResponses[Math.floor(Math.random() * ragResponses.length)];
+            addAIMessageWithDetailedInsight(randomResponse.message, randomResponse.insight, randomResponse.metrics, []);
+
+            // Update progress occasionally
+            if (Math.random() > 0.7) {
+                setTimeout(() => {
+                    updateProgress(Math.min(100, getCurrentProgress() + 15));
+                }, 2000);
+            }
+        }
+
+        // Progress management
+        function updateProgress(percentage) {
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const steps = document.querySelectorAll('#progressSteps .step');
+            
+            progressFill.style.width = percentage + '%';
+            
+            const currentStep = Math.ceil((percentage / 100) * 6);
+            const stepNames = ['리서치', '아이디어', '기획', '디자인', '프로토타입', '검증'];
+            
+            progressText.textContent = `${Math.min(currentStep, 6)}/6 단계 완료 (${percentage}%)`;
+            
+            steps.forEach((step, index) => {
+                step.classList.remove('active', 'completed');
+                
+                if (index < currentStep - 1) {
+                    step.classList.add('completed');
+                    step.innerHTML = `✅ ${stepNames[index]}`;
+                } else if (index === currentStep - 1 && currentStep <= 6) {
+                    step.classList.add('active');
+                    step.innerHTML = `🔄 ${stepNames[index]}`;
+                } else {
+                    step.innerHTML = `⏳ ${stepNames[index]}`;
+                }
+            });
+        }
+
+        function getCurrentProgress() {
+            const progressFill = document.getElementById('progressFill');
+            return parseInt(progressFill.style.width) || 33;
+        }
+
+        // UI utilities
+        function autoResize(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = textarea.scrollHeight + 'px';
+        }
+
+        function scrollToBottom() {
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            if (isTyping) return;
+            isTyping = true;
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'message ai';
+            typingDiv.id = 'typingIndicator';
+            typingDiv.innerHTML = `
+                <div class="message-avatar">🤖</div>
+                <div class="message-content">
+                    <div class="typing-indicator">
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                        RAG 데이터 분석 중...
+                    </div>
+                </div>
+            `;
+            messagesContainer.appendChild(typingDiv);
+            scrollToBottom();
+        }
+
+        function hideTypingIndicator() {
+            const typingIndicator = document.getElementById('typingIndicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+            isTyping = false;
+        }
+
+        // RAG data simulation - Update trends and personas periodically
+        function updateRAGData() {
+            const trendValues = document.querySelectorAll('.trend-value');
+            trendValues.forEach(item => {
+                if (Math.random() > 0.8) {
+                    const currentText = item.textContent;
+                    if (currentText.includes('%')) {
+                        const baseValue = parseInt(currentText);
+                        const newValue = baseValue + Math.floor(Math.random() * 3 - 1);
+                        item.textContent = `${newValue}%`;
+                        
+                        item.style.background = '#FEF3C7';
+                        setTimeout(() => {
+                            item.style.background = '';
+                        }, 2000);
+                    }
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            scrollToBottom();
+            document.getElementById('messageInput').focus();
+            
+            setInterval(updateRAGData, 45000);
+            
+            setTimeout(() => {
+                const badges = document.querySelectorAll('.rag-badge');
+                badges.forEach(badge => {
+                    if (badge.textContent === '실시간') {
+                        setInterval(() => {
+                            badge.style.background = badge.style.background === 'rgb(239, 68, 68)' ? '#10B981' : '#EF4444';
+                        }, 5000);
+                    }
+                });
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이노유 지원도움 AI - 디자인진흥원 연계 서비스</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 아이노유 지원도움 AI</h1>
+            <p>디자인진흥원 지원사업 맞춤 분석 서비스</p>
+        </div>
+
+        <div class="step-indicator">
+            <div class="step completed" id="step1">
+                <div class="step-number">1</div>
+                <span>사업 확인</span>
+            </div>
+            <div class="step active" id="step2">
+                <div class="step-number">2</div>
+                <span>지원자 정보</span>
+            </div>
+            <div class="step" id="step3">
+                <div class="step-number">3</div>
+                <span>페르소나 선택</span>
+            </div>
+            <div class="step" id="step4">
+                <div class="step-number">4</div>
+                <span>상세 분석</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Step 1: 사업 확인 -->
+            <div class="step-content" id="content1">
+                <div class="support-program">
+                    <div class="program-title">📋 디자인 창업지원사업</div>
+                    <div class="program-details">
+                        <div class="detail-item">
+                            <div class="detail-label">지원금</div>
+                            <div class="detail-value">최대 5천만원</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">신청기간</div>
+                            <div class="detail-value">2024.3.1~3.31</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">지원대상</div>
+                            <div class="detail-value">예비/초기 창업자</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">마감까지</div>
+                            <div class="detail-value">D-15</div>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 1.5rem;">👋 안녕하세요! 성공적인 지원을 위해 맞춤형 분석을 시작하겠습니다.</p>
+                    <button class="btn" onclick="nextStep()">🚀 분석 시작하기</button>
+                </div>
+            </div>
+
+            <!-- Step 2: 지원자 정보 입력 -->
+            <div class="step-content active" id="content2">
+                <h2 style="margin-bottom: 2rem;">👤 지원하시는 분에 대해 알려주세요</h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3 style="margin-bottom: 1rem;">🎯 지원자 배경</h3>
+                        <div class="form-group">
+                            <label class="form-label">연령대</label>
+                            <select class="form-select">
+                                <option>20대</option>
+                                <option>30대</option>
+                                <option>40대</option>
+                                <option>50대 이상</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">관련 분야 경험</label>
+                            <select class="form-select">
+                                <option>디자인 전공/경력 있음</option>
+                                <option>디자인 관련 경험 있음</option>
+                                <option>완전히 새로운 분야</option>
+                                <option>기타 창작 분야 경험</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">창업 단계</label>
+                            <select class="form-select">
+                                <option>아이디어 단계</option>
+                                <option>사업계획 수립 중</option>
+                                <option>프로토타입 개발 중</option>
+                                <option>시제품 완성</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h3 style="margin-bottom: 1rem;">🎨 사업 아이템</h3>
+                        <div class="form-group">
+                            <label class="form-label">지역 선택</label>
+                            <select class="form-select">
+                                <option>서울</option>
+                                <option>부산</option>
+                                <option>대구</option>
+                                <option>인천</option>
+                                <option>광주</option>
+                                <option>대전</option>
+                                <option>울산</option>
+                                <option>세종</option>
+                                <option>경기도</option>
+                                <option>강원도</option>
+                                <option>충청북도</option>
+                                <option>충청남도</option>
+                                <option>전라북도</option>
+                                <option>전라남도</option>
+                                <option>경상북도</option>
+                                <option>경상남도</option>
+                                <option>제주도</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">아이템 선택</label>
+                            <select class="form-select">
+                                <option>화장품/뷰티</option>
+                                <option>패션/의류</option>
+                                <option>식품/음료</option>
+                                <option>가전/전자제품</option>
+                                <option>가구/인테리어</option>
+                                <option>도서/문구</option>
+                                <option>스포츠/레저</option>
+                                <option>유아용품</option>
+                                <option>반려동물용품</option>
+                                <option>헬스케어</option>
+                                <option>자동차용품</option>
+                                <option>취미/공예</option>
+                                <option>기타</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">디자인 분야</label>
+                            <select class="form-select">
+                                <option>제품디자인</option>
+                                <option>패키지디자인</option>
+                                <option>브랜드디자인</option>
+                                <option>공간디자인</option>
+                                <option>UX/UI디자인</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">주요 타겟층</label>
+                            <select class="form-select">
+                                <option>2030 여성</option>
+                                <option>2030 남성</option>
+                                <option>4050 여성</option>
+                                <option>4050 남성</option>
+                                <option>전 연령층</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">시장 규모 예상</label>
+                            <select class="form-select">
+                                <option>소규모 틈새시장</option>
+                                <option>중간 규모</option>
+                                <option>대중적 시장</option>
+                                <option>글로벌 시장</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">📝 사업 아이템 간단 설명</label>
+                    <textarea class="form-textarea" placeholder="어떤 제품/서비스인지 간단히 설명해주세요...">친환경 소재를 활용한 화장품 용기 디자인. 재활용 가능한 소재와 미니멀한 디자인으로 환경을 생각하는 2030 여성 타겟.</textarea>
+                </div>
+                
+                <!-- 사용자 정의 페르소나 설정 섹션 추가 -->
+                <div class="custom-persona-section" style="margin-top: 2rem; padding: 1.5rem; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <h3 style="margin-bottom: 1rem; color: #1e293b;">🎯 나만의 페르소나 설정 (선택사항)</h3>
+                    <p style="margin-bottom: 1rem; color: #64748b; font-size: 0.9rem;">
+                        더 정확한 분석을 위해 타겟 고객에 대한 추가 정보를 입력해주세요.
+                    </p>
+                    
+                    <div class="toggle-section" style="margin-bottom: 1rem;">
+                        <label style="display: flex; align-items: center; cursor: pointer;">
+                            <input type="checkbox" id="enableCustomPersona" style="margin-right: 0.5rem;">
+                            <span>사용자 정의 페르소나 사용하기</span>
+                        </label>
+                    </div>
+                    
+                    <div id="customPersonaForm" style="display: none;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;">
+                            <div>
+                                <h4 style="margin-bottom: 1rem; color: #374151;">👥 타겟 고객 정보</h4>
+                                <div class="form-group">
+                                    <label class="form-label">주요 타겟 연령대</label>
+                                    <select class="form-select" id="customTargetAge">
+                                        <option>20대</option>
+                                        <option>30대</option>
+                                        <option>40대</option>
+                                        <option>50대 이상</option>
+                                        <option>전 연령층</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">주요 타겟 성별</label>
+                                    <select class="form-select" id="customTargetGender">
+                                        <option>여성</option>
+                                        <option>남성</option>
+                                        <option>성별 무관</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">선호 가격대</label>
+                                    <select class="form-select" id="customPriceRange">
+                                        <option>1만원 이하</option>
+                                        <option>1-3만원</option>
+                                        <option>3-5만원</option>
+                                        <option>5-10만원</option>
+                                        <option>10만원 이상</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h4 style="margin-bottom: 1rem; color: #374151;">🛒 구매 행동 패턴</h4>
+                                <div class="form-group">
+                                    <label class="form-label">주요 구매 채널</label>
+                                    <select class="form-select" id="customPurchaseChannel">
+                                        <option>온라인 쇼핑몰</option>
+                                        <option>오프라인 매장</option>
+                                        <option>SNS/인플루언서</option>
+                                        <option>블로그/커뮤니티</option>
+                                        <option>직접 제작/주문</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">구매 결정 요인</label>
+                                    <select class="form-select" id="customDecisionFactor">
+                                        <option>디자인/외관</option>
+                                        <option>브랜드/스토리</option>
+                                        <option>가격/가성비</option>
+                                        <option>기능/성능</option>
+                                        <option>친환경/윤리적</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">라이프스타일</label>
+                                    <select class="form-select" id="customLifestyle">
+                                        <option>트렌디/패션</option>
+                                        <option>실용적/절약</option>
+                                        <option>프리미엄/고급</option>
+                                        <option>친환경/윤리적</option>
+                                        <option>독창적/개성</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 1rem;">
+                            <label class="form-label">📊 시장 정보 (선택사항)</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <input type="text" class="form-input" id="customMarketSize" placeholder="예상 시장 규모 (예: 100억원)">
+                                <input type="text" class="form-input" id="customGrowthRate" placeholder="예상 성장률 (예: 15%)">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">💬 추가 고객 정보</label>
+                            <textarea class="form-textarea" id="customCustomerInfo" placeholder="타겟 고객에 대한 추가 정보나 특별한 니즈가 있다면 입력해주세요..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 2rem;">
+                    <button class="btn-secondary" onclick="prevStep()">이전</button>
+                    <button class="btn" onclick="startAnalysis()">➡️ 페르소나 분석 시작</button>
+                    <button class="btn-secondary" onclick="evaluateBusinessSuitability()" style="margin-left: 1rem;">📊 사업 적합도 평가</button>
+                </div>
+            </div>
+
+            <!-- Step 3: 페르소나 선택 -->
+            <div class="step-content" id="content3">
+                <div class="loading" id="loadingSection">
+                    <div class="loading-spinner"></div>
+                    <h3>🔍 타겟 페르소나 분석 중...</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <p id="loadingText">입력정보 기반 페르소나 매칭 중...</p>
+                </div>
+
+                <div id="personaResults" style="display: none;">
+                    <h2 style="margin-bottom: 1rem;">💡 분석된 주요 페르소나</h2>
+                    <p style="margin-bottom: 2rem; color: #64748b;">클릭하여 각 페르소나의 상세 분석을 확인해보세요</p>
+                        
+                        <div class="persona-card" onclick="selectPersona(1)">
+                        <div class="persona-header">
+                            <div class="persona-icon">🌱</div>
+                            <div class="persona-name">친환경 라이프스타일 추구층</div>
+                            <div class="persona-percentage">67%</div>
+                        </div>
+                        <p>환경을 생각하는 소비 습관을 가진 2030 여성으로, 제품의 지속가능성을 중요하게 여깁니다.</p>
+                        
+                        <div class="persona-details" id="persona1">
+                            <div class="strategy-selection" style="margin-bottom: 1.5rem;">
+                                <h4 style="margin-bottom: 1rem; color: #1e293b;">🎯 전략적 포지셔닝 선택</h4>
+                                <p style="color: #64748b; font-size: 0.9rem; margin-bottom: 1rem;">같은 페르소나라도 접근 전략에 따라 다른 결과가 나옵니다. 귀하의 상황에 맞는 전략을 선택해주세요.</p>
+                                <div class="strategy-options">
+                                    <label class="strategy-option active" onclick="selectStrategy(1, 'premium')">
+                                        <input type="radio" name="persona1-strategy" value="premium" checked>
+                                        <div class="option-content">
+                                            <div class="option-title">💎 프리미엄 차별화</div>
+                                            <div class="option-desc">고품질 친환경 소재로 프리미엄 시장 공략</div>
+                                        </div>
+                                    </label>
+                                    <label class="strategy-option" onclick="selectStrategy(1, 'accessible')">
+                                        <input type="radio" name="persona1-strategy" value="accessible">
+                                        <div class="option-content">
+                                            <div class="option-title">🎯 접근성 중심</div>
+                                            <div class="option-desc">합리적 가격으로 친환경 대중화 추진</div>
+                                        </div>
+                                    </label>
+                                    <label class="strategy-option" onclick="selectStrategy(1, 'innovation')">
+                                        <input type="radio" name="persona1-strategy" value="innovation">
+                                        <div class="option-content">
+                                            <div class="option-title">🚀 혁신적 접근</div>
+                                            <div class="option-desc">새로운 친환경 기술로 시장 선도</div>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="success-pattern" style="background: #f0f9ff; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border-left: 4px solid #0ea5e9;">
+                                <div style="font-weight: bold; color: #0369a1; margin-bottom: 0.5rem;">✅ 검증된 성공 패턴</div>
+                                <div style="font-size: 0.9rem; color: #0c4a6e;" id="persona1-success-pattern">
+                                    프리미엄 친환경 전략으로 성공한 23개 기업의 공통 패턴을 기반으로 합니다.
+                                </div>
+                            </div>
+                            
+                            <div class="analysis-tabs">
+                                <button class="tab-button active" onclick="switchTab(1, 'market')">시장분석</button>
+                                <button class="tab-button" onclick="switchTab(1, 'consumer')">소비자분석</button>
+                                <button class="tab-button" onclick="switchTab(1, 'opportunity')">숨겨진 기회</button>
+                            </div>
+                            
+                            <div class="tab-content active" id="persona1-market">
+                                <div class="metric-grid" id="persona1-market-metrics">
+                                    <div class="metric-item">
+                                        <div class="metric-value">2,400억원</div>
+                                        <div class="metric-label">프리미엄 친환경 시장</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">22.3%</div>
+                                        <div class="metric-label">연평균 성장률</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">중간</div>
+                                        <div class="metric-label">진입 장벽</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                    <button class="btn" onclick="showDetailReport('persona1', 'market')" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                        📊 상세 시장분석 리포트 보기
+                                    </button>
+                                    <button class="btn-secondary" onclick="exportToPDF('persona1', 'market')" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                        📄 PDF 다운로드
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" id="persona1-consumer">
+                                <div class="metric-grid" id="persona1-consumer-metrics">
+                                    <div class="metric-item">
+                                        <div class="metric-value">품질 + 환경가치</div>
+                                        <div class="metric-label">핵심 구매 동기</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">85%</div>
+                                        <div class="metric-label">프리미엄 지불 의향</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">브랜드 스토리</div>
+                                        <div class="metric-label">핵심 관심사</div>
+                                    </div>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                    <button class="btn" onclick="showDetailReport('persona1', 'consumer')" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                        👥 상세 소비자분석 리포트 보기
+                                    </button>
+                                    <button class="btn-secondary" onclick="exportToPDF('persona1', 'consumer')" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                        📄 PDF 다운로드
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" id="persona1-opportunity">
+                                <div class="opportunity-box" style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #f59e0b;">
+                                    <div style="font-weight: bold; color: #92400e; margin-bottom: 1rem;">💡 당신만의 숨겨진 기회</div>
+                                    <div id="persona1-hidden-opportunity" style="color: #78350f;">
+                                        <strong>제품디자인 배경 + 친환경 시장</strong><br>
+                                        87%의 친환경 브랜드가 놓치고 있는 점: 사용자 경험 디자인. 당신의 제품디자인 전공 배경을 활용해 '사용하기 즐거운 친환경 제품'으로 차별화하세요.
+                                    </div>
+                                </div>
+                                <div style="margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                                    <div style="font-weight: bold; margin-bottom: 0.5rem;">🎯 개인화된 실행 포인트</div>
+                                    <ul style="margin: 0; padding-left: 1.5rem; color: #4b5563;">
+                                        <li>UX 중심의 친환경 패키지 디자인</li>
+                                        <li>재사용성을 고려한 구조 설계</li>
+                                        <li>사용자 행동 데이터 기반 개선</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="persona-card" onclick="selectPersona(2)">
+                        <div class="persona-header">
+                            <div class="persona-icon">💎</div>
+                            <div class="persona-name">프리미엄 뷰티 관심층</div>
+                            <div class="persona-percentage">23%</div>
+                        </div>
+                        <p>고품질 화장품과 세련된 패키지를 선호하는 층으로, 브랜드 가치를 중시합니다.</p>
+                        
+                        <div class="persona-details" id="persona2">
+                            <div class="analysis-tabs">
+                                <button class="tab-button active" onclick="switchTab(2, 'market')">시장분석</button>
+                                <button class="tab-button" onclick="switchTab(2, 'consumer')">소비자분석</button>
+                            </div>
+                            
+                            <div class="tab-content active" id="persona2-market">
+                                <div class="metric-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">3,200억원</div>
+                                        <div class="metric-label">프리미엄 뷰티 시장</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">12.3%</div>
+                                        <div class="metric-label">연평균 성장률</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">매우 높음</div>
+                                        <div class="metric-label">경쟁 강도</div>
+                                    </div>
+                                </div>
+                                <button class="btn" onclick="showDetailReport('persona2', 'market')" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                    📊 상세 시장분석 리포트 보기
+                                </button>
+                            </div>
+                            
+                            <div class="tab-content" id="persona2-consumer">
+                                <div class="metric-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">브랜드 스토리</div>
+                                        <div class="metric-label">핵심 구매 동기</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">85%</div>
+                                        <div class="metric-label">브랜드 충성도</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">온라인 쇼핑몰</div>
+                                        <div class="metric-label">주요 구매 채널</div>
+                                    </div>
+                                </div>
+                                <button class="btn" onclick="showDetailReport('persona2', 'consumer')" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                    👥 상세 소비자분석 리포트 보기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="persona-card" onclick="selectPersona(3)">
+                        <div class="persona-header">
+                            <div class="persona-icon">🎨</div>
+                            <div class="persona-name">디자인 민감층</div>
+                            <div class="persona-percentage">10%</div>
+                        </div>
+                        <p>독특하고 아름다운 디자인에 민감하며, 심미성을 매우 중요하게 생각합니다.</p>
+                        
+                        <div class="persona-details" id="persona3">
+                            <div class="analysis-tabs">
+                                <button class="tab-button active" onclick="switchTab(3, 'market')">시장분석</button>
+                                <button class="tab-button" onclick="switchTab(3, 'consumer')">소비자분석</button>
+                            </div>
+                            
+                            <div class="tab-content active" id="persona3-market">
+                                <div class="metric-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">800억원</div>
+                                        <div class="metric-label">디자인 중심 시장</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">25.1%</div>
+                                        <div class="metric-label">연평균 성장률</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">보통</div>
+                                        <div class="metric-label">경쟁 강도</div>
+                                    </div>
+                                </div>
+                                <button class="btn" onclick="showDetailReport('persona3', 'market')" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                    📊 상세 시장분석 리포트 보기
+                                </button>
+                            </div>
+                            
+                            <div class="tab-content" id="persona3-consumer">
+                                <div class="metric-grid">
+                                    <div class="metric-item">
+                                        <div class="metric-value">독창성</div>
+                                        <div class="metric-label">핵심 구매 동기</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">낮음</div>
+                                        <div class="metric-label">가격 민감도</div>
+                                    </div>
+                                    <div class="metric-item">
+                                        <div class="metric-value">디자인 커뮤니티</div>
+                                        <div class="metric-label">주요 정보 채널</div>
+                                    </div>
+                                </div>
+                                <button class="btn" onclick="showDetailReport('persona3', 'consumer')" style="margin-top: 1rem; font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                    👥 상세 소비자분석 리포트 보기
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 사용자 정의 페르소나 카드 (동적으로 생성됨) -->
+                    <div class="persona-card" id="customPersonaCard" style="display: none;" onclick="selectPersona('custom')">
+                        <div class="persona-header">
+                            <div class="persona-icon">👤</div>
+                            <div class="persona-name" id="customPersonaName">나만의 타겟 고객</div>
+                            <div class="persona-percentage">100%</div>
+                        </div>
+                        <p id="customPersonaDescription">입력하신 정보를 바탕으로 생성된 맞춤형 페르소나입니다.</p>
+                        
+                        <div class="persona-details" id="persona-custom">
+                            <div class="analysis-tabs">
+                                <button class="tab-button active" onclick="switchTab('custom', 'market')">시장분석</button>
+                                <button class="tab-button" onclick="switchTab('custom', 'consumer')">소비자분석</button>
+                                <button class="tab-button" onclick="switchTab('custom', 'opportunity')">맞춤 기회</button>
+                            </div>
+                            
+                            <div class="tab-content active" id="persona-custom-market">
+                                <div class="metric-grid" id="persona-custom-market-metrics">
+                                    <!-- 동적으로 생성됩니다 -->
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                    <button class="btn" onclick="showDetailReport('persona-custom', 'market')" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                        📊 상세 시장분석 리포트 보기
+                                    </button>
+                                    <button class="btn-secondary" onclick="exportToPDF('persona-custom', 'market')" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                        📄 PDF 다운로드
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" id="persona-custom-consumer">
+                                <div class="metric-grid" id="persona-custom-consumer-metrics">
+                                    <!-- 동적으로 생성됩니다 -->
+                                </div>
+                                <div style="display: flex; gap: 0.5rem; margin-top: 1rem;">
+                                    <button class="btn" onclick="showDetailReport('persona-custom', 'consumer')" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                        👥 상세 소비자분석 리포트 보기
+                                    </button>
+                                    <button class="btn-secondary" onclick="exportToPDF('persona-custom', 'consumer')" style="font-size: 0.9rem; padding: 0.5rem 1rem;">
+                                        📄 PDF 다운로드
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-content" id="persona-custom-opportunity">
+                                <div class="opportunity-box" style="background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%); padding: 1.5rem; border-radius: 8px; border-left: 4px solid #3b82f6;">
+                                    <div style="font-weight: bold; color: #1e40af; margin-bottom: 1rem;">💡 당신만의 맞춤 기회</div>
+                                    <div id="persona-custom-hidden-opportunity" style="color: #1e3a8a;">
+                                        <!-- 동적으로 생성됩니다 -->
+                                    </div>
+                                </div>
+                                <div style="margin-top: 1rem; padding: 1rem; background: #f8fafc; border-radius: 8px;">
+                                    <div style="font-weight: bold; margin-bottom: 0.5rem;">🎯 개인화된 실행 포인트</div>
+                                    <ul id="persona-custom-execution-points" style="margin: 0; padding-left: 1.5rem; color: #4b5563;">
+                                        <!-- 동적으로 생성됩니다 -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="feedback-section">
+                        <div class="feedback-question">🤔 이 페르소나 분석이 귀하의 생각과 일치하나요?</div>
+                        <div class="feedback-options">
+                            <button class="feedback-btn" onclick="provideFeedback('match')">완전 일치</button>
+                            <button class="feedback-btn" onclick="provideFeedback('partial')">부분적 일치</button>
+                            <button class="feedback-btn" onclick="provideFeedback('different')">다른 생각</button>
+                        </div>
+                        <textarea class="feedback-input" placeholder="구체적인 의견이나 다른 관점이 있다면 알려주세요..." style="display: none;" id="feedbackText"></textarea>
+                        <div class="evolution-indicator" style="display: none;" id="evolutionMessage">
+                            <span class="icon">🔄</span>
+                            <span>피드백을 반영하여 더 정확한 2차 분석을 준비하고 있습니다...</span>
+                        </div>
+                    </div>
+                    
+                    <div class="signup-prompt">
+                        <h3>🔍 더 상세한 분석이 필요하신가요?</h3>
+                        <p>회원가입 후 지원서 작성 가이드, 성공 전략, 맞춤형 컨설팅 등<br>전문적인 분석 서비스를 이용하실 수 있습니다.</p>
+                        <button class="btn-signup" onclick="showSignup()">📝 회원가입 하기</button>
+                        <button class="btn-secondary" onclick="continueAsGuest()">체험하기</button>
+                    </div>
+                    
+                    <div style="margin-top: 2rem;">
+                        <button class="btn-secondary" onclick="prevStep()">이전</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 4: 상세 분석 (회원용) -->
+            <div class="step-content" id="content4">
+                <div style="text-align: center; padding: 3rem;">
+                    <h2 style="margin-bottom: 2rem;">🎉 상세 분석 서비스</h2>
+                    <p style="font-size: 1.2rem; color: #64748b; margin-bottom: 2rem;">
+                        회원가입을 완료하시면 다음과 같은 프리미엄 서비스를 이용하실 수 있습니다:
+                    </p>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                        <div style="background: white; padding: 2rem; border-radius: 12px; border: 2px solid #e5e7eb;">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">📊</div>
+                            <h3 style="margin-bottom: 1rem;">심화 시장 분석</h3>
+                            <p>경쟁사 분석, 트렌드 예측, 진입 전략 등 상세한 시장 분석 보고서</p>
+                        </div>
+                        <div style="background: white; padding: 2rem; border-radius: 12px; border: 2px solid #e5e7eb;">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">📝</div>
+                            <h3 style="margin-bottom: 1rem;">맞춤형 지원서 가이드</h3>
+                            <p>사업 특성에 맞는 지원서 작성법, 예상 질문 및 모범 답안 제공</p>
+                        </div>
+                        <div style="background: white; padding: 2rem; border-radius: 12px; border: 2px solid #e5e7eb;">
+                            <div style="font-size: 2rem; margin-bottom: 1rem;">🎯</div>
+                            <h3 style="margin-bottom: 1rem;">성공 전략 컨설팅</h3>
+                            <p>개인별 맞춤 전략, 리스크 분석, 성공 확률 향상 방안</p>
+                        </div>
+                    </div>
+                    
+                    <button class="btn" onclick="completeSignup()" style="font-size: 1.2rem; padding: 1.5rem 3rem;">
+                        🚀 프리미엄 서비스 시작하기
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 상세 리포트 모달 -->
+    <div class="modal-overlay" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeReport()">&times;</button>
+                <h2 id="modalTitle">📊 상세 분석 리포트</h2>
+                <p id="modalSubtitle">페르소나 기반 심화 분석</p>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 동적으로 내용이 채워집니다 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 사업 적합도 평가 모달 -->
+    <div class="modal-overlay" id="evaluationModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="modal-close" onclick="closeEvaluation()">&times;</button>
+                <h2>📊 사업 적합도 평가</h2>
+                <p>종합적인 사업 적합도 분석 결과</p>
+            </div>
+            <div class="modal-body" id="evaluationBody">
+                <!-- 동적으로 내용이 채워집니다 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html> 

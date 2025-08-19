@@ -1,0 +1,965 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이노유 - I Know You</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tagline {
+            color: #666;
+            font-size: 16px;
+            margin-left: 65px;
+        }
+        
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .step-indicator {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+        
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+        
+        .step.active .step-number {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+        }
+        
+        .step-text {
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .step.active .step-text {
+            color: #27ae60;
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        .user-type-selection {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .user-type-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .user-type-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .user-type-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .section-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .section-subtitle {
+            color: #666;
+            font-size: 18px;
+            margin-bottom: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-input, .form-select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+        
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(45deg, #95a5a6, #7f8c8d);
+        }
+        
+        .support-programs {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .program-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e1e5e9;
+        }
+        
+        .program-match {
+            display: inline-block;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .program-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        .program-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .loading-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .completion-message {
+            text-align: center;
+            padding: 40px 0;
+        }
+        
+        .completion-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+        
+        .application-guide {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px 0;
+        }
+        
+        .guide-section {
+            margin-bottom: 30px;
+        }
+        
+        .guide-section h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .user-type-buttons {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .support-programs {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loading" class="loading">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <p>분석 중입니다...</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">I</div>
+                <div class="logo-text">아이노유</div>
+            </div>
+            <div class="tagline">I Know You - 페르소나 기반 창업 전략</div>
+        </div>
+
+        <div class="main-content">
+            <!-- 사용자 유형 선택 -->
+            <div id="userTypeSelection" class="user-type-selection">
+                <h2 class="section-title">시작하기</h2>
+                <p class="section-subtitle">어떤 유형의 사용자이신가요?</p>
+                
+                <div class="user-type-buttons">
+                    <button class="user-type-btn" onclick="selectUserType('startup')">🚀 창업자</button>
+                    <button class="user-type-btn" onclick="selectUserType('business')">🏪 소상공인</button>
+                </div>
+            </div>
+
+            <!-- 단계 표시기 -->
+            <div id="stepIndicator" class="step-indicator hidden">
+                <div class="step" id="step1">
+                    <div class="step-number">1</div>
+                    <div class="step-text">기본 정보</div>
+                </div>
+                <div class="step" id="step2">
+                    <div class="step-number">2</div>
+                    <div class="step-text">사업 정보</div>
+                </div>
+                <div class="step" id="step3">
+                    <div class="step-number">3</div>
+                    <div class="step-text">시장 분석</div>
+                </div>
+                <div class="step" id="step4">
+                    <div class="step-number">4</div>
+                    <div class="step-text">페르소나</div>
+                </div>
+                <div class="step" id="step5">
+                    <div class="step-number">5</div>
+                    <div class="step-text">전략/매칭</div>
+                </div>
+            </div>
+
+            <!-- 1단계: 기본 정보 -->
+            <div class="step-content hidden" id="content1">
+                <h2 class="section-title">기본 정보 입력</h2>
+                <p class="section-subtitle">창업을 위한 기본 정보를 입력해주세요</p>
+                
+                <form id="basicForm">
+                    <div class="form-group">
+                        <label class="form-label">이름</label>
+                        <input type="text" class="form-input" id="name" placeholder="이름을 입력하세요">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">연령대</label>
+                        <select class="form-select" id="age">
+                            <option value="">연령대를 선택하세요</option>
+                            <option value="20s">20대</option>
+                            <option value="30s">30대</option>
+                            <option value="40s">40대</option>
+                            <option value="50s">50대 이상</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">창업 경험</label>
+                        <select class="form-select" id="experience">
+                            <option value="">창업 경험을 선택하세요</option>
+                            <option value="none">창업 경험 없음</option>
+                            <option value="first">첫 창업</option>
+                            <option value="experienced">창업 경험 있음</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">투자 가능 금액</label>
+                        <select class="form-select" id="investment">
+                            <option value="">투자 가능 금액을 선택하세요</option>
+                            <option value="under1m">100만원 미만</option>
+                            <option value="1m-5m">100만원 ~ 500만원</option>
+                            <option value="5m-10m">500만원 ~ 1,000만원</option>
+                            <option value="over10m">1,000만원 이상</option>
+                        </select>
+                    </div>
+                    
+                    <button type="button" class="btn" onclick="nextStep(1)">다음 단계</button>
+                </form>
+            </div>
+
+            <!-- 2단계: 사업 정보 -->
+            <div class="step-content hidden" id="content2">
+                <h2 class="section-title">사업 정보 입력</h2>
+                <p class="section-subtitle">창업하고자 하는 사업에 대한 정보를 입력해주세요</p>
+                
+                <form id="businessForm">
+                    <div class="form-group">
+                        <label class="form-label">사업 분야</label>
+                        <select class="form-select" id="businessType">
+                            <option value="">사업 분야를 선택하세요</option>
+                            <option value="food">음식점/카페</option>
+                            <option value="retail">소매업</option>
+                            <option value="service">서비스업</option>
+                            <option value="tech">IT/기술</option>
+                            <option value="manufacturing">제조업</option>
+                            <option value="other">기타</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">사업 규모</label>
+                        <select class="form-select" id="businessScale">
+                            <option value="">사업 규모를 선택하세요</option>
+                            <option value="small">소규모 (1-5명)</option>
+                            <option value="medium">중규모 (6-20명)</option>
+                            <option value="large">대규모 (21명 이상)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">예상 매출</label>
+                        <select class="form-select" id="expectedRevenue">
+                            <option value="">예상 매출을 선택하세요</option>
+                            <option value="under50m">5,000만원 미만</option>
+                            <option value="50m-100m">5,000만원 ~ 1억원</option>
+                            <option value="100m-500m">1억원 ~ 5억원</option>
+                            <option value="over500m">5억원 이상</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">사업 지역</label>
+                        <select class="form-select" id="businessLocation">
+                            <option value="">사업 지역을 선택하세요</option>
+                            <option value="seoul">서울</option>
+                            <option value="gyeonggi">경기</option>
+                            <option value="incheon">인천</option>
+                            <option value="busan">부산</option>
+                            <option value="daegu">대구</option>
+                            <option value="daejeon">대전</option>
+                            <option value="gwangju">광주</option>
+                            <option value="other">기타</option>
+                        </select>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px;">
+                        <button type="button" class="btn btn-secondary" onclick="prevStep(2)">이전 단계</button>
+                        <button type="button" class="btn" onclick="nextStep(2)">다음 단계</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 3단계: 시장 분석 -->
+            <div class="step-content hidden" id="content3">
+                <h2 class="section-title">시장 분석</h2>
+                <p class="section-subtitle">선택하신 정보를 바탕으로 시장 분석을 진행합니다</p>
+                
+                <div id="marketAnalysis">
+                    <div style="text-align: center; padding: 40px 0;">
+                        <div style="font-size: 48px; margin-bottom: 20px;">📊</div>
+                        <h3 style="margin-bottom: 15px;">시장 분석 중...</h3>
+                        <p style="color: #666;">페르소나 기반 시장 분석을 진행하고 있습니다.</p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(3)">이전 단계</button>
+                    <button type="button" class="btn" onclick="nextStep(3)">다음 단계</button>
+                </div>
+            </div>
+
+            <!-- 4단계: 페르소나 분석 -->
+            <div class="step-content hidden" id="content4">
+                <h2 class="section-title">페르소나 분석 결과</h2>
+                <p class="section-subtitle">시장 분석을 바탕으로 한 타겟 페르소나입니다</p>
+                
+                <div id="personaResult">
+                    <div class="result-card">
+                        <h3 style="color: #667eea; margin-bottom: 20px;">🎯 주요 타겟 페르소나</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div style="background: #f8f9ff; padding: 20px; border-radius: 10px;">
+                                <h4 style="color: #667eea; margin-bottom: 10px;">1순위: 홍대 문화족</h4>
+                                <p><strong>연령:</strong> 20-30대<br>
+                                <strong>특징:</strong> 트렌디한 문화에 관심<br>
+                                <strong>소비 패턴:</strong> SNS 공유, 브랜드 가치 중시</p>
+                            </div>
+                            <div style="background: #f8f9ff; padding: 20px; border-radius: 10px;">
+                                <h4 style="color: #667eea; margin-bottom: 10px;">2순위: 직장인</h4>
+                                <p><strong>연령:</strong> 25-40대<br>
+                                <strong>특징:</strong> 편의성과 품질 중시<br>
+                                <strong>소비 패턴:</strong> 점심시간 활용, 배달 서비스 선호</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(4)">이전 단계</button>
+                    <button type="button" class="btn" onclick="nextStep(4)">다음 단계</button>
+                </div>
+            </div>
+
+            <!-- 5단계: 전략 수립 (창업자용) / 지원사업 매칭 (소상공인용) -->
+            <div class="step-content hidden" id="content5">
+                <!-- 창업자용 전략 수립 -->
+                <div id="startupStrategy" class="hidden">
+                    <h2 class="section-title">🚀 확장 전략 & 투자 유치 가이드</h2>
+                    <p class="section-subtitle">시장 분석을 바탕으로 한 확장 가능한 비즈니스 전략을 제시합니다</p>
+                    
+                    <div class="support-programs">
+                        <div class="program-card">
+                            <div class="program-match" style="background: #e74c3c;">확장성 평가</div>
+                            <h3>프랜차이즈 전략</h3>
+                            <p><strong>목표 매장 수:</strong> 3년 내 50개점<br>
+                            <strong>투자 규모:</strong> 시리즈A 30억원<br>
+                            <strong>차별화:</strong> 페르소나 기반 맞춤형 매장</p>
+                            
+                            <div style="margin-top: 15px; padding: 10px; background: #f8f9ff; border-radius: 8px;">
+                                <strong>🎯 핵심 전략</strong><br>
+                                • 지역별 페르소나 밀도 분석 기반 입점<br>
+                                • 표준화된 브랜딩 + 지역별 메뉴 커스터마이징<br>
+                                • 데이터 기반 매장 운영 시스템<br>
+                                • 구독 서비스 모델 도입
+                            </div>
+                        </div>
+                        
+                        <div class="program-card">
+                            <div class="program-match" style="background: #3498db;">투자 유치</div>
+                            <h3>Series A 투자 전략</h3>
+                            <p><strong>목표 금액:</strong> 30억원<br>
+                            <strong>밸류에이션:</strong> 150억원<br>
+                            <strong>투자사 타겟:</strong> F&B 전문 VC</p>
+                            
+                            <div style="margin-top: 15px; padding: 10px; background: #f8f9ff; border-radius: 8px;">
+                                <strong>🎯 투자 어필 포인트</strong><br>
+                                • 페르소나 기반 과학적 시장 분석<br>
+                                • ESG 트렌드 반영한 지속가능 모델<br>
+                                • 데이터 기반 매장 운영 효율성<br>
+                                • 확장 가능한 표준화 시스템
+                            </div>
+                        </div>
+                        
+                        <div class="program-card">
+                            <div class="program-match" style="background: #27ae60;">기술 혁신</div>
+                            <h3>디지털 트랜스포메이션</h3>
+                            <p><strong>핵심 기술:</strong> AI 기반 고객 분석<br>
+                            <strong>특허 가능성:</strong> 페르소나 매칭 알고리즘<br>
+                            <strong>플랫폼:</strong> 모바일 앱 + 구독 서비스</p>
+                            
+                            <div style="margin-top: 15px; padding: 10px; background: #f8f9ff; border-radius: 8px;">
+                                <strong>🎯 기술 로드맵</strong><br>
+                                • 고객 행동 예측 AI 개발<br>
+                                • 개인화 추천 시스템<br>
+                                • 무인 주문/결제 시스템<br>
+                                • 크로스 브랜드 멤버십 플랫폼
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 20px; padding: 30px; margin: 30px 0;">
+                        <h3 style="margin-bottom: 20px; font-size: 24px;">🎯 3년 로드맵</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                                <h4>1년차: MVP 검증</h4>
+                                <p>• 플래그십 매장 3개점 오픈<br>
+                                • 페르소나 매칭 알고리즘 고도화<br>
+                                • 시드 투자 5억원 유치<br>
+                                • 브랜드 인지도 구축</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                                <h4>2년차: 확장 가속화</h4>
+                                <p>• 전국 20개점 확장<br>
+                                • Series A 30억원 투자 유치<br>
+                                • 모바일 앱 런칭<br>
+                                • 구독 서비스 도입</p>
+                            </div>
+                            <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 15px;">
+                                <h4>3년차: 시장 리더십</h4>
+                                <p>• 50개점 달성<br>
+                                • IPO 준비 또는 Series B<br>
+                                • 해외 진출 (동남아)</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn" onclick="showCompletion()">분석 완료</button>
+                    </div>
+                </div>
+
+                <!-- 소상공인용 지원사업 매칭 -->
+                <div id="businessSupport" class="hidden">
+                    <h2 class="section-title">🏪 지원사업 매칭 결과</h2>
+                    <p class="section-subtitle">소상공인을 위한 맞춤형 지원사업을 추천합니다</p>
+                    
+                    <div class="support-programs">
+                        <div class="program-card">
+                            <div class="program-match" style="background: #e74c3c;">매칭도 95%</div>
+                            <h3>청년창업사관학교</h3>
+                            <p><strong>지원 금액:</strong> 최대 3,000만원<br>
+                            <strong>지원 내용:</strong> 창업자금, 교육, 멘토링<br>
+                            <strong>신청 기간:</strong> 2024년 3월 ~ 4월</p>
+                            
+                            <div style="margin-top: 15px;">
+                                <button class="btn" onclick="showDetailGuide('youth')" style="margin-right: 10px;">상세 가이드</button>
+                                <button class="btn" onclick="downloadTemplate('youth')">템플릿 다운로드</button>
+                            </div>
+                        </div>
+                        
+                        <div class="program-card">
+                            <div class="program-match" style="background: #3498db;">매칭도 88%</div>
+                            <h3>서울시 청년창업지원</h3>
+                            <p><strong>지원 금액:</strong> 최대 2,000만원<br>
+                            <strong>지원 내용:</strong> 창업자금, 사업화 지원<br>
+                            <strong>신청 기간:</strong> 2024년 2월 ~ 3월</p>
+                            
+                            <div style="margin-top: 15px;">
+                                <button class="btn" onclick="showDetailGuide('seoul')" style="margin-right: 10px;">상세 가이드</button>
+                                <button class="btn" onclick="downloadTemplate('seoul')">템플릿 다운로드</button>
+                            </div>
+                        </div>
+                        
+                        <div class="program-card">
+                            <div class="program-match" style="background: #27ae60;">매칭도 82%</div>
+                            <h3>소상공인시장진흥공단</h3>
+                            <p><strong>지원 금액:</strong> 최대 1,000만원<br>
+                            <strong>지원 내용:</strong> 창업자금, 교육 지원<br>
+                            <strong>신청 기간:</strong> 2024년 1월 ~ 12월</p>
+                            
+                            <div style="margin-top: 15px;">
+                                <button class="btn" onclick="showDetailGuide('semas')" style="margin-right: 10px;">상세 가이드</button>
+                                <button class="btn" onclick="downloadTemplate('semas')">템플릿 다운로드</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn" onclick="showApplicationGuide()">신청 가이드 보기</button>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <button type="button" class="btn btn-secondary" onclick="prevStep(5)">이전 단계</button>
+                </div>
+            </div>
+
+            <!-- 완료 메시지 -->
+            <div id="completion" class="completion-message hidden">
+                <div class="completion-icon">🎉</div>
+                <h2 class="section-title">분석이 완료되었습니다!</h2>
+                <p class="section-subtitle">페르소나 기반 창업 전략이 준비되었습니다.</p>
+                
+                <div style="background: white; border-radius: 15px; padding: 30px; margin: 20px 0;">
+                    <h3 style="color: #667eea; margin-bottom: 20px;">📋 다음 단계</h3>
+                    <ul style="text-align: left; line-height: 2;">
+                        <li>추천된 전략을 바탕으로 사업계획서 작성</li>
+                        <li>투자 유치를 위한 피칭 자료 준비</li>
+                        <li>페르소나 기반 마케팅 전략 수립</li>
+                        <li>정기적인 시장 분석 업데이트</li>
+                    </ul>
+                </div>
+                
+                <button class="btn" onclick="restartAnalysis()">새로운 분석 시작</button>
+            </div>
+
+            <!-- 신청 가이드 -->
+            <div id="applicationGuide" class="application-guide hidden">
+                <h2 class="section-title">📝 지원사업 신청 가이드</h2>
+                
+                <div class="guide-section">
+                    <h3>1. 사업계획서 작성</h3>
+                    <p>• 페르소나 분석 결과를 포함한 시장 분석<br>
+                    • 구체적인 사업 모델과 수익 구조<br>
+                    • 차별화 전략과 경쟁 우위<br>
+                    • 3년간의 사업 로드맵</p>
+                </div>
+                
+                <div class="guide-section">
+                    <h3>2. 제출 서류 준비</h3>
+                    <p>• 사업자등록증 사본<br>
+                    • 개인정보동의서<br>
+                    • 사업계획서 (PDF 형식)<br>
+                    • 추가 증빙서류 (필요시)</p>
+                </div>
+                
+                <div class="guide-section">
+                    <h3>3. 신청 절차</h3>
+                    <p>• 온라인 신청 시스템 접속<br>
+                    • 기본 정보 입력<br>
+                    • 사업계획서 업로드<br>
+                    • 신청서 제출 및 확인</p>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-secondary" onclick="showContent(5)">이전으로 돌아가기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let userType = '';
+
+        function selectUserType(type) {
+            userType = type;
+            document.getElementById('userTypeSelection').classList.add('hidden');
+            document.getElementById('stepIndicator').classList.remove('hidden');
+            showContent(1);
+        }
+
+        function showContent(step) {
+            // 모든 콘텐츠 숨기기
+            for (let i = 1; i <= 5; i++) {
+                const content = document.getElementById(`content${i}`);
+                if (content) content.classList.add('hidden');
+            }
+            
+            // 완료 메시지와 신청 가이드도 숨기기
+            const completion = document.getElementById('completion');
+            if (completion) completion.classList.add('hidden');
+            const applicationGuide = document.getElementById('applicationGuide');
+            if (applicationGuide) applicationGuide.classList.add('hidden');
+            
+            // 선택된 단계만 표시
+            const selectedContent = document.getElementById(`content${step}`);
+            if (selectedContent) selectedContent.classList.remove('hidden');
+            
+            // 5단계에서 사용자 유형에 따라 다른 내용 표시
+            if (step === 5) {
+                if (userType === 'startup') {
+                    document.getElementById('startupStrategy').classList.remove('hidden');
+                    document.getElementById('businessSupport').classList.add('hidden');
+                } else {
+                    document.getElementById('startupStrategy').classList.add('hidden');
+                    document.getElementById('businessSupport').classList.remove('hidden');
+                }
+            }
+            
+            updateStepIndicator();
+        }
+
+        function updateStepIndicator() {
+            // 모든 단계 비활성화
+            for (let i = 1; i <= 5; i++) {
+                const step = document.getElementById(`step${i}`);
+                if (step) {
+                    step.classList.remove('active');
+                }
+            }
+            
+            // 현재 단계까지 활성화
+            for (let i = 1; i <= currentStep; i++) {
+                const step = document.getElementById(`step${i}`);
+                if (step) {
+                    step.classList.add('active');
+                }
+            }
+        }
+
+        function nextStep(step) {
+            if (step < 5) {
+                currentStep = step + 1;
+                showContent(currentStep);
+            }
+        }
+
+        function prevStep(step) {
+            if (step > 1) {
+                currentStep = step - 1;
+                showContent(currentStep);
+            }
+        }
+
+        function showCompletion() {
+            document.getElementById('content5').classList.add('hidden');
+            document.getElementById('completion').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function restartAnalysis() {
+            currentStep = 1;
+            userType = '';
+            document.getElementById('completion').classList.add('hidden');
+            document.getElementById('userTypeSelection').classList.remove('hidden');
+            document.getElementById('stepIndicator').classList.add('hidden');
+        }
+
+        function showLoading(message) {
+            const loading = document.getElementById('loading');
+            if (loading) {
+                loading.querySelector('p').textContent = message;
+                loading.style.display = 'flex';
+            }
+        }
+
+        function hideLoading() {
+            const loading = document.getElementById('loading');
+            if (loading) {
+                loading.remove();
+            }
+        }
+
+        function showApplicationGuide() {
+            // 지원사업 신청 가이드 표시
+            document.getElementById('content5').classList.add('hidden');
+            document.getElementById('applicationGuide').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function downloadTemplate(type) {
+            const templates = {
+                'youth': '청년창업사관학교 맞춤 템플릿',
+                'seoul': '서울시 청년창업지원 맞춤 템플릿', 
+                'semas': '소상공인시장진흥공단 맞춤 템플릿'
+            };
+            
+            showLoading(`${templates[type]}을 준비중입니다...`);
+            
+            setTimeout(() => {
+                hideLoading();
+                alert(`${templates[type]}이 다운로드되었습니다!\n\n실제 서비스에서는 PDF 파일이 다운로드됩니다.\n- 페르소나 기반 작성 가이드\n- 상권분석 데이터 첨부\n- 차별화 전략 템플릿\n- 예상 매출 시뮬레이션 자료`);
+            }, 1500);
+        }
+
+        function showDetailGuide(type) {
+            const guides = {
+                'youth': `청년창업사관학교 상세 가이드:
+                
+📋 필수 제출 서류
+• 사업계획서 (20페이지 이내)
+• 페르소나 분석 보고서
+• 상권분석 자료
+• 예상 매출 시뮬레이션
+
+🎯 평가 기준 (100점 만점)
+• 사업 아이디어 독창성 (25점)
+• 시장분석 및 고객분석 (25점)
+• 사업화 가능성 (25점)
+• 팀 역량 (25점)
+
+💡 합격 TIP
+• 데이터 기반 근거 제시 필수
+• 차별화 포인트 구체적 서술
+• 3년간 사업 로드맵 상세 작성`,
+                
+                'seoul': `서울시 청년창업지원 상세 가이드:
+                
+📋 신청 자격
+• 만 18~39세 서울시 거주자
+• 창업 3년 이내 또는 예비창업자
+• 서울시 내 사업장 소재
+
+🎯 평가 기준
+• 지역 기여도 (30점)
+• 사업 계획 (25점)  
+• 청년 고용 계획 (25점)
+• 혁신성 (20점)
+
+💡 합격 TIP
+• 홍대 문화와 연계성 강조
+• 지역 청년 고용 계획 구체화
+• 상권 활성화 기여 방안 제시`,
+                
+                'semas': `소상공인시장진흥공단 상세 가이드:
+                
+📋 지원 내용
+• 창업자금: 최대 1,000만원
+• 교육 지원: 40시간 창업교육 필수
+• 멘토링: 6개월간 전문가 지원
+
+🎯 심사 기준
+• 사업 타당성 (40점)
+• 시장성 및 경쟁력 (30점)
+• 운영 계획 (20점)
+• 자금 계획 (10점)
+
+💡 합격 TIP
+• 상권분석 데이터 풍부하게 제시
+• 경쟁업체 대비 우위 요소 명확화
+• 보수적 매출 예측으로 신뢰성 확보`
+            };
+            
+            alert(guides[type]);
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 로딩 화면 숨기기
+            const loading = document.getElementById('loading');
+            if (loading) {
+                loading.style.display = 'none';
+            }
+            
+            // 사용자 유형 선택 화면만 표시
+            document.getElementById('userTypeSelection').classList.remove('hidden');
+            document.getElementById('stepIndicator').classList.add('hidden');
+
+            // 나머지 모든 콘텐츠 숨김
+            for (let i = 1; i <= 5; i++) {
+                const content = document.getElementById(`content${i}`);
+                if (content) content.classList.add('hidden');
+            }
+            const result = document.getElementById('result1');
+            if (result) result.classList.add('hidden');
+            const completion = document.getElementById('completion');
+            if (completion) completion.classList.add('hidden');
+            const applicationGuide = document.getElementById('applicationGuide');
+            if (applicationGuide) applicationGuide.classList.add('hidden');
+        });
+
+        // 반응형 처리
+        window.addEventListener('resize', function() {
+            // 필요시 반응형 로직 추가
+        });
+    </script>
+</body>
+</html>

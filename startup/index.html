@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이노유 - 창업 AI 서비스</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #000;
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .header {
+            margin-bottom: 60px;
+        }
+        
+        .logo {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #888;
+            margin-bottom: 40px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .service-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            border: 1px solid #333;
+            border-radius: 20px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .service-card:hover::before {
+            left: 100%;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+            border-color: #667eea;
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .service-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .service-description {
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .service-features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 25px;
+        }
+        
+        .service-features li {
+            color: #888;
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .service-features li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .start-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .footer {
+            margin-top: 60px;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 2.5rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .service-card {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 class="logo">아이노유</h1>
+            <p class="subtitle">창업자의 눈높이가 아닌, 소비자의 눈높이에서 시장을 바라보세요</p>
+        </div>
+        
+        <div class="services-grid">
+            <div class="service-card" onclick="location.href='index2.html'">
+                <span class="service-icon">🚀</span>
+                <h3 class="service-title">페르소나 기반 창업 전략</h3>
+                <p class="service-description">다단계 분석을 통한 체계적인 창업 전략 수립</p>
+                <ul class="service-features">
+                    <li>사용자 유형 분석</li>
+                    <li>기본 정보 입력</li>
+                    <li>사업 정보 분석</li>
+                    <li>시장 분석</li>
+                    <li>확장 전략 & 투자 가이드</li>
+                </ul>
+                <a href="index2.html" class="start-button">시작하기</a>
+            </div>
+            
+            <div class="service-card" onclick="location.href='index3.html'">
+                <span class="service-icon">🧬</span>
+                <h3 class="service-title">StartupDNA - 청년창업 AI</h3>
+                <p class="service-description">AI 기반 청년창업 지원 서비스로 창업 성공률을 높입니다</p>
+                <ul class="service-features">
+                    <li>창업 동기 패턴 분석</li>
+                    <li>고객 직감 지능 측정</li>
+                    <li>AI 기반 맞춤 전략</li>
+                    <li>청년창업 특화 지원</li>
+                    <li>실시간 피드백</li>
+                </ul>
+                <a href="index3.html" class="start-button">시작하기</a>
+            </div>
+            
+            <div class="service-card" onclick="location.href='index3-1.html'">
+                <span class="service-icon">⚡</span>
+                <h3 class="service-title">StartupDNA Pro - AI 지능 분석</h3>
+                <p class="service-description">고급 머신러닝 알고리즘을 활용한 창업 지능 분석 플랫폼</p>
+                <ul class="service-features">
+                    <li>심리측정학적 성향 분석</li>
+                    <li>창업 동기 패턴 분석</li>
+                    <li>고객 직감 지능 측정</li>
+                    <li>AI 지능 분석</li>
+                    <li>고급 머신러닝 알고리즘</li>
+                </ul>
+                <a href="index3-1.html" class="start-button">시작하기</a>
+            </div>
+            
+            <div class="service-card" onclick="location.href='index4.html'">
+                <span class="service-icon">🔮</span>
+                <h3 class="service-title">페르소나 기반 성공 예측</h3>
+                <p class="service-description">7만 페르소나 데이터 기반 최적 타겟 가이드</p>
+                <ul class="service-features">
+                    <li>7만 페르소나 데이터</li>
+                    <li>타겟별 유리함 비교</li>
+                    <li>핵심 인사이트 제공</li>
+                    <li>성공 예측 분석</li>
+                    <li>최적 타겟 가이드</li>
+                </ul>
+                <a href="index4.html" class="start-button">시작하기</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 아이노유. 모든 권리 보유.</p>
+        </div>
+    </div>
+</body>
+</html>

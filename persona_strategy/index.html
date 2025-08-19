@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Persona Strategy Platform</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #0a0a0a;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+/* ===== 헤더 ===== */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 70px;
+  background: rgba(15, 15, 35, 0.95);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  padding: 0 2rem;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 700;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.nav-tabs {
+  display: flex;
+  margin-left: auto;
+  gap: 2rem;
+}
+
+.nav-tab {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  border: 1px solid transparent;
+}
+
+.nav-tab.active {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.5);
+  color: #667eea;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* ===== 메인 레이아웃 ===== */
+.main-container {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 70px;
+}
+
+.sidebar {
+  width: 280px;
+  background: linear-gradient(180deg, #16213e 0%, #0f1419 100%);
+  padding: 2rem 1.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-y: auto;
+}
+
+.sidebar h3 {
+  color: #667eea;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: rgba(255, 255, 255, 0.7);
+  border: 1px solid transparent;
+}
+
+.sidebar-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+  color: #667eea;
+}
+
+.sidebar-item.active {
+  background: rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.3);
+  color: #667eea;
+}
+
+.sidebar-item .icon {
+  margin-right: 0.75rem;
+  font-size: 1.2rem;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+  background: radial-gradient(ellipse at top, rgba(102, 126, 234, 0.05) 0%, transparent 50%);
+}
+
+/* ===== 카드 컴포넌트 ===== */
+.card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  backdrop-filter: blur(20px);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(102, 126, 234, 0.5), transparent);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.card-subtitle {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+.confidence-badge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.confidence-high {
+  background: rgba(76, 175, 80, 0.2);
+  color: #4caf50;
+  border: 1px solid rgba(76, 175, 80, 0.3);
+}
+
+.confidence-medium {
+  background: rgba(255, 183, 77, 0.2);
+  color: #ffb74d;
+  border: 1px solid rgba(255, 183, 77, 0.3);
+}
+
+.confidence-low {
+  background: rgba(244, 67, 54, 0.2);
+  color: #f44336;
+  border: 1px solid rgba(244, 67, 54, 0.3);
+}
+
+/* ===== 폼 요소 ===== */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.checkbox-item {
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checkbox-item:hover {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.3);
+}
+
+.checkbox-item input {
+  margin-right: 0.75rem;
+  accent-color: #667eea;
+}
+
+/* ===== 버튼 ===== */
+.btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.btn-primary {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+/* ===== 통계 카드 ===== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.stat-change {
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}
+
+.stat-change.positive {
+  color: #4caf50;
+}
+
+.stat-change.negative {
+  color: #f44336;
+}
+
+/* ===== 프로그레스 바 ===== */
+.progress-bar {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  overflow: hidden;
+  height: 8px;
+  margin: 1rem 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #667eea, #764ba2);
+  border-radius: 10px;
+  transition: width 0.8s ease;
+}
+
+/* ===== 페르소나 카드 ===== */
+.persona-card {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.persona-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.persona-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-right: 1rem;
+}
+
+.persona-info h3 {
+  margin-bottom: 0.25rem;
+  color: #ffffff;
+}
+
+.persona-info p {
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+}
+
+.persona-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.persona-detail {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.persona-detail h4 {
+  font-size: 0.9rem;
+  color: #667eea;
+  margin-bottom: 0.5rem;
+}
+
+.persona-detail p {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.85rem;
+}
+
+/* ===== 히든 섹션 ===== */
+.section {
+  display: none;
+}
+
+.section.active {
+  display: block;
+}
+
+/* ===== 시나리오 카드 ===== */
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.scenario-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scenario-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}
+
+.scenario-card.selected {
+  border-color: #667eea;
+  background: rgba(102, 126, 234, 0.1);
+}
+
+.scenario-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.scenario-icon {
+  font-size: 1.5rem;
+  margin-right: 0.75rem;
+}
+
+.scenario-title {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.scenario-description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* ===== 반응형 ===== */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+  
+  .sidebar {
+    width: 100%;
+    padding: 1rem;
+  }
+  
+  .nav-tabs {
+    display: none;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .checkbox-group {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+<body>
+  <!-- 헤더 -->
+  <header class="header">
+    <div class="logo">Enterprise Persona Platform</div>
+    <nav class="nav-tabs">
+      <div class="nav-tab active" data-tab="setup">프로젝트 설정</div>
+      <div class="nav-tab" data-tab="analysis">분석 결과</div>
+      <div class="nav-tab" data-tab="strategy">전략 수립</div>
+    </nav>
+  </header>
+
+  <div class="main-container">
+    <!-- 사이드바 -->
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <h3>📊 분석 단계</h3>
+        <div class="sidebar-item active" data-section="business-context">
+          <span class="icon">🎯</span>
+          <span>비즈니스 컨텍스트</span>
+        </div>
+        <div class="sidebar-item" data-section="data-integration">
+          <span class="icon">🔗</span>
+          <span>데이터 통합</span>
+        </div>
+        <div class="sidebar-item" data-section="persona-modeling">
+          <span class="icon">👥</span>
+          <span>페르소나 모델링</span>
+        </div>
+        <div class="sidebar-item" data-section="market-intelligence">
+          <span class="icon">📈</span>
+          <span>시장 인텔리전스</span>
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <h3>🚀 전략 수립</h3>
+        <div class="sidebar-item" data-section="strategy-simulation">
+          <span class="icon">🎮</span>
+          <span>전략 시뮬레이션</span>
+        </div>
+        <div class="sidebar-item" data-section="insights-dashboard">
+          <span class="icon">💡</span>
+          <span>인사이트 대시보드</span>
+        </div>
+        <div class="sidebar-item" data-section="performance-tracking">
+          <span class="icon">📊</span>
+          <span>성과 추적</span>
+        </div>
+      </div>
+    </aside>
+
+    <!-- 메인 콘텐츠 -->
+    <main class="content">
+      <!-- 1. 비즈니스 컨텍스트 -->
+      <section id="business-context" class="section active">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">비즈니스 컨텍스트 설정</h2>
+              <p class="card-subtitle">프로젝트 목표와 비즈니스 상황을 설정해주세요</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">프로젝트 목표</label>
+            <div class="scenario-grid">
+              <div class="scenario-card" data-goal="new-product">
+                <div class="scenario-header">
+                  <span class="scenario-icon">🚀</span>
+                  <h3 class="scenario-title">신제품 출시</h3>
+                </div>
+                <p class="scenario-description">새로운 제품/서비스를 시장에 런칭하여 시장 점유율 확보</p>
+              </div>
+              <div class="scenario-card" data-goal="market-expansion">
+                <div class="scenario-header">
+                  <span class="scenario-icon">🌍</span>
+                  <h3 class="scenario-title">시장 확장</h3>
+                </div>
+                <p class="scenario-description">기존 제품으로 새로운 타겟 고객층 공략</p>
+              </div>
+              <div class="scenario-card" data-goal="optimization">
+                <div class="scenario-header">
+                  <span class="scenario-icon">⚡</span>
+                  <h3 class="scenario-title">성과 최적화</h3>
+                </div>
+                <p class="scenario-description">기존 마케팅 전략의 효율성 개선</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">업종 및 카테고리</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <select class="form-select" id="industry">
+                <option value="">업종 선택</option>
+                <option value="tech">IT/테크</option>
+                <option value="retail">소매/유통</option>
+                <option value="finance">금융</option>
+                <option value="healthcare">헬스케어</option>
+                <option value="education">교육</option>
+                <option value="food">식음료</option>
+                <option value="beauty">뷰티</option>
+                <option value="automotive">자동차</option>
+              </select>
+              <select class="form-select" id="category">
+                <option value="">카테고리 선택</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">제품/서비스 정보</label>
+            <input type="text" class="form-input" id="product-name" placeholder="제품/서비스명">
+            <textarea class="form-textarea" id="product-description" placeholder="제품/서비스 설명 (주요 기능, 특징, 차별점 등)"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">예산 및 일정</label>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <input type="number" class="form-input" id="budget" placeholder="마케팅 예산 (만원)">
+              <input type="date" class="form-input" id="timeline">
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="nextStep('data-integration')">
+            다음 단계: 데이터 통합 →
+          </button>
+        </div>
+      </section>
+
+      <!-- 2. 데이터 통합 -->
+      <section id="data-integration" class="section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">데이터 소스 통합</h2>
+              <p class="card-subtitle">다양한 데이터 소스를 연결하여 신뢰성 높은 분석 기반 구축</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">3</div>
+              <div class="stat-label">연결된 데이터 소스</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">87%</div>
+              <div class="stat-label">데이터 신뢰도</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">12.5K</div>
+              <div class="stat-label">분석 가능 고객</div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">자사 데이터 (우선순위: 높음)</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="crm-data" checked>
+                <label for="crm-data">CRM 고객 데이터</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="sales-data" checked>
+                <label for="sales-data">매출/구매 이력</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="web-analytics">
+                <label for="web-analytics">웹 애널리틱스</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="customer-service">
+                <label for="customer-service">고객 서비스 데이터</label>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="nextStep('persona-modeling')">
+            다음 단계: 페르소나 모델링 →
+          </button>
+        </div>
+      </section>
+
+      <!-- 3. 페르소나 모델링 -->
+      <section id="persona-modeling" class="section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">스마트 페르소나 모델링</h2>
+              <p class="card-subtitle">AI 기반 동적 페르소나 생성 및 세분화</p>
+            </div>
+            <div class="confidence-badge confidence-high">신뢰도 87%</div>
+          </div>
+
+          <div class="persona-card">
+            <div class="persona-header">
+              <div class="persona-avatar">A</div>
+              <div class="persona-info">
+                <h3>액티브 프로페셔널 (Primary)</h3>
+                <p>전체 타겟의 34% • 높은 구매력 • 브랜드 충성도 높음</p>
+              </div>
+            </div>
+            <div class="persona-details">
+              <div class="persona-detail">
+                <h4>데모그래픽</h4>
+                <p>28-35세 직장인<br>월 소득 400-600만원<br>서울/수도권 거주</p>
+              </div>
+              <div class="persona-detail">
+                <h4>라이프스타일</h4>
+                <p>효율성 중시<br>품질 대비 가격 민감<br>온라인 쇼핑 선호</p>
+              </div>
+              <div class="persona-detail">
+                <h4>구매 행동</h4>
+                <p>충분한 리서치 후 구매<br>리뷰/평점 중시<br>브랜드 신뢰도 고려</p>
+              </div>
+              <div class="persona-detail">
+                <h4>페인포인트</h4>
+                <p>시간 부족<br>정보 과부하<br>가격 대비 가치 불명확</p>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="nextStep('market-intelligence')">
+            다음 단계: 시장 인텔리전스 →
+          </button>
+        </div>
+      </section>
+
+      <!-- 4. 시장 인텔리전스 -->
+      <section id="market-intelligence" class="section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">시장 인텔리전스</h2>
+              <p class="card-subtitle">경쟁사 분석 및 시장 동향 파악</p>
+            </div>
+            <div class="confidence-badge confidence-medium">신뢰도 73%</div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">12</div>
+              <div class="stat-label">주요 경쟁사</div>
+              <div class="stat-change positive">↑ 2개 신규 진입</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">₩2.3조</div>
+              <div class="stat-label">시장 규모</div>
+              <div class="stat-change positive">↑ 15% YoY</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">8.5%</div>
+              <div class="stat-label">시장 성장률</div>
+              <div class="stat-change positive">↑ 0.8%p</div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="nextStep('strategy-simulation')">
+            다음 단계: 전략 시뮬레이션 →
+          </button>
+        </div>
+      </section>
+
+      <!-- 5. 전략 시뮬레이션 -->
+      <section id="strategy-simulation" class="section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">전략 시뮬레이션</h2>
+              <p class="card-subtitle">다양한 시나리오별 전략 효과 예측</p>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-number">2.8M</div>
+              <div class="stat-label">예상 도달 고객</div>
+              <div class="stat-change positive">↑ 15% vs 현재</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">12.5%</div>
+              <div class="stat-label">전환율</div>
+              <div class="stat-change positive">↑ 2.1%p</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">₩8.7B</div>
+              <div class="stat-label">예상 매출</div>
+              <div class="stat-change positive">↑ 23%</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-number">4.2</div>
+              <div class="stat-label">ROI</div>
+              <div class="stat-change positive">↑ 0.8x</div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="nextStep('insights-dashboard')">
+            다음 단계: 인사이트 대시보드 →
+          </button>
+        </div>
+      </section>
+
+      <!-- 6. 인사이트 대시보드 -->
+      <section id="insights-dashboard" class="section">
+                  <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">전략 인사이트 대시보드</h2>
+              <p class="card-subtitle">실행 가능한 전략 제안 및 액션 플랜</p>
+            </div>
+            <div class="confidence-badge confidence-high">신뢰도 89%</div>
+          </div>
+
+          <div class="card" style="background: linear-gradient(135deg, rgba(102,126,234,0.1), rgba(118,75,162,0.1)); border-color: rgba(102,126,234,0.3);">
+            <h3 style="color: #667eea; margin-bottom: 1rem;">🎯 핵심 전략 방향</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+              <div>
+                <h4 style="margin-bottom: 0.5rem;">1. 타겟 우선순위</h4>
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.4;">
+                  <strong>Primary:</strong> 액티브 프로페셔널 (34%)<br>
+                  - 높은 구매력, 브랜드 충성도<br>
+                  - 품질 중심 메시징 효과적
+                </p>
+              </div>
+              <div>
+                <h4 style="margin-bottom: 0.5rem;">2. 포지셔닝</h4>
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.4;">
+                  <strong>차별화 포인트:</strong> 전문성 + 접근성<br>
+                  - 경쟁사 대비 중간 포지션<br>
+                  - 가격-품질 균형 강조
+                </p>
+              </div>
+              <div>
+                <h4 style="margin-bottom: 0.5rem;">3. 채널 전략</h4>
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.9rem; line-height: 1.4;">
+                  <strong>온라인 중심:</strong> 70% 비중<br>
+                  - 디지털 퍼널 최적화<br>
+                  - 옴니채널 고객 경험
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom: 1rem;">📊 성과 지표 (KPI)</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+              <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                <div style="font-size: 1.5rem; color: #667eea; font-weight: 600;">2.8M</div>
+                <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">브랜드 인지도</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                <div style="font-size: 1.5rem; color: #4caf50; font-weight: 600;">12.5%</div>
+                <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">전환율</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                <div style="font-size: 1.5rem; color: #ffb74d; font-weight: 600;">₩8.7B</div>
+                <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">예상 매출</div>
+              </div>
+              <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px; text-align: center;">
+                <div style="font-size: 1.5rem; color: #f48fb1; font-weight: 600;">4.2x</div>
+                <div style="font-size: 0.9rem; color: rgba(255,255,255,0.7);">ROI</div>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" onclick="nextStep('performance-tracking')">
+            다음 단계: 성과 추적 →
+          </button>
+        </div>
+      </section>
+
+      <!-- 7. 성과 추적 -->
+      <section id="performance-tracking" class="section">
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2 class="card-title">성과 추적 & 검증</h2>
+              <p class="card-subtitle">실제 결과와 예측 비교를 통한 모델 신뢰성 검증</p>
+            </div>
+          </div>
+
+          <div class="card" style="background: linear-gradient(135deg, rgba(76,175,80,0.1), rgba(67,160,71,0.1)); border-color: rgba(76,175,80,0.3);">
+            <h3 style="color: #4caf50; margin-bottom: 1rem;">🔄 피드백 루프</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+              <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                <h4 style="margin-bottom: 0.5rem;">실시간 데이터 수집</h4>
+                <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                  • 캠페인 성과 모니터링<br>
+                  • 고객 반응 추적<br>
+                  • 매출 데이터 연동
+                </p>
+              </div>
+              <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                <h4 style="margin-bottom: 0.5rem;">예측 vs 실제 비교</h4>
+                <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                  • 오차 분석<br>
+                  • 패턴 인식<br>
+                  • 개선점 도출
+                </p>
+              </div>
+              <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                <h4 style="margin-bottom: 0.5rem;">모델 업데이트</h4>
+                <p style="font-size: 0.9rem; color: rgba(255,255,255,0.8);">
+                  • 알고리즘 개선<br>
+                  • 가중치 조정<br>
+                  • 신뢰도 향상
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom: 1rem;">📈 예측 정확도 트렌드</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+              <div>
+                <h4 style="margin-bottom: 1rem;">월별 정확도</h4>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>1월</span>
+                    <span>73%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 73%"></div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>2월</span>
+                    <span>81%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 81%"></div>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>3월</span>
+                    <span>87%</span>
+                  </div>
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: 87%"></div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4 style="margin-bottom: 1rem;">분야별 성과</h4>
+                <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 8px;">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>고객 획득</span>
+                    <span style="color: #4caf50;">+15%</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>전환율</span>
+                    <span style="color: #4caf50;">+8%</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>매출</span>
+                    <span style="color: #4caf50;">+23%</span>
+                  </div>
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span>ROI</span>
+                    <span style="color: #4caf50;">+31%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h3 style="margin-bottom: 1rem;">🎯 다음 단계 권장사항</h3>
+            <div style="background: rgba(102,126,234,0.1); padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(102,126,234,0.3);">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem;">
+                <div>
+                  <h4 style="color: #667eea; margin-bottom: 0.5rem;">단기 (1-3개월)</h4>
+                  <ul style="font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.4;">
+                    <li>A/B 테스트 캠페인 런칭</li>
+                    <li>실시간 데이터 수집 시스템 구축</li>
+                    <li>핵심 KPI 모니터링 대시보드</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 style="color: #667eea; margin-bottom: 0.5rem;">중기 (3-6개월)</h4>
+                  <ul style="font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.4;">
+                    <li>고객 여정 최적화</li>
+                    <li>개인화 추천 시스템 도입</li>
+                    <li>옴니채널 경험 통합</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 style="color: #667eea; margin-bottom: 0.5rem;">장기 (6개월+)</h4>
+                  <ul style="font-size: 0.9rem; color: rgba(255,255,255,0.8); line-height: 1.4;">
+                    <li>AI 기반 예측 모델 고도화</li>
+                    <li>시장 확장 전략 수립</li>
+                    <li>브랜드 자산 구축</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <button class="btn btn-primary" onclick="exportReport()">
+              📄 전략 리포트 다운로드
+            </button>
+            <button class="btn btn-secondary" onclick="scheduleReview()">
+              📅 정기 리뷰 설정
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    // 전역 변수
+    let currentSection = 'business-context';
+    let projectData = {
+      businessContext: {},
+      dataIntegration: {},
+      personas: [],
+      marketIntelligence: {},
+      strategy: {},
+      performance: {}
+    };
+
+    // 초기화
+    document.addEventListener('DOMContentLoaded', function() {
+      initializeEventListeners();
+      loadCategoryData();
+      animateProgressBars();
+    });
+
+    // 이벤트 리스너 초기화
+    function initializeEventListeners() {
+      // 사이드바 네비게이션
+      document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const sectionId = this.dataset.section;
+          showSection(sectionId);
+        });
+      });
+
+      // 탭 네비게이션
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', function() {
+          const tabId = this.dataset.tab;
+          switchTab(tabId);
+        });
+      });
+
+      // 시나리오 선택
+      document.querySelectorAll('.scenario-card').forEach(card => {
+        card.addEventListener('click', function() {
+          selectScenario(this);
+        });
+      });
+
+      // 업종 선택 시 카테고리 업데이트
+      document.getElementById('industry').addEventListener('change', function() {
+        updateCategories(this.value);
+      });
+    }
+
+    // 섹션 전환
+    function showSection(sectionId) {
+      // 모든 섹션 숨기기
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+
+      // 선택된 섹션 표시
+      document.getElementById(sectionId).classList.add('active');
+
+      // 사이드바 활성화 상태 업데이트
+      document.querySelectorAll('.sidebar-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
+
+      currentSection = sectionId;
+    }
+
+    // 다음 단계로 이동
+    function nextStep(sectionId) {
+      showSection(sectionId);
+      saveCurrentData();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 시나리오 선택
+    function selectScenario(card) {
+      document.querySelectorAll('.scenario-card').forEach(c => {
+        c.classList.remove('selected');
+      });
+      card.classList.add('selected');
+    }
+
+    // 카테고리 데이터 로드
+    function loadCategoryData() {
+      const categoryMap = {
+        'tech': ['소프트웨어', 'AI/머신러닝', '핀테크', '이커머스'],
+        'retail': ['패션', '생활용품', '식품', '가전'],
+        'finance': ['은행', '보험', '투자', '결제'],
+        'healthcare': ['의료기기', '디지털헬스', '바이오', '제약'],
+        'education': ['에듀테크', '온라인강의', '어학', '자격증'],
+        'food': ['음료', '건강식품', '레스토랑', '배달'],
+        'beauty': ['화장품', '스킨케어', '헤어', '네일'],
+        'automotive': ['전기차', '자율주행', '모빌리티', '부품']
+      };
+      window.categoryData = categoryMap;
+    }
+
+    // 카테고리 업데이트
+    function updateCategories(industry) {
+      const categorySelect = document.getElementById('category');
+      const categories = window.categoryData[industry] || [];
+      
+      categorySelect.innerHTML = '<option value="">카테고리 선택</option>';
+      categories.forEach(category => {
+        categorySelect.innerHTML += `<option value="${category}">${category}</option>`;
+      });
+    }
+
+    // 프로그레스 바 애니메이션
+    function animateProgressBars() {
+      document.querySelectorAll('.progress-fill').forEach(bar => {
+        const targetWidth = bar.style.width;
+        bar.style.width = '0%';
+        
+        setTimeout(() => {
+          bar.style.width = targetWidth;
+        }, 100);
+      });
+    }
+
+    // 현재 데이터 저장
+    function saveCurrentData() {
+      const sectionData = {};
+      const currentSectionElement = document.getElementById(currentSection);
+      const inputs = currentSectionElement.querySelectorAll('input, select, textarea');
+      
+      inputs.forEach(input => {
+        if (input.type === 'checkbox' || input.type === 'radio') {
+          if (input.checked) {
+            sectionData[input.name || input.id] = input.value;
+          }
+        } else {
+          sectionData[input.id] = input.value;
+        }
+      });
+      
+      projectData[currentSection.replace('-', '')] = sectionData;
+      localStorage.setItem('enterprisePersonaProject', JSON.stringify(projectData));
+    }
+
+    // 리포트 내보내기
+    function exportReport() {
+      alert('전략 리포트를 생성하고 있습니다. 잠시만 기다려주세요.');
+      setTimeout(() => {
+        alert('리포트가 준비되었습니다!');
+      }, 2000);
+    }
+
+    // 정기 리뷰 설정
+    function scheduleReview() {
+      const reviewOptions = ['주간 리뷰', '월간 리뷰', '분기별 리뷰'];
+      const selectedReview = prompt('정기 리뷰 주기를 선택하세요:\n1. 주간 리뷰\n2. 월간 리뷰\n3. 분기별 리뷰\n\n번호를 입력하세요:');
+      
+      if (selectedReview && selectedReview >= 1 && selectedReview <= 3) {
+        alert(`${reviewOptions[selectedReview - 1]}가 설정되었습니다. 이메일로 알림을 보내드리겠습니다.`);
+      }
+    }
+
+    // 탭 전환
+    function switchTab(tabId) {
+      document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
+    }
+  </script>
+</body>
+</html>

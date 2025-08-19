@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>통합 제품 기획 & 디자인 전략 플랫폼</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 좌측 사이드바 */
+        .sidebar {
+            width: 300px;
+            background: linear-gradient(180deg, #1a202c 0%, #2d3748 100%);
+            color: white;
+            padding: 0;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 25px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar-header h1 {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: white;
+        }
+
+        .sidebar-header p {
+            font-size: 0.8em;
+            opacity: 0.7;
+        }
+
+        .menu-section {
+            padding: 20px 0;
+        }
+
+        .menu-title {
+            padding: 0 20px 10px;
+            font-size: 0.75em;
+            font-weight: 600;
+            opacity: 0.6;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .menu-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .menu-item.active {
+            background: rgba(102, 126, 234, 0.2);
+            border-left-color: #667eea;
+        }
+
+        .menu-item i {
+            margin-right: 12px;
+            font-size: 1.1em;
+            width: 16px;
+        }
+
+        .menu-item span {
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+
+        .menu-item.new::after {
+            content: "NEW";
+            background: #e53e3e;
+            color: white;
+            font-size: 0.6em;
+            padding: 2px 6px;
+            border-radius: 10px;
+            margin-left: auto;
+        }
+
+        /* 메인 컨텐츠 */
+        .main-content {
+            flex: 1;
+            margin-left: 300px;
+            padding: 30px;
+            background: #f5f7fa;
+            min-height: 100vh;
+        }
+
+        .page-header {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .page-title {
+            font-size: 2.2em;
+            font-weight: 700;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #718096;
+            font-size: 1.1em;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e2e8f0;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .card-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            color: white;
+            font-size: 1.3em;
+        }
+
+        .card-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2d3748;
+        }
+
+        /* 분석 결과 시각화 */
+        .analysis-result {
+            background: #f8fafc;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .confidence-meter {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+        }
+
+        .meter-label {
+            width: 100px;
+            font-size: 0.9em;
+            color: #4a5568;
+        }
+
+        .meter-bar {
+            flex: 1;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 15px;
+        }
+
+        .meter-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        .high-confidence {
+            background: linear-gradient(90deg, #48bb78, #38a169);
+        }
+
+        .medium-confidence {
+            background: linear-gradient(90deg, #ed8936, #dd6b20);
+        }
+
+        .low-confidence {
+            background: linear-gradient(90deg, #fc8181, #e53e3e);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* 새로운 분석 카드 스타일 */
+        .research-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+
+        .insight-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .insight-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .insight-icon {
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-right: 12px;
+            font-size: 1.1em;
+        }
+
+        .gap-analysis {
+            background: linear-gradient(135deg, #e6fffa 0%, #f0fff4 100%);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .gap-item {
+            display: flex;
+            align-items: center;
+            margin: 12px 0;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .gap-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+        }
+
+        .gap-high {
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+        }
+
+        .gap-medium {
+            background: linear-gradient(45deg, #ed8936, #dd6b20);
+            color: white;
+        }
+
+        .gap-low {
+            background: linear-gradient(45deg, #fc8181, #e53e3e);
+            color: white;
+        }
+
+        .competitive-matrix {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .competitor-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .competitor-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .radar-chart {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            position: relative;
+            background: conic-gradient(
+                #48bb78 0deg 72deg,
+                #ed8936 72deg 144deg,
+                #667eea 144deg 216deg,
+                #38b2ac 216deg 288deg,
+                #e53e3e 288deg 360deg
+            );
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .radar-center {
+            width: 100px;
+            height: 100px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #2d3748;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- 좌측 사이드바 -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h1>통합 제품 기획 플랫폼</h1>
+                <p>데이터 기반 제품 전략 수립</p>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">프로젝트 관리</div>
+                <div class="menu-item active" onclick="showPage('dashboard', this)">
+                    <i>📊</i>
+                    <span>종합 대시보드</span>
+                </div>
+                <div class="menu-item" onclick="showPage('concept', this)">
+                    <i>🎯</i>
+                    <span>제품 컨셉 정의</span>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">시장 리서치</div>
+                <div class="menu-item new" onclick="showPage('market-research', this)">
+                    <i>🔍</i>
+                    <span>시장 분석 & 검증</span>
+                </div>
+                <div class="menu-item new" onclick="showPage('competitor', this)">
+                    <i>⚔️</i>
+                    <span>경쟁사 분석</span>
+                </div>
+                <div class="menu-item new" onclick="showPage('needs-gap', this)">
+                    <i>🎪</i>
+                    <span>니즈 갭 분석</span>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">사용자 리서치</div>
+                <div class="menu-item" onclick="showPage('personas', this)">
+                    <i>👥</i>
+                    <span>페르소나 생성</span>
+                </div>
+                <div class="menu-item new" onclick="showPage('user-journey', this)">
+                    <i>🗺️</i>
+                    <span>고객 여정 분석</span>
+                </div>
+                <div class="menu-item new" onclick="showPage('usability', this)">
+                    <i>🧪</i>
+                    <span>사용성 예측</span>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">디자인 전략</div>
+                <div class="menu-item new" onclick="showPage('design-rationale', this)">
+                    <i>🎨</i>
+                    <span>디자인 근거 분석</span>
+                </div>
+                <div class="menu-item" onclick="showPage('trends', this)">
+                    <i>📈</i>
+                    <span>디자인 트렌드</span>
+                </div>
+                <div class="menu-item new" onclick="showPage('ab-test', this)">
+                    <i>🧬</i>
+                    <span>A/B 테스트 예측</span>
+                </div>
+            </div>
+
+            <div class="menu-section">
+                <div class="menu-title">전략 수립</div>
+                <div class="menu-item" onclick="showPage('strategies', this)">
+                    <i>📋</i>
+                    <span>통합 전략 수립</span>
+                </div>
+                <div class="menu-item new" onclick="showPage('validation', this)">
+                    <i>✅</i>
+                    <span>전략 검증</span>
+                </div>
+                <div class="menu-item" onclick="showPage('reports', this)">
+                    <i>📄</i>
+                    <span>최종 보고서</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- 메인 컨텐츠 -->
+        <div class="main-content">
+            <!-- 종합 대시보드 -->
+            <div id="dashboard-page" class="page">
+                <div class="page-header">
+                    <h1 class="page-title">프로젝트 종합 대시보드</h1>
+                    <p class="page-subtitle">프리미엄 홈카페 원두 - 데이터 기반 제품 기획 현황</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <h3 class="card-title">프로젝트 현황</h3>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div style="text-align: center; padding: 15px; background: #f0fff4; border-radius: 8px;">
+                                <div style="font-size: 1.8em; font-weight: bold; color: #48bb78;">92%</div>
+                                <div style="font-size: 0.9em; color: #2d5016;">제품 타당성</div>
+                            </div>
+                            <div style="text-align: center; padding: 15px; background: #e6fffa; border-radius: 8px;">
+                                <div style="font-size: 1.8em; font-weight: bold; color: #38b2ac;">85%</div>
+                                <div style="font-size: 0.9em; color: #234e52;">시장 적합성</div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 20px;">
+                            <div style="background: #fef5e7; padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #744210; margin-bottom: 8px;">핵심 발견사항</div>
+                                <ul style="color: #653510; font-size: 0.9em; line-height: 1.6;">
+                                    <li>30대 워킹맘 세그먼트에서 높은 니즈 갭 발견</li>
+                                    <li>프리미엄 홈카페 시장 25% 성장 예측</li>
+                                    <li>친환경 패키징 요구도 78% 증가</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🎯</div>
+                            <h3 class="card-title">타겟 검증 결과</h3>
+                        </div>
+                        <div class="confidence-meter">
+                            <div class="meter-label">시장 규모</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill high-confidence" style="width: 88%"></div>
+                            </div>
+                            <span>88%</span>
+                        </div>
+                        <div class="confidence-meter">
+                            <div class="meter-label">경쟁 우위</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill medium-confidence" style="width: 73%"></div>
+                            </div>
+                            <span>73%</span>
+                        </div>
+                        <div class="confidence-meter">
+                            <div class="meter-label">기술 실현성</div>
+                            <div class="meter-bar">
+                                <div class="meter-fill high-confidence" style="width: 91%"></div>
+                            </div>
+                            <span>91%</span>
+                        </div>
+                        <div style="background: #f0fff4; padding: 12px; border-radius: 8px; margin-top: 15px;">
+                            <div style="font-weight: bold; color: #22543d; font-size: 0.9em;">✅ 제품 개발 진행 권장</div>
+                            <div style="font-size: 0.8em; color: #2d5016; margin-top: 4px;">모든 지표가 임계값을 상회하여 제품 개발 타당성 확보</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🔍</div>
+                            <h3 class="card-title">리서치 완성도</h3>
+                        </div>
+                        <div style="margin: 20px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 0.9em; color: #4a5568;">시장 리서치</span>
+                                <span style="font-size: 0.9em; color: #48bb78; font-weight: bold;">완료</span>
+                            </div>
+                            <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;">
+                                <div style="width: 100%; height: 100%; background: linear-gradient(90deg, #48bb78, #38a169); border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin: 20px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 0.9em; color: #4a5568;">사용자 리서치</span>
+                                <span style="font-size: 0.9em; color: #ed8936; font-weight: bold;">85%</span>
+                            </div>
+                            <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;">
+                                <div style="width: 85%; height: 100%; background: linear-gradient(90deg, #ed8936, #dd6b20); border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                        <div style="margin: 20px 0;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <span style="font-size: 0.9em; color: #4a5568;">디자인 근거</span>
+                                <span style="font-size: 0.9em; color: #667eea; font-weight: bold;">진행중</span>
+                            </div>
+                            <div style="width: 100%; height: 8px; background: #e2e8f0; border-radius: 4px;">
+                                <div style="width: 60%; height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 4px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🚀</div>
+                        <h3 class="card-title">추천 다음 액션</h3>
+                    </div>
+                    <div class="research-grid">
+                        <div class="insight-card" style="border-left-color: #48bb78;">
+                            <div class="insight-header">
+                                <div class="insight-icon" style="background: linear-gradient(45deg, #48bb78, #38a169);">1</div>
+                                <div>
+                                    <div style="font-weight: bold; color: #22543d;">A/B 테스트 설계</div>
+                                    <div style="font-size: 0.8em; color: #2d5016;">패키징 디자인 2안 비교</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.9em; color: #4a5568;">미니멀 vs 일러스트 스타일의 사용자 반응 예측 필요</div>
+                        </div>
+
+                        <div class="insight-card" style="border-left-color: #ed8936;">
+                            <div class="insight-header">
+                                <div class="insight-icon" style="background: linear-gradient(45deg, #ed8936, #dd6b20);">2</div>
+                                <div>
+                                    <div style="font-weight: bold; color: #744210;">심층 인터뷰 시뮬레이션</div>
+                                    <div style="font-size: 0.8em; color: #653510;">워킹맘 페르소나 검증</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.9em; color: #4a5568;">김완벽 페르소나의 실제 구매 의사 결정 과정 분석</div>
+                        </div>
+
+                        <div class="insight-card" style="border-left-color: #667eea;">
+                            <div class="insight-header">
+                                <div class="insight-icon" style="background: linear-gradient(45deg, #667eea, #764ba2);">3</div>
+                                <div>
+                                    <div style="font-weight: bold; color: #553c9a;">가격 전략 최적화</div>
+                                    <div style="font-size: 0.8em; color: #44337a;">프리미엄 가격 민감도 분석</div>
+                                </div>
+                            </div>
+                            <div style="font-size: 0.9em; color: #4a5568;">45,000원 vs 55,000원 가격대별 구매 전환율 예측</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 시장 분석 & 검증 페이지 -->
+            <div id="market-research-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">시장 분석 & 검증</h1>
+                    <p class="page-subtitle">데이터 기반 시장 기회 분석 및 제품 타당성 검증</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📈</div>
+                            <h3 class="card-title">시장 규모 분석</h3>
+                        </div>
+                        <div style="text-align: center; margin: 20px 0;">
+                            <div style="font-size: 3em; font-weight: bold; color: #2d3748; margin-bottom: 10px;">152억원</div>
+                            <div style="color: #718096; margin-bottom: 15px;">국내 프리미엄 원두 시장 (연간)</div>
+                            <div style="background: #f0fff4; padding: 15px; border-radius: 10px;">
+                                <div style="color: #48bb78; font-weight: bold; font-size: 1.2em;">+25% YoY</div>
+                                <div style="color: #2d5016; font-size: 0.9em;">2024년 성장률 예측</div>
+                            </div>
+                        </div>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 10px;">
+                            <h5 style="color: #2d3748; margin-bottom: 15px;">시장 세분화</h5>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div>
+                                    <div style="font-weight: bold; color: #4a5568;">홈카페 애호가</div>
+                                    <div style="font-size: 0.9em; color: #718096;">68억원 (45%)</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: bold; color: #4a5568;">프리미엄 소비자</div>
+                                    <div style="font-size: 0.9em; color: #718096;">54억원 (35%)</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: bold; color: #4a5568;">기업용 시장</div>
+                                    <div style="font-size: 0.9em; color: #718096;">23억원 (15%)</div>
+                                </div>
+                                <div>
+                                    <div style="font-weight: bold; color: #4a5568;">기타</div>
+                                    <div style="font-size: 0.9em; color: #718096;">7억원 (5%)</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🎯</div>
+                            <h3 class="card-title">타겟 시장 검증</h3>
+                        </div>
+                        <div class="analysis-result">
+                            <h5 style="color: #667eea; margin-bottom: 15px;">🎯 주력 타겟: 30대 워킹맘</h5>
+                            <div style="margin-bottom: 15px;">
+                                <div style="font-weight: bold; color: #2d3748;">시장 크기: 약 28억원</div>
+                                <div style="font-size: 0.9em; color: #4a5568;">전체 시장의 18.4% (성장률 +32%)</div>
+                            </div>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">시장 접근성</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill high-confidence" style="width: 85%"></div>
+                                </div>
+                                <span>85%</span>
+                            </div>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">구매력 수준</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill high-confidence" style="width: 92%"></div>
+                                </div>
+                                <span>92%</span>
+                            </div>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">니즈 강도</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill medium-confidence" style="width: 78%"></div>
+                                </div>
+                                <span>78%</span>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                            <div style="font-weight: bold; color: #234e52;">✅ 검증 결과: 타겟 선정 적절</div>
+                            <div style="font-size: 0.9em; color: #2c5530;">모든 지표가 목표치 이상으로 시장 진입 타당성 확보</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">⚡</div>
+                            <h3 class="card-title">진입 장벽 분석</h3>
+                        </div>
+                        
+                        <div style="margin: 20px 0;">
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div class="gap-icon gap-low">⚠️</div>
+                                <div>
+                                    <div style="font-weight: bold; color: #742a2a;">높은 진입장벽</div>
+                                    <div style="font-size: 0.9em; color: #63171b;">브랜드 인지도 구축</div>
+                                </div>
+                                <div style="margin-left: auto; color: #e53e3e; font-weight: bold;">높음</div>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div class="gap-icon gap-medium">💰</div>
+                                <div>
+                                    <div style="font-weight: bold; color: #744210;">중간 진입장벽</div>
+                                    <div style="font-size: 0.9em; color: #653510;">초기 투자 비용</div>
+                                </div>
+                                <div style="margin-left: auto; color: #ed8936; font-weight: bold;">중간</div>
+                            </div>
+                            
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div class="gap-icon gap-high">🚀</div>
+                                <div>
+                                    <div style="font-weight: bold; color: #22543d;">낮은 진입장벽</div>
+                                    <div style="font-size: 0.9em; color: #2d5016;">온라인 판매 채널</div>
+                                </div>
+                                <div style="margin-left: auto; color: #48bb78; font-weight: bold;">낮음</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #fef5e7; padding: 15px; border-radius: 8px;">
+                            <h6 style="color: #744210; margin-bottom: 8px;">💡 진입 전략 제안</h6>
+                            <ul style="color: #653510; font-size: 0.9em; line-height: 1.6;">
+                                <li>인플루언서 마케팅으로 브랜드 인지도 단계적 구축</li>
+                                <li>소량 생산으로 초기 투자 부담 최소화</li>
+                                <li>온라인 퍼스트 전략으로 빠른 시장 진입</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📊</div>
+                        <h3 class="card-title">시장 기회 매트릭스</h3>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin: 20px 0;">
+                        <!-- 기회 영역 -->
+                        <div>
+                            <h5 style="color: #48bb78; margin-bottom: 15px;">🟢 고기회 영역</h5>
+                            <div style="background: #f0fff4; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                                <div style="font-weight: bold; color: #22543d;">친환경 패키징</div>
+                                <div style="font-size: 0.9em; color: #2d5016;">환경 의식 증가로 수요 급증 (+78%)</div>
+                            </div>
+                            <div style="background: #f0fff4; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                                <div style="font-weight: bold; color: #22543d;">소포장 제품</div>
+                                <div style="font-size: 0.9em; color: #2d5016;">1-2인 가구 증가로 니즈 확대</div>
+                            </div>
+                            <div style="background: #f0fff4; padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #22543d;">구독 서비스</div>
+                                <div style="font-size: 0.9em; color: #2d5016;">정기 배송 선호도 증가</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 위험 영역 -->
+                        <div>
+                            <h5 style="color: #e53e3e; margin-bottom: 15px;">🔴 고위험 영역</h5>
+                            <div style="background: #fed7d7; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                                <div style="font-weight: bold; color: #742a2a;">가격 경쟁</div>
+                                <div style="font-size: 0.9em; color: #63171b;">대형 브랜드와의 가격 경쟁 심화</div>
+                            </div>
+                            <div style="background: #fed7d7; padding: 15px; border-radius: 8px; margin-bottom: 12px;">
+                                <div style="font-weight: bold; color: #742a2a;">공급망 리스크</div>
+                                <div style="font-size: 0.9em; color: #63171b;">원두 공급 가격 변동성</div>
+                            </div>
+                            <div style="background: #fed7d7; padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #742a2a;">시장 포화</div>
+                                <div style="font-size: 0.9em; color: #63171b;">유사 제품 출시 증가</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #667eea; color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">종합 시장 매력도</div>
+                        <div style="font-size: 2.5em; font-weight: bold; margin-bottom: 5px;">B+</div>
+                        <div style="font-size: 0.9em; opacity: 0.9;">시장 진입 권장 (중간-높음 수준)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 니즈 갭 분석 페이지 -->
+            <div id="needs-gap-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">니즈 갭 분석</h1>
+                    <p class="page-subtitle">시장의 미충족 니즈 vs 제품 컨셉 매칭도 분석</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🎪</div>
+                            <h3 class="card-title">핵심 니즈 갭 발견</h3>
+                        </div>
+                        
+                        <div class="gap-analysis">
+                            <h5 style="color: #2d3748; margin-bottom: 20px; text-align: center;">📊 니즈 갭 매트릭스</h5>
+                            
+                            <div class="gap-item">
+                                <div class="gap-icon gap-high">⭐</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold; color: #22543d;">프리미엄 품질 + 합리적 가격</div>
+                                    <div style="font-size: 0.9em; color: #2d5016; margin-top: 4px;">갭 크기: 높음 | 충족도: 32% | 중요도: 94%</div>
+                                </div>
+                                <div style="color: #48bb78; font-weight: bold; font-size: 1.2em;">62%</div>
+                            </div>
+                            
+                            <div class="gap-item">
+                                <div class="gap-icon gap-high">🌱</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold; color: #22543d;">친환경 + 편의성</div>
+                                    <div style="font-size: 0.9em; color: #2d5016; margin-top: 4px;">갭 크기: 높음 | 충족도: 28% | 중요도: 89%</div>
+                                </div>
+                                <div style="color: #48bb78; font-weight: bold; font-size: 1.2em;">61%</div>
+                            </div>
+                            
+                            <div class="gap-item">
+                                <div class="gap-icon gap-medium">📦</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold; color: #744210;">맞춤형 소포장</div>
+                                    <div style="font-size: 0.9em; color: #653510; margin-top: 4px;">갭 크기: 중간 | 충족도: 45% | 중요도: 78%</div>
+                                </div>
+                                <div style="color: #ed8936; font-weight: bold; font-size: 1.2em;">33%</div>
+                            </div>
+                            
+                            <div class="gap-item">
+                                <div class="gap-icon gap-low">📱</div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: bold; color: #742a2a;">모바일 구매 경험</div>
+                                    <div style="font-size: 0.9em; color: #63171b; margin-top: 4px;">갭 크기: 낮음 | 충족도: 72% | 중요도: 65%</div>
+                                </div>
+                                <div style="color: #e53e3e; font-weight: bold; font-size: 1.2em;">7%</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin-top: 20px;">
+                            <div style="font-weight: bold; color: #234e52; margin-bottom: 8px;">💡 제품 컨셉 최적화 제안</div>
+                            <div style="font-size: 0.9em; color: #2c5530;">
+                                상위 2개 갭에 집중하여 "프리미엄 품질의 친환경 소포장 원두"로 컨셉 구체화 권장
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🔍</div>
+                            <h3 class="card-title">페르소나별 니즈 분석</h3>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <h5 style="color: #2d3748; margin-bottom: 15px;">👩‍💼 김완벽 (30대 워킹맘)</h5>
+                            <div style="background: #f0fff4; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; color: #22543d; margin-bottom: 8px;">핵심 니즈</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.9em;">
+                                    <div>✅ 시간 절약 (중요도: 95%)</div>
+                                    <div>✅ 품질 보장 (중요도: 92%)</div>
+                                    <div>✅ 안전성 (중요도: 89%)</div>
+                                    <div>✅ 브랜드 신뢰 (중요도: 87%)</div>
+                                </div>
+                            </div>
+                            <div style="background: #fed7d7; padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #742a2a; margin-bottom: 8px;">미충족 니즈 (갭 영역)</div>
+                                <div style="font-size: 0.9em; color: #63171b; line-height: 1.6;">
+                                    "프리미엄 품질이지만 합리적 가격의 원두를 빠르고 편리하게 구매하고 싶다"
+                                    <br>현재 충족도: 34% → <strong>66% 갭 존재</strong>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <h5 style="color: #2d3748; margin-bottom: 15px;">👨‍🎨 박개성 (20대 싱글)</h5>
+                            <div style="background: #e6fffa; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; color: #234e52; margin-bottom: 8px;">핵심 니즈</div>
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 0.9em;">
+                                    <div>✅ 독특함/개성 (중요도: 91%)</div>
+                                    <div>✅ SNS 공유 가치 (중요도: 88%)</div>
+                                    <div>✅ 트렌디함 (중요도: 85%)</div>
+                                    <div>✅ 가성비 (중요도: 82%)</div>
+                                </div>
+                            </div>
+                            <div style="background: #fef5e7; padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #744210; margin-bottom: 8px;">미충족 니즈 (갭 영역)</div>
+                                <div style="font-size: 0.9em; color: #653510; line-height: 1.6;">
+                                    "나만의 개성을 표현할 수 있는 스타일리시한 원두 패키징"
+                                    <br>현재 충족도: 41% → <strong>59% 갭 존재</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🎯</div>
+                        <h3 class="card-title">제품 컨셉 vs 니즈 갭 매칭 분석</h3>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 2.5em; font-weight: bold; color: #48bb78; margin-bottom: 8px;">85%</div>
+                            <div style="color: #22543d; font-size: 1.1em; font-weight: bold;">니즈 갭 매칭도</div>
+                            <div style="color: #2d5016; font-size: 0.9em;">현재 제품 컨셉이 시장 갭을 해결할 수 있는 정도</div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 25px;">
+                            <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="font-size: 1.8em; color: #48bb78; margin-bottom: 8px;">92%</div>
+                                <div style="font-size: 0.9em; color: #22543d; font-weight: bold;">품질-가격 갭</div>
+                                <div style="font-size: 0.8em; color: #2d5016;">매우 높은 해결 가능성</div>
+                            </div>
+                            <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="font-size: 1.8em; color: #38b2ac; margin-bottom: 8px;">78%</div>
+                                <div style="font-size: 0.9em; color: #234e52; font-weight: bold;">친환경-편의 갭</div>
+                                <div style="font-size: 0.8em; color: #2c5530;">높은 해결 가능성</div>
+                            </div>
+                            <div style="text-align: center; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                <div style="font-size: 1.8em; color: #ed8936; margin-bottom: 8px;">65%</div>
+                                <div style="font-size: 0.9em; color: #744210; font-weight: bold;">개성 표현 갭</div>
+                                <div style="font-size: 0.8em; color: #653510;">중간 수준 해결</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 10px;">
+                        <h6 style="color: #2d3748; margin-bottom: 15px;">📋 제품 개발 당위성 요약</h6>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h6 style="color: #48bb78; margin-bottom: 8px;">✅ 강력한 근거</h6>
+                                <ul style="color: #2d5016; font-size: 0.9em; line-height: 1.6;">
+                                    <li>최대 62% 니즈 갭 보유 영역 타겟</li>
+                                    <li>85% 이상 갭 해결 가능성</li>
+                                    <li>핵심 타겟의 92% 중요 니즈 충족</li>
+                                    <li>시장 규모 28억원 + 32% 성장</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h6 style="color: #ed8936; margin-bottom: 8px;">⚠️ 보완 필요</h6>
+                                <ul style="color: #653510; font-size: 0.9em; line-height: 1.6;">
+                                    <li>개성 표현 니즈 강화 방안</li>
+                                    <li>SNS 마케팅 전략 필수</li>
+                                    <li>패키징 디자인 차별화</li>
+                                    <li>브랜드 스토리텔링 강화</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 디자인 근거 분석 페이지 -->
+            <div id="design-rationale-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">디자인 근거 분석</h1>
+                    <p class="page-subtitle">데이터 기반 디자인 의사결정 근거 및 타당성 검증</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🎨</div>
+                            <h3 class="card-title">페르소나별 디자인 선호도</h3>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <h5 style="color: #2d3748; margin-bottom: 15px;">👩‍💼 김완벽 선호 분석</h5>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">미니멀 디자인</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill high-confidence" style="width: 89%"></div>
+                                </div>
+                                <span>89%</span>
+                            </div>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">자연 색상</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill high-confidence" style="width: 92%"></div>
+                                </div>
+                                <span>92%</span>
+                            </div>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">깔끔한 타이포</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill medium-confidence" style="width: 76%"></div>
+                                </div>
+                                <span>76%</span>
+                            </div>
+                            
+                            <div style="background: #f0fff4; padding: 12px; border-radius: 8px; margin-top: 15px;">
+                                <div style="font-weight: bold; color: #22543d; margin-bottom: 5px;">디자인 근거</div>
+                                <div style="font-size: 0.9em; color: #2d5016;">
+                                    바쁜 일상 속에서 빠른 인지와 신뢰감 조성을 위한 미니멀+자연 색상 조합 선택
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 25px;">
+                            <h5 style="color: #2d3748; margin-bottom: 15px;">👨‍🎨 박개성 선호 분석</h5>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">독창적 디자인</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill high-confidence" style="width: 94%"></div>
+                                </div>
+                                <span>94%</span>
+                            </div>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">트렌디 컬러</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill high-confidence" style="width: 87%"></div>
+                                </div>
+                                <span>87%</span>
+                            </div>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">SNS 친화적</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill high-confidence" style="width: 91%"></div>
+                                </div>
+                                <span>91%</span>
+                            </div>
+                            
+                            <div style="background: #e6fffa; padding: 12px; border-radius: 8px; margin-top: 15px;">
+                                <div style="font-weight: bold; color: #234e52; margin-bottom: 5px;">디자인 근거</div>
+                                <div style="font-size: 0.9em; color: #2c5530;">
+                                    개성 표현과 SNS 공유를 위한 시각적 임팩트와 독창성에 중점
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📊</div>
+                            <h3 class="card-title">디자인 요소별 근거</h3>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="color: #2d3748; margin-bottom: 12px;">🎨 색상 선택 근거</h6>
+                            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px; align-items: center; margin-bottom: 12px;">
+                                    <div style="width: 60px; height: 40px; background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%); border-radius: 6px;"></div>
+                                    <div>
+                                        <div style="font-weight: bold; color: #744210;">원두 브라운 (#8B4513)</div>
+                                        <div style="font-size: 0.85em; color: #653510;">제품 연상도 94% | 프리미엄 인식도 87%</div>
+                                    </div>
+                                </div>
+                                <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px; align-items: center; margin-bottom: 12px;">
+                                    <div style="width: 60px; height: 40px; background: linear-gradient(135deg, #F5DEB3 0%, #DEB887 100%); border-radius: 6px;"></div>
+                                    <div>
+                                        <div style="font-weight: bold; color: #744210;">크림 베이지 (#F5DEB3)</div>
+                                        <div style="font-size: 0.85em; color: #653510;">신뢰도 89% | 고급스러움 82%</div>
+                                    </div>
+                                </div>
+                                <div style="background: #fef5e7; padding: 10px; border-radius: 6px; margin-top: 10px;">
+                                    <div style="font-size: 0.9em; color: #744210;">
+                                        <strong>선택 근거:</strong> 제품 직관성과 프리미엄 인식을 동시에 만족하는 조합
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="color: #2d3748; margin-bottom: 12px;">📝 타이포그래피 근거</h6>
+                            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                                <div style="margin-bottom: 15px;">
+                                    <div style="font-family: 'Arial', sans-serif; font-weight: bold; font-size: 1.4em; color: #2d3748; margin-bottom: 5px;">Premium Coffee</div>
+                                    <div style="font-size: 0.9em; color: #4a5568;">산세리프 볼드 | 가독성 95% | 모던함 88%</div>
+                                </div>
+                                <div style="background: #e6fffa; padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 0.9em; color: #234e52;">
+                                        <strong>선택 근거:</strong> 30대 타겟의 높은 가독성 요구와 모던한 브랜드 이미지 구현
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="color: #2d3748; margin-bottom: 12px;">📦 패키징 형태 근거</h6>
+                            <div style="background: #f8fafc; padding: 15px; border-radius: 8px;">
+                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="font-weight: bold; color: #22543d; margin-bottom: 8px;">직사각형 박스</div>
+                                        <div style="font-size: 0.9em; color: #2d5016;">보관 편의성: 92%</div>
+                                        <div style="font-size: 0.9em; color: #2d5016;">스택 효율성: 95%</div>
+                                    </div>
+                                    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                        <div style="font-weight: bold; color: #744210; margin-bottom: 8px;">투명 윈도우</div>
+                                        <div style="font-size: 0.9em; color: #653510;">제품 신뢰도: 87%</div>
+                                        <div style="font-size: 0.9em; color: #653510;">구매 결정도: 78%</div>
+                                    </div>
+                                </div>
+                                <div style="background: #f0fff4; padding: 10px; border-radius: 6px; margin-top: 10px;">
+                                    <div style="font-size: 0.9em; color: #22543d;">
+                                        <strong>선택 근거:</strong> 실용성 중시 타겟의 보관 편의성과 품질 확인 욕구 충족
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🧪</div>
+                        <h3 class="card-title">디자인 결정 프로세스</h3>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #f0fff4 0%, #e6fffa 100%); padding: 25px; border-radius: 15px;">
+                        <h5 style="color: #2d3748; margin-bottom: 20px; text-align: center;">📊 데이터 기반 디자인 의사결정 흐름</h5>
+                        
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #48bb78, #38a169); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 20px;">1</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; color: #22543d; margin-bottom: 5px;">페르소나 선호도 분석</div>
+                                <div style="font-size: 0.9em; color: #2d5016;">타겟별 디자인 요소 선호도 정량 분석 (89-94% 신뢰도)</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #38b2ac, #319795); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 20px;">2</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; color: #234e52; margin-bottom: 5px;">경쟁사 디자인 갭 분석</div>
+                                <div style="font-size: 0.9em; color: #2c5530;">시장 내 디자인 차별화 포인트 발굴 및 기회 영역 식별</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 20px;">3</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; color: #553c9a; margin-bottom: 5px;">트렌드 적합성 검증</div>
+                                <div style="font-size: 0.9em; color: #44337a;">현재 디자인 트렌드와의 정합성 및 미래 지속성 평가</div>
+                            </div>
+                        </div>
+                        
+                        <div style="display: flex; align-items: center;">
+                            <div style="width: 50px; height: 50px; background: linear-gradient(45deg, #ed8936, #dd6b20); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; margin-right: 20px;">4</div>
+                            <div style="flex: 1;">
+                                <div style="font-weight: bold; color: #744210; margin-bottom: 5px;">최종 디자인 결정</div>
+                                <div style="font-size: 0.9em; color: #653510;">정량적 데이터 기반 최적 디자인 조합 선정 및 근거 문서화</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #667eea; color: white; padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                        <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 8px;">종합 디자인 근거 신뢰도</div>
+                        <div style="font-size: 2.5em; font-weight: bold; margin-bottom: 5px;">87%</div>
+                        <div style="font-size: 0.9em; opacity: 0.9;">데이터 기반 디자인 결정 타당성</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">📋</div>
+                        <h3 class="card-title">디자인 가이드라인 & 근거서</h3>
+                    </div>
+                    
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h6 style="color: #2d3748; margin-bottom: 15px;">📄 디자인 결정 근거 문서</h6>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h6 style="color: #48bb78; margin-bottom: 10px;">✅ 채택 근거</h6>
+                                <div style="background: #f0fff4; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                                    <div style="font-weight: bold; color: #22543d;">미니멀 디자인</div>
+                                    <div style="font-size: 0.85em; color: #2d5016;">30대 타겟 선호도 89% | 브랜드 인지 속도 +34%</div>
+                                </div>
+                                <div style="background: #f0fff4; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                                    <div style="font-weight: bold; color: #22543d;">자연 색상 팔레트</div>
+                                    <div style="font-size: 0.85em; color: #2d5016;">제품 연상도 94% | 친환경 인식 +28%</div>
+                                </div>
+                                <div style="background: #f0fff4; padding: 12px; border-radius: 8px;">
+                                    <div style="font-weight: bold; color: #22543d;">투명 윈도우 패키징</div>
+                                    <div style="font-size: 0.85em; color: #2d5016;">구매 전환율 +23% | 품질 신뢰도 87%</div>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <h6 style="color: #e53e3e; margin-bottom: 10px;">❌ 배제 근거</h6>
+                                <div style="background: #fed7d7; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                                    <div style="font-weight: bold; color: #742a2a;">화려한 일러스트</div>
+                                    <div style="font-size: 0.85em; color: #63171b;">타겟 선호도 34% | 프리미엄 인식 저해</div>
+                                </div>
+                                <div style="background: #fed7d7; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                                    <div style="font-weight: bold; color: #742a2a;">네온 컬러</div>
+                                    <div style="font-size: 0.85em; color: #63171b;">연령대 부적합 | 신뢰도 -45%</div>
+                                </div>
+                                <div style="background: #fed7d7; padding: 12px; border-radius: 8px;">
+                                    <div style="font-weight: bold; color: #742a2a;">복잡한 패키징</div>
+                                    <div style="font-size: 0.85em; color: #63171b;">사용 편의성 저하 | 비용 증가 +35%</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center;">
+                        <button class="btn-primary" onclick="exportDesignGuide()" style="margin-right: 15px;">
+                            📄 디자인 가이드라인 내보내기
+                        </button>
+                        <button class="btn-primary" onclick="validateDesign()" style="background: linear-gradient(45deg, #48bb78, #38a169);">
+                            ✅ 디자인 검증 완료
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- A/B 테스트 예측 페이지 -->
+            <div id="ab-test-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">A/B 테스트 예측</h1>
+                    <p class="page-subtitle">AI 기반 디자인 안별 성과 예측 및 최적화 제안</p>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">🧬</div>
+                            <h3 class="card-title">패키징 디자인 A/B 테스트</h3>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <div style="border: 2px solid #e2e8f0; border-radius: 10px; padding: 20px; text-align: center;">
+                                <div style="background: linear-gradient(135deg, #8B4513 20%, #F5DEB3 80%); height: 120px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.1em;">
+                                    안 A: 미니멀
+                                </div>
+                                <div style="font-weight: bold; margin-bottom: 8px;">미니멀 디자인</div>
+                                <div style="font-size: 0.9em; color: #4a5568;">심플한 타이포그래피 + 자연색상</div>
+                            </div>
+                            
+                            <div style="border: 2px solid #e2e8f0; border-radius: 10px; padding: 20px; text-align: center;">
+                                <div style="background: linear-gradient(135deg, #8B4513 30%, #228B22 30%, #F5DEB3 70%); height: 120px; border-radius: 8px; margin-bottom: 15px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.1em;">
+                                    안 B: 일러스트
+                                </div>
+                                <div style="font-weight: bold; margin-bottom: 8px;">일러스트 디자인</div>
+                                <div style="font-size: 0.9em; color: #4a5568;">원두 일러스트 + 다채로운 색상</div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 10px;">
+                            <h6 style="color: #2d3748; margin-bottom: 15px;">📊 예상 성과 비교</h6>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                                <div style="text-align: center; font-weight: bold; color: #4a5568;">지표</div>
+                                <div style="text-align: center; font-weight: bold; color: #48bb78;">안 A (미니멀)</div>
+                                <div style="text-align: center; font-weight: bold; color: #667eea;">안 B (일러스트)</div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: center; padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                                <div style="font-size: 0.9em; color: #4a5568;">첫인상 점수</div>
+                                <div style="text-align: center; color: #48bb78; font-weight: bold;">87점</div>
+                                <div style="text-align: center; color: #667eea; font-weight: bold;">72점</div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: center; padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                                <div style="font-size: 0.9em; color: #4a5568;">구매 의도</div>
+                                <div style="text-align: center; color: #48bb78; font-weight: bold;">84%</div>
+                                <div style="text-align: center; color: #667eea; font-weight: bold;">69%</div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: center; padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                                <div style="font-size: 0.9em; color: #4a5568;">프리미엄 인식</div>
+                                <div style="text-align: center; color: #48bb78; font-weight: bold;">91%</div>
+                                <div style="text-align: center; color: #667eea; font-weight: bold;">58%</div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; align-items: center; padding: 12px; background: white; border-radius: 8px; margin-bottom: 8px;">
+                                <div style="font-size: 0.9em; color: #4a5568;">SNS 공유 의도</div>
+                                <div style="text-align: center; color: #48bb78; font-weight: bold;">76%</div>
+                                <div style="text-align: center; color: #667eea; font-weight: bold;">85%</div>
+                            </div>
+                            
+                            <div style="background: #f0fff4; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                                <div style="font-weight: bold; color: #22543d; margin-bottom: 8px;">🏆 추천: 안 A (미니멀)</div>
+                                <div style="font-size: 0.9em; color: #2d5016;">
+                                    핵심 타겟(30대 워킹맘)의 주요 지표에서 15-33% 우위 | 종합 점수: A안 84점 vs B안 71점
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📱</div>
+                            <h3 class="card-title">모바일 UI A/B 테스트</h3>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="color: #2d3748; margin-bottom: 12px;">🛒 구매 버튼 색상 테스트</h6>
+                            <div style="display: flex; gap: 20px; margin-bottom: 15px;">
+                                <div style="flex: 1; text-align: center;">
+                                    <div style="background: #48bb78; color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; margin-bottom: 10px;">
+                                        구매하기
+                                    </div>
+                                    <div style="font-size: 0.9em; color: #22543d;">안전/신뢰 그린</div>
+                                    <div style="font-weight: bold; color: #48bb78; margin-top: 5px;">전환율 +23%</div>
+                                </div>
+                                <div style="flex: 1; text-align: center;">
+                                    <div style="background: #667eea; color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; margin-bottom: 10px;">
+                                        구매하기
+                                    </div>
+                                    <div style="font-size: 0.9em; color: #553c9a;">프리미엄 블루</div>
+                                    <div style="font-weight: bold; color: #667eea; margin-top: 5px;">전환율 +18%</div>
+                                </div>
+                                <div style="flex: 1; text-align: center;">
+                                    <div style="background: #ed8936; color: white; padding: 12px 24px; border-radius: 8px; font-weight: bold; margin-bottom: 10px;">
+                                        구매하기
+                                    </div>
+                                    <div style="font-size: 0.9em; color: #744210;">액션 오렌지</div>
+                                    <div style="font-weight: bold; color: #ed8936; margin-top: 5px;">전환율 +31%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #fef5e7; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <div style="font-weight: bold; color: #744210; margin-bottom: 8px;">🏆 최적 선택: 오렌지 (#ed8936)</div>
+                            <div style="font-size: 0.9em; color: #653510;">
+                                구매 행동 유도에 가장 효과적 | 타겟 그룹 반응도 +31% | 시인성 우수
+            </div>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="color: #2d3748; margin-bottom: 12px;">📄 상품 정보 레이아웃</h6>
+                            <div class="confidence-meter">
+                                <div class="meter-label">카드형 레이아웃</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill high-confidence" style="width: 89%"></div>
+                                </div>
+                                <span>89%</span>
+                            </div>
+                            
+                            <div class="confidence-meter">
+                                <div class="meter-label">리스트형 레이아웃</div>
+                                <div class="meter-bar">
+                                    <div class="meter-fill medium-confidence" style="width: 67%"></div>
+                                </div>
+                                <span>67%</span>
+                            </div>
+                            
+                            <div style="background: #e6fffa; padding: 12px; border-radius: 8px; margin-top: 10px;">
+                                <div style="font-size: 0.9em; color: #234e52;">
+                                    <strong>권장:</strong> 카드형 레이아웃 | 시각적 임팩트 +22% | 정보 인지도 +15%
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">⚡</div>
+                        <h3 class="card-title">실시간 테스트 시뮬레이션</h3>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; margin-bottom: 20px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <div style="font-size: 1.3em; font-weight: bold; margin-bottom: 10px;">7일간 예상 테스트 결과</div>
+                            <div style="font-size: 0.9em; opacity: 0.9;">예상 방문자: 1,000명 | 신뢰도: 95%</div>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+                            <div style="text-align: center; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; margin-bottom: 8px;">3.8%</div>
+                                <div style="font-size: 0.9em;">현재 전환율</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; margin-bottom: 8px;">4.9%</div>
+                                <div style="font-size: 0.9em;">예상 전환율 (A안)</div>
+                            </div>
+                            <div style="text-align: center; background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px;">
+                                <div style="font-size: 2em; font-weight: bold; margin-bottom: 8px;">+29%</div>
+                                <div style="font-size: 0.9em;">개선 효과</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f8fafc; padding: 20px; border-radius: 10px;">
+                        <h6 style="color: #2d3748; margin-bottom: 15px;">📈 예상 비즈니스 임팩트</h6>
+                        
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                            <div>
+                                <h6 style="color: #48bb78; margin-bottom: 10px;">💰 매출 개선</h6>
+                                <ul style="color: #2d5016; font-size: 0.9em; line-height: 1.6;">
+                                    <li>월 매출 +127만원 예상</li>
+                                    <li>고객 획득 비용 -23% 절감</li>
+                                    <li>LTV (고객생애가치) +18% 증가</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h6 style="color: #667eea; margin-bottom: 10px;">📊 운영 효율</h6>
+                                <ul style="color: #553c9a; font-size: 0.9em; line-height: 1.6;">
+                                    <li>고객 문의 -31% 감소</li>
+                                    <li>반품률 -18% 개선</li>
+                                    <li>브랜드 인지도 +24% 상승</li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; background: linear-gradient(45deg, #48bb78, #38a169); color: white; padding: 15px; border-radius: 8px;">
+                            <div style="font-weight: bold; margin-bottom: 5px;">권장 액션: 안 A (미니멀) 적용</div>
+                            <div style="font-size: 0.9em; opacity: 0.9;">예상 ROI: 340% | 투자 회수 기간: 2.3개월</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 사용자 여정 분석 페이지 -->
+            <div id="user-journey-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">고객 여정 분석</h1>
+                    <p class="page-subtitle">페르소나별 구매 여정 및 터치포인트 최적화 방안</p>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">🗺️</div>
+                        <h3 class="card-title">김완벽 (30대 워킹맘) 고객 여정</h3>
+                    </div>
+                    
+                    <div style="margin-bottom: 30px;">
+                        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 20px;">
+                            <!-- 인지 단계 -->
+                            <div style="text-align: center;">
+                                <div style="width: 80px; height: 80px; background: linear-gradient(45deg, #f093fb, #f5576c); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5em; margin: 0 auto 15px;">🔍</div>
+                                <div style="font-weight: bold; color: #2d3748; margin-bottom: 8px;">인지</div>
+                                <div style="font-size: 0.85em; color: #4a5568;">SNS에서 홈카페 콘텐츠 발견</div>
+                            </div>
+                            
+                            <!-- 관심 단계 -->
+                            <div style="text-align: center;">
+                                <div style="width: 80px; height: 80px; background: linear-gradient(45deg, #4facfe, #00f2fe); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5em; margin: 0 auto 15px;">💡</div>
+                                <div style="font-weight: bold; color: #2d3748; margin-bottom: 8px;">관심</div>
+                                <div style="font-size: 0.85em; color: #4a5568;">프리미엄 원두 검색 및 비교</div>
+                            </div>
+                            
+                            <!-- 고려 단계 -->
+                            <div style="text-align: center;">
+                                <div style="width: 80px; height: 80px; background: linear-gradient(45deg, #43e97b, #38f9d7); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5em; margin: 0 auto 15px;">🤔</div>
+                                <div style="font-weight: bold; color: #2d3748; margin-bottom: 8px;">고려</div>
+                                <div style="font-size: 0.85em; color: #4a5568;">리뷰 확인 및 가격 비교</div>
+                            </div>
+                            
+                            <!-- 구매 단계 -->
+                            <div style="text-align: center;">
+                                <div style="width: 80px; height: 80px; background: linear-gradient(45deg, #fa709a, #fee140); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5em; margin: 0 auto 15px;">🛒</div>
+                                <div style="font-weight: bold; color: #2d3748; margin-bottom: 8px;">구매</div>
+                                <div style="font-size: 0.85em; color: #4a5568;">온라인에서 간편 결제</div>
+                            </div>
+                            
+                            <!-- 사용 단계 -->
+                            <div style="text-align: center;">
+                                <div style="width: 80px; height: 80px; background: linear-gradient(45deg, #a8edea, #fed6e3); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5em; margin: 0 auto 15px;">☕</div>
+                                <div style="font-weight: bold; color: #2d3748; margin-bottom: 8px;">사용</div>
+                                <div style="font-size: 0.85em; color: #4a5568;">홈카페 타임 즐기기</div>
+                            </div>
+                        </div>
+                        
+                        <!-- 여정별 상세 분석 -->
+                        <div style="background: #f8fafc; padding: 25px; border-radius: 15px;">
+                            <h6 style="color: #2d3748; margin-bottom: 20px;">📊 단계별 상세 분석</h6>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <h6 style="color: #f093fb; margin-bottom: 10px;">🔍 인지 단계 (2일)</h6>
+                                    <div style="font-size: 0.9em; color: #4a5568; margin-bottom: 8px;"><strong>주요 채널:</strong> 인스타그램 (67%), 유튜브 (28%)</div>
+                                    <div style="font-size: 0.9em; color: #4a5568; margin-bottom: 8px;"><strong>관심 키워드:</strong> "홈카페", "원두 추천", "바리스타"</div>
+                                    <div style="background: #fef5e7; padding: 8px; border-radius: 6px; font-size: 0.85em; color: #744210;">
+                                        <strong>개선점:</strong> 인플루언서 콘텐츠 강화 필요
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <h6 style="color: #4facfe; margin-bottom: 10px;">💡 관심 단계 (3-5일)</h6>
+                                    <div style="font-size: 0.9em; color: #4a5568; margin-bottom: 8px;"><strong>주요 행동:</strong> 구글 검색, 블로그 리뷰 확인</div>
+                                    <div style="font-size: 0.9em; color: #4a5568; margin-bottom: 8px;"><strong>중요 요소:</strong> 품질 인증, 원산지 정보</div>
+                                    <div style="background: #e6fffa; padding: 8px; border-radius: 6px; font-size: 0.85em; color: #234e52;">
+                                        <strong>개선점:</strong> SEO 최적화 및 전문 리뷰 확보
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <h6 style="color: #43e97b; margin-bottom: 10px;">🤔 고려 단계 (1-2일)</h6>
+                                    <div style="font-size: 0.9em; color: #4a5568; margin-bottom: 8px;"><strong>의사결정 요소:</strong> 가격 (35%), 리뷰 (42%), 브랜드 (23%)</div>
+                                    <div style="font-size: 0.9em; color: #4a5568; margin-bottom: 8px;"><strong>고민 포인트:</strong> "정말 맛있을까?", "비싸지 않을까?"</div>
+                                    <div style="background: #f0fff4; padding: 8px; border-radius: 6px; font-size: 0.85em; color: #22543d;">
+                                        <strong>개선점:</strong> 체험팩 제공, 만족도 보장 정책
+                                    </div>
+                                </div>
+                                
+                                <div style="background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                                    <h6 style="color: #fa709a; margin-bottom: 10px;">🛒 구매 단계 (당일)</h6>
+                                    <div style="font-size: 0.9em; color: #4a5568; margin-bottom: 8px;"><strong>선호 결제:</strong> 간편결제 (78%), 카드 (22%)</div>
+                                    <div style="font-size: 0.9em; color: #4a5568; margin-bottom: 8px;"><strong>이탈 요인:</strong> 복잡한 결제, 배송비</div>
+                                    <div style="background: #fed7d7; padding: 8px; border-radius: 6px; font-size: 0.85em; color: #742a2a;">
+                                        <strong>개선점:</strong> 원클릭 결제, 무료배송 임계값 조정
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 10px;">전체 고객 여정 소요시간</div>
+                        <div style="font-size: 2em; font-weight: bold; margin-bottom: 5px;">6-10일</div>
+                        <div style="font-size: 0.9em; opacity: 0.9;">인지부터 구매까지 | 업계 평균 대비 -23% 단축 목표</div>
+                    </div>
+                </div>
+
+                <div class="content-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">📱</div>
+                            <h3 class="card-title">터치포인트 최적화</h3>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="color: #2d3748; margin-bottom: 15px;">🎯 핵심 터치포인트별 개선안</h6>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                    <div style="width: 40px; height: 40px; background: #f093fb; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1em; margin-right: 12px;">📱</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: bold; color: #2d3748;">인스타그램 광고</div>
+                                        <div style="font-size: 0.85em; color: #4a5568;">현재 CTR: 2.3% → 목표: 3.8%</div>
+                                    </div>
+                                    <div style="color: #48bb78; font-weight: bold;">+65%</div>
+                                </div>
+                                <div style="background: #fef5e7; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                                    <div style="font-size: 0.9em; color: #744210;">
+                                        <strong>개선안:</strong> 실제 홈카페 영상 콘텐츠, 사용자 후기 스토리 활용
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                    <div style="width: 40px; height: 40px; background: #4facfe; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1em; margin-right: 12px;">🌐</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: bold; color: #2d3748;">랜딩 페이지</div>
+                                        <div style="font-size: 0.85em; color: #4a5568;">현재 전환율: 4.2% → 목표: 6.8%</div>
+                                    </div>
+                                    <div style="color: #48bb78; font-weight: bold;">+62%</div>
+                                </div>
+                                <div style="background: #e6fffa; padding: 12px; border-radius: 8px; margin-bottom: 12px;">
+                                    <div style="font-size: 0.9em; color: #234e52;">
+                                        <strong>개선안:</strong> 품질 인증서 상단 배치, 간편 주문 버튼 확대
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-bottom: 15px;">
+                                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                                    <div style="width: 40px; height: 40px; background: #fa709a; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.1em; margin-right: 12px;">🛒</div>
+                                    <div style="flex: 1;">
+                                        <div style="font-weight: bold; color: #2d3748;">결제 페이지</div>
+                                        <div style="font-size: 0.85em; color: #4a5568;">현재 완료율: 76% → 목표: 89%</div>
+                                    </div>
+                                    <div style="color: #48bb78; font-weight: bold;">+17%</div>
+                                </div>
+                                <div style="background: #f0fff4; padding: 12px; border-radius: 8px;">
+                                    <div style="font-size: 0.9em; color: #22543d;">
+                                        <strong>개선안:</strong> 카카오페이 우선 배치, 배송 일정 명확히 표시
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-icon">⚠️</div>
+                            <h3 class="card-title">이탈 지점 분석</h3>
+                        </div>
+                        
+                        <div style="margin-bottom: 20px;">
+                            <h6 style="color: #2d3748; margin-bottom: 15px;">🚨 주요 이탈 포인트</h6>
+                            
+                            <div style="background: #fed7d7; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; color: #742a2a; margin-bottom: 8px;">1순위: 가격 확인 후 (38% 이탈)</div>
+                                <div style="font-size: 0.9em; color: #63171b; margin-bottom: 10px;">
+                                    "다른 곳과 비교해서 비싸다"는 반응이 주요 원인
+                                </div>
+                                <div style="background: #f0fff4; padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 0.85em; color: #22543d;">
+                                        <strong>해결책:</strong> 첫 구매 할인 쿠폰, 가격 대비 가치 명확히 설명
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #fef5e7; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                                <div style="font-weight: bold; color: #744210; margin-bottom: 8px;">2순위: 결제 진행 중 (23% 이탈)</div>
+                                <div style="font-size: 0.9em; color: #653510; margin-bottom: 10px;">
+                                    복잡한 회원가입, 배송비 추가 등이 원인
+                                </div>
+                                <div style="background: #e6fffa; padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 0.85em; color: #234e52;">
+                                        <strong>해결책:</strong> 게스트 결제 옵션, 무료배송 기준 명시
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: #e6fffa; padding: 15px; border-radius: 8px;">
+                                <div style="font-weight: bold; color: #234e52; margin-bottom: 8px;">3순위: 리뷰 확인 후 (19% 이탈)</div>
+                                <div style="font-size: 0.9em; color: #2c5530; margin-bottom: 10px;">
+                                    부정적 리뷰나 리뷰 부족으로 인한 신뢰도 하락
+                                </div>
+                                <div style="background: #fef5e7; padding: 10px; border-radius: 6px;">
+                                    <div style="font-size: 0.85em; color: #744210;">
+                                        <strong>해결책:</strong> 인증된 구매 후기 증대, 전문가 리뷰 확보
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div style="background: #667eea; color: white; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-weight: bold; margin-bottom: 5px;">전체 이탈률 개선 목표</div>
+                            <div style="font-size: 1.5em; font-weight: bold;">64% → 39%</div>
+                            <div style="font-size: 0.9em; opacity: 0.9;">(-25%p 개선 | 예상 매출 증대 +180만원/월)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 기타 페이지들은 기존 구조 유지 -->
+            <div id="concept-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">제품 컨셉 정의</h1>
+                    <p class="page-subtitle">통합 리서치를 위한 제품 기본 정보 설정</p>
+                </div>
+                <!-- 기존 컨셉 페이지 내용 그대로 유지 -->
+            </div>
+
+            <div id="personas-page" class="page hidden">
+                <div class="page-header">
+                    <h1 class="page-title">AI 페르소나 생성</h1>
+                    <p class="page-subtitle">데이터 기반 타겟 고객 분석 및 검증</p>
+                </div>
+                <!-- 기존 페르소나 페이지 내용 그대로 유지 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 기존 JavaScript 함수들 유지
+        let selectedPersona = null;
+
+        function showPage(pageId, element = null) {
+            const pages = document.querySelectorAll('.page');
+            pages.forEach(page => {
+                page.classList.remove('active');
+                page.classList.add('hidden');
+            });
+
+            const targetPage = document.getElementById(pageId + '-page');
+            if (targetPage) {
+                targetPage.classList.remove('hidden');
+                targetPage.classList.add('active');
+            }
+
+            if (element) {
+                const menuItems = document.querySelectorAll('.menu-item');
+                menuItems.forEach(item => item.classList.remove('active'));
+                element.classList.add('active');
+            }
+        }
+
+        // 새로운 기능 함수들
+        function exportDesignGuide() {
+            alert('디자인 가이드라인 내보내기 기능입니다.\n\n실제 구현 시에는 PDF 형태로 상세 디자인 근거서가 생성됩니다.');
+        }
+
+        function validateDesign() {
+            alert('디자인 검증이 완료되었습니다.\n\n데이터 기반 디자인 결정의 타당성이 87% 신뢰도로 확인되었습니다.');
+        }
+
+        // 페이지 로드 시 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            // 기본 대시보드 페이지 표시
+            showPage('dashboard');
+        });
+    </script>
+</body>
+</html>

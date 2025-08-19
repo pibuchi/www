@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이노유 AI - 페르소나 기반 성공 예측</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            font-weight: 500;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .input-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .input-section h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .input-container {
+            display: flex;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto 20px;
+        }
+        
+        input[type="text"] {
+            flex: 1;
+            padding: 15px 20px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .target-input {
+            max-width: 400px;
+            margin: 0 auto 20px;
+        }
+        
+        .target-input label {
+            display: block;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .analyze-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        
+        .analyze-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .results-section {
+            display: none;
+        }
+        
+        .danger-alert {
+            background: linear-gradient(45deg, #ff4757, #ff3838);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(255, 71, 87, 0.3);
+        }
+        
+        .success-alert {
+            background: linear-gradient(45deg, #2ed573, #1dd1a1);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(46, 213, 115, 0.3);
+        }
+        
+        .alert-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .alert-subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .persona-comparison {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .comparison-title {
+            text-align: center;
+            color: #2d3748;
+            font-size: 1.5em;
+            margin-bottom: 25px;
+            font-weight: bold;
+        }
+        
+        .persona-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .persona-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 5px solid #ddd;
+            position: relative;
+            transition: transform 0.2s;
+        }
+        
+        .persona-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .persona-high-risk {
+            border-left-color: #ff4757;
+            background: linear-gradient(135deg, #fff 0%, #ffe8ea 100%);
+        }
+        
+        .persona-medium-risk {
+            border-left-color: #ffa502;
+            background: linear-gradient(135deg, #fff 0%, #fff3e0 100%);
+        }
+        
+        .persona-low-risk {
+            border-left-color: #2ed573;
+            background: linear-gradient(135deg, #fff 0%, #e8f8f5 100%);
+        }
+        
+        .persona-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #2d3748;
+        }
+        
+        .success-rate {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .rate-high { color: #ff4757; }
+        .rate-medium { color: #ffa502; }
+        .rate-low { color: #2ed573; }
+        
+        .persona-details {
+            font-size: 0.9em;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        
+        .teaser-info {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-size: 0.85em;
+            color: #2d3748;
+            border-left: 3px solid #667eea;
+        }
+        
+        .teaser-highlight {
+            color: #667eea;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 8px;
+        }
+        
+        .visual-stat {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 10px;
+            padding: 8px;
+            background: rgba(255,255,255,0.7);
+            border-radius: 6px;
+        }
+        
+        .stat-bar {
+            flex: 1;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+        
+        .stat-fill {
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.8s ease;
+        }
+        
+        .stat-fill.danger { background: linear-gradient(90deg, #ff6b6b, #ff5252); }
+        .stat-fill.medium { background: linear-gradient(90deg, #ffa502, #ff7675); }
+        .stat-fill.success { background: linear-gradient(90deg, #2ed573, #00b894); }
+        
+        .stat-label {
+            font-size: 0.75em;
+            font-weight: 500;
+            color: #4a5568;
+        }
+        
+        .mini-chart {
+            display: flex;
+            align-items: end;
+            gap: 3px;
+            margin: 5px 0;
+        }
+        
+        .chart-bar {
+            width: 8px;
+            background: #667eea;
+            border-radius: 2px;
+            opacity: 0.3;
+            transition: all 0.6s ease;
+        }
+        
+        .chart-bar.active {
+            opacity: 1;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+        
+        .icon-stat {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+        }
+        
+        .stat-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .icon-danger { background: #ff6b6b; }
+        .icon-medium { background: #ffa502; }
+        .icon-success { background: #2ed573; }
+        
+        .data-source {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .source-title {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2d3748;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .source-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .source-item {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .source-name {
+            font-weight: 600;
+            color: #4a5568;
+            font-size: 0.9em;
+        }
+        
+        .source-desc {
+            color: #718096;
+            font-size: 0.8em;
+            margin-top: 4px;
+        }
+        
+        .strategy-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .strategy-title {
+            font-size: 1.6em;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .strategy-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        
+        .strategy-tab {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            color: white;
+            font-weight: 500;
+        }
+        
+        .strategy-tab.active {
+            background: rgba(255,255,255,0.9);
+            color: #f5576c;
+        }
+        
+        .strategy-content {
+            display: none;
+        }
+        
+        .strategy-content.active {
+            display: block;
+        }
+        
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .strategy-card {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .strategy-card h4 {
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+        
+        .trend-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .trend-keyword {
+            font-weight: 500;
+        }
+        
+        .trend-growth {
+            background: rgba(46, 213, 115, 0.8);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .color-palette {
+            display: flex;
+            gap: 8px;
+            margin: 10px 0;
+        }
+        
+        .color-chip {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .action-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+        }
+        
+        .action-step {
+            background: rgba(255,255,255,0.9);
+            color: #f5576c;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .action-desc {
+            font-size: 0.9em;
+        }
+        
+        .risk-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+        
+        .badge-high { background: #ffa502; color: white; }
+        .badge-medium { background: #57606f; color: white; }
+        .badge-low { background: #2ed573; color: white; }
+        
+        .insight-section {
+            background: linear-gradient(135deg, #3742fa, #2f3542);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .insight-title {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .insight-icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        
+        .insight-content {
+            flex: 1;
+        }
+        
+        .insight-content strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+        
+        .premium-teaser {
+            background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .premium-teaser::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        .premium-title {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .premium-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .premium-feature {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .premium-feature h4 {
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+        
+        .premium-btn {
+            background: white;
+            color: #19547b;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .premium-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        .blur-overlay {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blur-overlay::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.95) 60%);
+            backdrop-filter: blur(4px);
+        }
+        
+        .unlock-message {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #667eea;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            z-index: 10;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>아이노유 AI</h1>
+            <p class="subtitle">7만 페르소나 데이터 기반 최적 타겟 가이드</p>
+        </header>
+        
+        <div class="main-card">
+            <div class="input-section">
+                <h2>당신의 아이템에 가장 적합한 타겟을 찾아드립니다</h2>
+                <div class="input-container">
+                    <input type="text" id="businessIdea" placeholder="예: 프리미엄 펫 케어 서비스" maxlength="100">
+                </div>
+                <div class="target-input">
+                    <label for="targetCustomer">생각하고 있는 주요 타겟 고객 (선택사항)</label>
+                    <input type="text" id="targetCustomer" placeholder="예: 30대 맞벌이 부부">
+                </div>
+                <button class="analyze-btn" onclick="analyzeIdea()">페르소나 분석 시작</button>
+            </div>
+            
+            <div class="results-section" id="resultsSection">
+                <!-- 위험 또는 성공 알림 -->
+                <div class="danger-alert" id="dangerAlert" style="display: none;">
+                    <div class="alert-title">⚠️ 더 좋은 대안이 있습니다!</div>
+                    <div class="alert-subtitle" id="dangerMessage">현재 생각하신 타겟보다 더 유리한 선택지를 찾았습니다</div>
+                </div>
+                
+                <div class="success-alert" id="successAlert" style="display: none;">
+                    <div class="alert-title">✅ 현명한 선택입니다!</div>
+                    <div class="alert-subtitle" id="successMessage">선택하신 타겟은 현재 시장 상황에서 유리한 옵션입니다</div>
+                </div>
+                
+                <!-- 데이터 소스 섹션 -->
+                <div class="data-source">
+                    <div class="source-title">
+                        📊 분석 데이터 출처
+                    </div>
+                    <div class="source-grid">
+                        <div class="source-item">
+                            <div class="source-name">통계청 가계동향조사</div>
+                            <div class="source-desc">소비 패턴 및 지출 구조</div>
+                        </div>
+                        <div class="source-item">
+                            <div class="source-name">한국소비자원 조사</div>
+                            <div class="source-desc">연령별 구매 성향</div>
+                        </div>
+                        <div class="source-item">
+                            <div class="source-name">네이버 데이터랩</div>
+                            <div class="source-desc">검색 트렌드 분석</div>
+                        </div>
+                        <div class="source-item">
+                            <div class="source-name">업계 매출 데이터</div>
+                            <div class="source-desc">동종업계 성과 분석</div>
+                        </div>
+                        <div class="source-item">
+                            <div class="source-name">소셜미디어 분석</div>
+                            <div class="source-desc">SNS 관심사 트렌드</div>
+                        </div>
+                        <div class="source-item">
+                            <div class="source-name">아이디이노랩 자체 DB</div>
+                            <div class="source-desc">7만 페르소나 누적 데이터</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 페르소나별 성공률 비교 -->
+                <div class="persona-comparison">
+                    <h3 class="comparison-title">📊 타겟별 유리함 비교</h3>
+                    <div class="persona-grid" id="personaGrid">
+                        <!-- 동적으로 생성됨 -->
+                    </div>
+                </div>
+                
+                <!-- 페르소나 기반 실행 전략 -->
+                <div class="strategy-section">
+                    <h3 class="strategy-title">🚀 페르소나 기반 실행 전략</h3>
+                    <div class="strategy-tabs">
+                        <button class="strategy-tab active" onclick="showStrategy('trend')">트렌드 분석</button>
+                        <button class="strategy-tab" onclick="showStrategy('design')">디자인 가이드</button>
+                        <button class="strategy-tab" onclick="showStrategy('marketing')">마케팅 전략</button>
+                    </div>
+                    
+                    <div id="trend-strategy" class="strategy-content active">
+                        <div class="strategy-grid">
+                            <div class="strategy-card">
+                                <h4>📈 최신 트렌드</h4>
+                                <div class="trend-item">
+                                    <span class="trend-keyword">건강 관심</span>
+                                    <span class="trend-growth">↑23%</span>
+                                </div>
+                                <div class="trend-item">
+                                    <span class="trend-keyword">홈케어</span>
+                                    <span class="trend-growth">↑18%</span>
+                                </div>
+                                <div class="trend-item">
+                                    <span class="trend-keyword">프리미엄 제품</span>
+                                    <span class="trend-growth">↑15%</span>
+                                </div>
+                            </div>
+                            <div class="strategy-card">
+                                <h4>⏰ 최적 타이밍</h4>
+                                <p>• <strong>피크 시간:</strong> 오전 10-12시</p>
+                                <p>• <strong>활성 요일:</strong> 화-목요일</p>
+                                <p>• <strong>성수기:</strong> 11-12월 (+30%)</p>
+                                <p>• <strong>프로모션:</strong> 주말 효과적</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="design-strategy" class="strategy-content">
+                        <div class="strategy-grid">
+                            <div class="strategy-card">
+                                <h4>🎨 추천 컬러</h4>
+                                <div class="color-palette">
+                                    <div class="color-chip" style="background: #f5e6d3"></div>
+                                    <div class="color-chip" style="background: #e8d5b7"></div>
+                                    <div class="color-chip" style="background: #d4b896"></div>
+                                    <div class="color-chip" style="background: #c9a87c"></div>
+                                </div>
+                                <p>따뜻하고 안정감 있는 톤</p>
+                            </div>
+                            <div class="strategy-card">
+                                <h4>📝 메시지 톤</h4>
+                                <p>✅ <strong>추천:</strong> "안전한", "믿을 수 있는"</p>
+                                <p>✅ <strong>추천:</strong> "가족을 위한", "검증된"</p>
+                                <p>❌ <strong>피하기:</strong> "트렌디한", "힙한"</p>
+                                <p>❌ <strong>피하기:</strong> "젊은 감성", "쿨한"</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="marketing-strategy" class="strategy-content">
+                        <div class="strategy-grid">
+                            <div class="strategy-card">
+                                <h4>📱 추천 채널</h4>
+                                <div class="action-item">
+                                    <div class="action-step">1</div>
+                                    <div class="action-desc">네이버 카페 (육아/살림)</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-step">2</div>
+                                    <div class="action-desc">인스타그램 (#육아맘)</div>
+                                </div>
+                                <div class="action-item">
+                                    <div class="action-step">3</div>
+                                    <div class="action-desc">유튜브 (리뷰 영상)</div>
+                                </div>
+                            </div>
+                            <div class="strategy-card">
+                                <h4>🎯 핵심 키워드</h4>
+                                <p>• <strong>검색 키워드:</strong> "안전한 펫케어"</p>
+                                <p>• <strong>해시태그:</strong> #믿을수있는펫케어</p>
+                                <p>• <strong>제목 패턴:</strong> "우리 아이를 위한"</p>
+                                <p>• <strong>후기 유도:</strong> "엄마가 선택한"</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="blur-overlay" style="height: 100px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 20px;">
+                        <div class="unlock-message">완전한 90일 실행 플랜은 프리미엄에서 ▶</div>
+                    </div>
+                </div>
+                
+                <!-- 핵심 인사이트 -->
+                <div class="insight-section">
+                    <h3 class="insight-title">💡 핵심 인사이트 (무료)</h3>
+                    <div class="insight-item">
+                        <span class="insight-icon">🎯</span>
+                        <div class="insight-content">
+                            <strong>가장 추천하는 타겟</strong>
+                            <span id="bestTarget">40대 전업맘이 현재 조건에서 가장 유리합니다</span>
+                        </div>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon">⚠️</span>
+                        <div class="insight-content">
+                            <strong>주의가 필요한 선택지</strong>
+                            <span id="riskWarning">20대 남성 타겟은 유사 서비스들이 어려움을 겪고 있습니다</span>
+                        </div>
+                    </div>
+                    <div class="insight-item">
+                        <span class="insight-icon">📈</span>
+                        <div class="insight-content">
+                            <strong>더 나은 대안 제안</strong>
+                            <span id="improvement">30대 직장맘으로 타겟을 조정하면 더욱 유리해집니다</span>
+                        </div>
+                    </div>
+                    
+                    <div class="blur-overlay" style="height: 120px; background: rgba(255,255,255,0.1); border-radius: 10px; margin-top: 20px;">
+                        <div class="unlock-message">더 자세한 페르소나 분석은 프리미엄에서 ▶</div>
+                    </div>
+                </div>
+                
+                <!-- 프리미엄 기능 -->
+                <div class="premium-teaser">
+                    <h3 class="premium-title">🔥 완전한 실행 전략이 필요하시죠?</h3>
+                    <div class="premium-features">
+                        <div class="premium-feature" onclick="openMarketAnalysis()" style="cursor: pointer;">
+                            <h4>📊 시장 데이터 심층 분석</h4>
+                            <p>통계청, 소비자원 등 10개 공신력 있는 데이터 소스 기반 상세 분석</p>
+                        </div>
+                        <div class="premium-feature">
+                            <h4>🎨 완벽한 디자인 가이드북</h4>
+                            <p>로고, 웹사이트, 포스터까지 실제 적용 가능한 디자인 템플릿</p>
+                        </div>
+                        <div class="premium-feature">
+                            <h4>📢 90일 마케팅 플랜</h4>
+                            <p>주차별 실행 체크리스트와 예산 배분 가이드</p>
+                        </div>
+                        <div class="premium-feature">
+                            <h4>📈 실시간 트렌드 모니터링</h4>
+                            <p>월별 시장 변화와 경쟁사 동향 분석 리포트</p>
+                        </div>
+                    </div>
+                    <p style="margin-bottom: 20px; font-size: 1.2em;">
+                        <strong>페르소나 기반 완전 실행 전략: 15만원</strong>
+                    </p>
+                    <button class="premium-btn" onclick="showPremium()">완전 전략 받기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function analyzeIdea() {
+            const ideaInput = document.getElementById('businessIdea');
+            const targetInput = document.getElementById('targetCustomer');
+            const resultsSection = document.getElementById('resultsSection');
+            
+            if (!ideaInput.value.trim()) {
+                alert('창업 아이템을 입력해주세요!');
+                return;
+            }
+            
+            // 로딩 효과
+            document.querySelector('.analyze-btn').textContent = '페르소나 분석 중...';
+            document.querySelector('.analyze-btn').disabled = true;
+            
+            // 2초 후 결과 표시
+            setTimeout(() => {
+                showResults(ideaInput.value, targetInput.value);
+                resultsSection.style.display = 'block';
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+                
+                document.querySelector('.analyze-btn').textContent = '페르소나 분석 시작';
+                document.querySelector('.analyze-btn').disabled = false;
+            }, 2500);
+        }
+        
+        function showResults(idea, target) {
+            const dangerAlert = document.getElementById('dangerAlert');
+            const successAlert = document.getElementById('successAlert');
+            const personaGrid = document.getElementById('personaGrid');
+            
+            // 아이템별 페르소나 데이터 (예시)
+            let personas = [];
+            let riskLevel = 'medium';
+            
+            if (idea.toLowerCase().includes('펫') || idea.toLowerCase().includes('pet')) {
+                personas = [
+                    {
+                        title: '20대 대학생', 
+                        rate: '주의 필요', 
+                        risk: 'high',
+                        details: '낮은 구매력, 높은 가격 민감도<br>반려동물 관련 지출 최소화 경향',
+                        teaser: '비슷한 펫케어 서비스들의 현실',
+                        visual: {
+                            type: 'failure_rate',
+                            data: { failed: 9, total: 12, spend: '월 8만원' }
+                        }
+                    },
+                    {
+                        title: '30대 맞벌이 부부', 
+                        rate: '매우 유리', 
+                        risk: 'low',
+                        details: '높은 소득, 반려동물을 가족으로 인식<br>프리미엄 서비스 지불 의향 높음',
+                        teaser: '프리미엄 지불 의향 분석',
+                        visual: {
+                            type: 'spending_power',
+                            data: { spend: '월 35만원', premium: 85 }
+                        }
+                    },
+                    {
+                        title: '40대 전업맘', 
+                        rate: '가장 추천', 
+                        risk: 'low',
+                        details: '시간 여유, 반려동물에 애정 깊음<br>품질 중시, 신뢰성 있는 서비스 선호',
+                        teaser: '숨겨진 블루오션 발견!',
+                        visual: {
+                            type: 'opportunity',
+                            data: { competitors: 15, targeting: 2, potential: 95 }
+                        }
+                    }
+                ];
+                
+                if (target.includes('20대') || target.includes('대학생')) {
+                    riskLevel = 'high';
+                } else if (target.includes('30대') || target.includes('40대')) {
+                    riskLevel = 'low';
+                }
+            } else if (idea.toLowerCase().includes('치킨')) {
+                personas = [
+                    {
+                        title: '20대 대학생', 
+                        rate: '어려운 선택', 
+                        risk: 'high',
+                        details: '불규칙한 소비, 가격 최우선<br>브랜드 충성도 낮음',
+                        teaser: '동일 타겟 창업자들의 현실',
+                        visual: {
+                            type: 'struggle_rate',
+                            data: { struggling: 8, total: 10, avgSales: '월 180만원' }
+                        }
+                    },
+                    {
+                        title: '30대 직장인', 
+                        rate: '적당히 유리', 
+                        risk: 'medium',
+                        details: '야식/회식 수요 있음<br>편의성과 맛의 균형 추구',
+                        teaser: '안정적 소비 패턴 분석',
+                        visual: {
+                            type: 'steady_demand',
+                            data: { monthlySpend: '28만원', frequency: 65 }
+                        }
+                    },
+                    {
+                        title: '40대 가족', 
+                        rate: '매우 추천', 
+                        risk: 'low',
+                        details: '가족 단위 정기 소비<br>품질과 양 중시, 높은 재구매율',
+                        teaser: '놀라운 소비력 발견!',
+                        visual: {
+                            type: 'high_value',
+                            data: { orderSize: '2.3배', loyalty: 89, frequency: '주 2회' }
+                        }
+                    }
+                ];
+                
+                riskLevel = target.includes('20대') ? 'high' : target.includes('40대') ? 'low' : 'medium';
+            }
+            
+            // 위험도에 따른 알림 표시
+            if (riskLevel === 'high') {
+                dangerAlert.style.display = 'block';
+                successAlert.style.display = 'none';
+                document.getElementById('dangerMessage').textContent = `"${target || '현재 타겟'}"보다 더 유리한 대안을 찾았습니다!`;
+            } else if (riskLevel === 'low') {
+                dangerAlert.style.display = 'none';
+                successAlert.style.display = 'block';
+                document.getElementById('successMessage').textContent = `"${target || '선택하신 타겟'}"은 현재 시장에서 유리한 선택입니다!`;
+            } else {
+                dangerAlert.style.display = 'none';
+                successAlert.style.display = 'none';
+            }
+            
+            // 페르소나 카드 생성
+            personaGrid.innerHTML = '';
+            personas.forEach((persona, index) => {
+                const card = document.createElement('div');
+                card.className = `persona-card persona-${persona.risk}-risk`;
+                
+                const badgeClass = persona.risk === 'high' ? 'badge-high' : 
+                                 persona.risk === 'medium' ? 'badge-medium' : 'badge-low';
+                const badgeText = persona.risk === 'high' ? '대안필요' : 
+                                persona.risk === 'medium' ? '보통' : '추천';
+                const rateClass = persona.risk === 'high' ? 'rate-high' : 
+                                persona.risk === 'medium' ? 'rate-medium' : 'rate-low';
+                
+                // 시각적 요소 생성
+                let visualElement = '';
+                const visual = persona.visual;
+                
+                if (visual.type === 'failure_rate' || visual.type === 'struggle_rate') {
+                    const failRate = Math.round((visual.data.failed / visual.data.total) * 100);
+                    visualElement = `
+                        <div class="visual-stat">
+                            <span class="stat-label">${visual.data.total}곳 중 ${visual.data.failed}곳 어려움</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill danger" style="width: ${failRate}%"></div>
+                            </div>
+                            <span class="stat-label">${failRate}%</span>
+                        </div>
+                        <div class="icon-stat">
+                            <div class="stat-icon icon-danger">${visual.data.failed}</div>
+                            <span style="font-size: 0.8em;">${visual.data.spend || visual.data.avgSales}</span>
+                        </div>
+                    `;
+                } else if (visual.type === 'spending_power' || visual.type === 'steady_demand') {
+                    const rate = visual.data.premium || visual.data.frequency;
+                    visualElement = `
+                        <div class="visual-stat">
+                            <span class="stat-label">프리미엄 선호도</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill medium" style="width: ${rate}%"></div>
+                            </div>
+                            <span class="stat-label">${rate}%</span>
+                        </div>
+                        <div class="icon-stat">
+                            <div class="stat-icon icon-medium">₩</div>
+                            <span style="font-size: 0.8em;">${visual.data.spend || visual.data.monthlySpend}</span>
+                        </div>
+                    `;
+                } else if (visual.type === 'opportunity' || visual.type === 'high_value') {
+                    const potential = visual.data.potential || visual.data.loyalty;
+                    visualElement = `
+                        <div class="visual-stat">
+                            <span class="stat-label">기회 지수</span>
+                            <div class="stat-bar">
+                                <div class="stat-fill success" style="width: ${potential}%"></div>
+                            </div>
+                            <span class="stat-label">${potential}%</span>
+                        </div>
+                        <div class="icon-stat">
+                            <div class="stat-icon icon-success">⭐</div>
+                            <span style="font-size: 0.8em;">${visual.data.orderSize || visual.data.frequency}</span>
+                        </div>
+                    `;
+                }
+                
+                card.innerHTML = `
+                    <div class="risk-badge ${badgeClass}">${badgeText}</div>
+                    <div class="persona-title">${persona.title}</div>
+                    <div class="success-rate ${rateClass}">${persona.rate}</div>
+                    <div class="persona-details">${persona.details}</div>
+                    <div class="teaser-info">
+                        <span class="teaser-highlight">${persona.teaser}</span>
+                        ${visualElement}
+                    </div>
+                `;
+                
+                personaGrid.appendChild(card);
+                
+                // 애니메이션 효과 (카드 추가 후)
+                setTimeout(() => {
+                    const statFills = card.querySelectorAll('.stat-fill');
+                    statFills.forEach(fill => {
+                        const width = fill.style.width;
+                        fill.style.width = '0%';
+                        setTimeout(() => {
+                            fill.style.width = width;
+                        }, 100 + index * 200);
+                    });
+                }, 500);
+            });
+            
+            // 인사이트 업데이트
+            const bestPersona = personas.find(p => p.risk === 'low');
+            if (bestPersona) {
+                document.getElementById('bestTarget').textContent = 
+                    `${bestPersona.title}이 현재 조건에서 가장 유리합니다`;
+            }
+        }
+        
+        function showStrategy(type) {
+            // 모든 탭 비활성화
+            document.querySelectorAll('.strategy-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.strategy-content').forEach(content => content.classList.remove('active'));
+            
+            // 선택된 탭 활성화
+            event.target.classList.add('active');
+            document.getElementById(type + '-strategy').classList.add('active');
+        }
+        
+        function showPremium() {
+            alert('페르소나 기반 완전 실행 전략으로 이동합니다!\n\n📊 공신력 있는 시장 데이터 분석\n🎨 실제 적용 가능한 디자인 가이드\n📢 90일 상세 마케팅 플랜\n📈 지속적 트렌드 모니터링');
+        }
+        
+        function openMarketAnalysis() {
+            window.open('popup.html', '_blank', 'width=1200,height=800,scrollbars=yes,resizable=yes');
+        }
+        
+        // Enter 키로 분석 시작
+        document.getElementById('businessIdea').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeIdea();
+            }
+        });
+        
+        document.getElementById('targetCustomer').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeIdea();
+            }
+        });
+    </script>
+</body>
+</html>

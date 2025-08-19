@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이템 분석 대시보드</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/umd/lucide.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background-color: #f9fafb;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 24px;
+            background-color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .header {
+            margin-bottom: 32px;
+        }
+        
+        .header h1 {
+            font-size: 30px;
+            font-weight: bold;
+            color: #111827;
+            margin-bottom: 8px;
+        }
+        
+        .header p {
+            color: #6b7280;
+        }
+        
+        .card {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            background: white;
+            transition: box-shadow 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .card:hover {
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-input {
+            padding: 8px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            flex: 1;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .detail-panel {
+            background-color: #f9fafb;
+            border-radius: 8px;
+            padding: 24px;
+        }
+        
+        .placeholder {
+            text-align: center;
+            padding: 48px 24px;
+            color: #6b7280;
+        }
+        
+        .placeholder-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 16px;
+            color: #d1d5db;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+            width: 100%;
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .stat-card {
+            border-radius: 8px;
+            padding: 16px;
+            border: 1px solid;
+        }
+        
+        .stat-card.blue {
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+        }
+        
+        .stat-card.green {
+            background-color: #f0fdf4;
+            border-color: #bbf7d0;
+        }
+        
+        .stat-card.purple {
+            background-color: #faf5ff;
+            border-color: #e9d5ff;
+        }
+        
+        .stat-card.gray {
+            background-color: #f9fafb;
+            border-color: #e5e7eb;
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: bold;
+            margin-top: 4px;
+        }
+        
+        .progress-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .progress-track {
+            width: 96px;
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
+        
+        .progress-green { background-color: #10b981; }
+        .progress-blue { background-color: #3b82f6; }
+        .progress-yellow { background-color: #f59e0b; }
+        
+        .item-card {
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            background: white;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        
+        .item-card.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 16px;
+            }
+            
+            /* 모바일에서 flex 레이아웃을 세로로 변경 */
+            div[style*="display: flex"][style*="flex-wrap: wrap"] {
+                flex-direction: column;
+            }
+            
+            div[style*="flex: 1; min-width: 400px"] {
+                min-width: auto !important;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>아이템 분석 대시보드</h1>
+            <p>상권분석 소분류와 연계된 아이템 데이터 분석</p>
+        </div>
+
+        <!-- Controls -->
+        <div style="margin-bottom: 24px;">
+            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                <select id="categoryFilter" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" onchange="filterItems()">
+                    <option value="">전체 분류</option>
+                    <option value="가전디지털">가전디지털</option>
+                    <option value="생활용품">생활용품</option>
+                    <option value="패션의류">패션의류</option>
+                </select>
+                <select id="statusFilter" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; font-size: 14px;" onchange="filterItems()">
+                    <option value="">전체 상태</option>
+                    <option value="유지">유지</option>
+                    <option value="대체">대체</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+            <!-- Item List (Left) -->
+            <div style="flex: 1; min-width: 400px;">
+                <div style="margin-bottom: 16px;">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                        <i data-lucide="search" style="width: 16px; height: 16px; color: #9ca3af;"></i>
+                        <input type="text" id="itemSearch" placeholder="아이템명 검색..." class="search-input" style="flex: 1;" oninput="searchItems()">
+                    </div>
+                </div>
+                
+                <div id="itemsList" style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto;">
+                    <!-- USB허브 (대체) -->
+                    <div class="item-card" data-category="가전디지털" data-status="대체" onclick="selectItem('F010101')">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <span style="font-weight: 600; color: #111827; font-size: 14px;">USB허브</span>
+                                <span style="background-color: #fef3c7; color: #d97706; padding: 2px 6px; font-size: 11px; border-radius: 4px;">대체</span>
+                            </div>
+                            <div style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">F010101</div>
+                            <div style="font-size: 12px; color: #3b82f6;">→ 스마트 허브</div>
+                            <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">가전디지털 > 노트북/PC/주변장치</div>
+                        </div>
+                    </div>
+
+                    <!-- 공유기 (유지) -->
+                    <div class="item-card" data-category="가전디지털" data-status="유지" onclick="selectItem('F010102')">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <span style="font-weight: 600; color: #111827; font-size: 14px;">공유기</span>
+                                <span style="background-color: #d1fae5; color: #16a34a; padding: 2px 6px; font-size: 11px; border-radius: 4px;">유지</span>
+                            </div>
+                            <div style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">F010102</div>
+                            <div style="font-size: 11px; color: #6b7280;">가전디지털 > 노트북/PC/주변장치</div>
+                        </div>
+                    </div>
+
+                    <!-- 노트북 (유지) -->
+                    <div class="item-card" data-category="가전디지털" data-status="유지" onclick="selectItem('F010103')">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <span style="font-weight: 600; color: #111827; font-size: 14px;">노트북</span>
+                                <span style="background-color: #d1fae5; color: #16a34a; padding: 2px 6px; font-size: 11px; border-radius: 4px;">유지</span>
+                            </div>
+                            <div style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">F010103</div>
+                            <div style="font-size: 11px; color: #6b7280;">가전디지털 > 노트북/PC/주변장치</div>
+                        </div>
+                    </div>
+
+                    <!-- 마우스 (유지) -->
+                    <div class="item-card" data-category="가전디지털" data-status="유지" onclick="selectItem('F010104')">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <span style="font-weight: 600; color: #111827; font-size: 14px;">마우스</span>
+                                <span style="background-color: #d1fae5; color: #16a34a; padding: 2px 6px; font-size: 11px; border-radius: 4px;">유지</span>
+                            </div>
+                            <div style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">F010104</div>
+                            <div style="font-size: 11px; color: #6b7280;">가전디지털 > 노트북/PC/주변장치</div>
+                        </div>
+                    </div>
+
+                    <!-- 노트북 쿨러 (대체) -->
+                    <div class="item-card" data-category="가전디지털" data-status="대체" onclick="selectItem('F010107')">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <span style="font-weight: 600; color: #111827; font-size: 14px;">노트북 쿨러</span>
+                                <span style="background-color: #fef3c7; color: #d97706; padding: 2px 6px; font-size: 11px; border-radius: 4px;">대체</span>
+                            </div>
+                            <div style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">F010107</div>
+                            <div style="font-size: 12px; color: #3b82f6;">→ 노트북 쿨러거치대</div>
+                            <div style="font-size: 11px; color: #6b7280; margin-top: 4px;">가전디지털 > 노트북/PC/주변장치</div>
+                        </div>
+                    </div>
+
+                    <!-- 웹캠 (유지) -->
+                    <div class="item-card" data-category="가전디지털" data-status="유지" onclick="selectItem('F010108')">
+                        <div>
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                                <span style="font-weight: 600; color: #111827; font-size: 14px;">웹캠</span>
+                                <span style="background-color: #d1fae5; color: #16a34a; padding: 2px 6px; font-size: 11px; border-radius: 4px;">유지</span>
+                            </div>
+                            <div style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">F010108</div>
+                            <div style="font-size: 11px; color: #6b7280;">가전디지털 > 노트북/PC/주변장치</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Detail Panel (Right) -->
+            <div style="flex: 1; min-width: 400px;">
+                <div class="detail-panel" id="item-detail-panel">
+                    <div class="placeholder">
+                        <div class="placeholder-icon">
+                            <i data-lucide="package" style="width: 48px; height: 48px;"></i>
+                        </div>
+                        <h3 style="font-size: 18px; font-weight: 500; color: #111827; margin-bottom: 8px;">아이템을 선택하세요</h3>
+                        <p>왼쪽에서 아이템을 클릭하면 상세 분석 정보를 확인할 수 있습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Stats -->
+        <div style="margin-top: 32px;">
+            <h3 style="font-size: 18px; font-weight: 600; color: #111827; margin-bottom: 16px;">아이템 현황 요약</h3>
+            <div class="stats-grid">
+                <div class="stat-card blue">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label" style="color: #2563eb;">총 아이템</div>
+                            <div class="stat-value" style="color: #1e3a8a;">48</div>
+                        </div>
+                        <i data-lucide="package" style="width: 32px; height: 32px; color: #2563eb;"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card green">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label" style="color: #16a34a;">유지 아이템</div>
+                            <div class="stat-value" style="color: #14532d;">32</div>
+                        </div>
+                        <i data-lucide="check-circle" style="width: 32px; height: 32px; color: #16a34a;"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card purple">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label" style="color: #9333ea;">대체 아이템</div>
+                            <div class="stat-value" style="color: #581c87;">16</div>
+                        </div>
+                        <i data-lucide="refresh-cw" style="width: 32px; height: 32px; color: #9333ea;"></i>
+                    </div>
+                </div>
+                
+                <div class="stat-card gray">
+                    <div class="stat-header">
+                        <div>
+                            <div class="stat-label" style="color: #6b7280;">연결 업종</div>
+                            <div class="stat-value" style="color: #111827;">127</div>
+                        </div>
+                        <i data-lucide="store" style="width: 32px; height: 32px; color: #6b7280;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Analysis -->
+        <div style="margin-top: 24px;">
+            <div style="display: flex; gap: 24px; flex-wrap: wrap;">
+                <div class="card" style="flex: 1; min-width: 300px;">
+                    <h3 style="font-weight: 600; color: #111827; margin-bottom: 16px;">분류별 아이템 분포</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="font-weight: 500; color: #374151;">가전디지털</span>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 100px; height: 8px; background: #e5e7eb; border-radius: 4px;">
+                                    <div style="width: 85%; height: 100%; background: #3b82f6; border-radius: 4px;"></div>
+                                </div>
+                                <span style="font-size: 14px; color: #6b7280;">41개</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="font-weight: 500; color: #374151;">생활용품</span>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 100px; height: 8px; background: #e5e7eb; border-radius: 4px;">
+                                    <div style="width: 10%; height: 100%; background: #10b981; border-radius: 4px;"></div>
+                                </div>
+                                <span style="font-size: 14px; color: #6b7280;">5개</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="font-weight: 500; color: #374151;">패션의류</span>
+                            <div style="display: flex; align-items: center; gap: 8px;">
+                                <div style="width: 100px; height: 8px; background: #e5e7eb; border-radius: 4px;">
+                                    <div style="width: 5%; height: 100%; background: #8b5cf6; border-radius: 4px;"></div>
+                                </div>
+                                <span style="font-size: 14px; color: #6b7280;">2개</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="flex: 1; min-width: 300px;">
+                    <h3 style="font-weight: 600; color: #111827; margin-bottom: 16px;">아이템-상권 연결 현황</h3>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="color: #374151;">연결된 상권업종</span>
+                            <div class="progress-bar">
+                                <div class="progress-track">
+                                    <div class="progress-fill progress-blue" style="width: 92%;"></div>
+                                </div>
+                                <span style="font-size: 14px; color: #6b7280;">92%</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="color: #374151;">매핑 완성도</span>
+                            <div class="progress-bar">
+                                <div class="progress-track">
+                                    <div class="progress-fill progress-green" style="width: 88%;"></div>
+                                </div>
+                                <span style="font-size: 14px; color: #6b7280;">88%</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
+                            <span style="color: #374151;">데이터 품질</span>
+                            <div class="progress-bar">
+                                <div class="progress-track">
+                                    <div class="progress-fill progress-yellow" style="width: 85%;"></div>
+                                </div>
+                                <span style="font-size: 14px; color: #6b7280;">85%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // 아이템 검색 및 필터링
+        function searchItems() {
+            const searchTerm = document.getElementById('itemSearch').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const statusFilter = document.getElementById('statusFilter').value;
+            
+            const itemCards = document.querySelectorAll('.item-card');
+            itemCards.forEach(card => {
+                const itemName = card.querySelector('span[style*="font-weight: 600"]').textContent.toLowerCase();
+                const category = card.getAttribute('data-category');
+                const status = card.getAttribute('data-status');
+                
+                const matchesSearch = itemName.includes(searchTerm);
+                const matchesCategory = !categoryFilter || category === categoryFilter;
+                const matchesStatus = !statusFilter || status === statusFilter;
+                
+                if (matchesSearch && matchesCategory && matchesStatus) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterItems() {
+            searchItems(); // 검색과 동일한 로직 사용
+        }
+
+        // 아이템 선택
+        function selectItem(itemCode) {
+            // 기존 선택 해제
+            document.querySelectorAll('.item-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // 새로운 선택 적용
+            event.currentTarget.classList.add('selected');
+            
+            const detailPanel = document.getElementById('item-detail-panel');
+            
+            const itemData = {
+                'F010101': {
+                    code: 'F010101',
+                    name: 'USB허브',
+                    status: '대체',
+                    improvedName: '스마트 허브',
+                    engName: 'Smart hub',
+                    suitableBusiness: '홈 IoT 전문점, 스마트홈 솔루션 전문점, AI 가전 액세서리 전문점',
+                    description: '다양한 스마트 가전·센서·기기를 하나의 시스템으로 연결·제어할 수 있게 해주는 중앙 관리 장치',
+                    classification: '오프라인 > 가전디지털 > 노트북/PC/주변장치',
+                    painpoint: '다양한 제조사의 기기를 한꺼번에 제어하는 편리함을 기대하지만, 서로 다른 프로토콜 간 호환성 부족과 앱 연동 오류로 인해 통합 제어가 원활하지 않음',
+                    targetUser: '40대 남성, 30대 남성'
+                },
+                'F010102': {
+                    code: 'F010102',
+                    name: '공유기',
+                    status: '유지',
+                    improvedName: '공유기',
+                    engName: 'router',
+                    suitableBusiness: '무선인터넷 전문매장, 중소기업 IT장비 공급점',
+                    description: '여러 대의 컴퓨터가 유선이나 무선으로 하나의 인터넷 라인을 공유해 동시에 인터넷에 접속할 수 있도록 하는 네트워크 기기',
+                    classification: '오프라인 > 가전디지털 > 노트북/PC/주변장치',
+                    painpoint: '빠르고 안정적인 인터넷 연결을 기대하지만, 다수 기기 동시 접속 시 속도 저하와 간헐적 연결 끊김, 복잡한 설정 과정으로 사용자가 초기 설치와 유지관리에 어려움',
+                    targetUser: '20대 남성, 30대 여성, 30대 남성'
+                },
+                'F010103': {
+                    code: 'F010103',
+                    name: '노트북',
+                    status: '유지',
+                    improvedName: '노트북',
+                    engName: 'notebook, laptop',
+                    suitableBusiness: '사무용기기 멀티샵, 중고노트북 전문점',
+                    description: '다양한 컴퓨팅 작업을 이동 중에도 수행할 수 있도록 설계된 휴대용 일체형 컴퓨터 솔루션',
+                    classification: '오프라인 > 가전디지털 > 노트북/PC/주변장치',
+                    painpoint: '업무와 엔터테인먼트 등 다양한 용도에 맞는 성능과 휴대성을 요구하지만, 모델별 사양과 기능 차이를 비교하기 어렵고 구매 정보 부족으로 인해 최적 제품 선택에 혼란',
+                    targetUser: '20대 여성, 40대 남성, 20대 남성'
+                },
+                'F010104': {
+                    code: 'F010104',
+                    name: '마우스',
+                    status: '유지',
+                    improvedName: '마우스',
+                    engName: 'computer mouse',
+                    suitableBusiness: '게이밍 기어샵, PC방 장비 도소매점',
+                    description: '책상 위에 올려 두고 손으로 잡아끌거나 눌러서 컴퓨터를 작동시키는 입력장치',
+                    classification: '오프라인 > 가전디지털 > 노트북/PC/주변장치',
+                    painpoint: '정확한 커서 제어와 편안한 그립감을 기대하지만, 손 크기와 사용 환경에 따라 적합한 제품 선택이 어렵고 무선 연결 불안정, 클릭 반응 지연 등으로 작업 효율이 떨어짐',
+                    targetUser: '30대 여성, 40대 남성'
+                },
+                'F010107': {
+                    code: 'F010107',
+                    name: '노트북 쿨러',
+                    status: '대체',
+                    improvedName: '노트북 쿨러거치대',
+                    engName: 'Laptop Cooling Stand',
+                    suitableBusiness: '노트북 액세서리 전문점, 냉각용품 특화 IT용품점',
+                    description: '노트북의 발열을 줄이고 각도를 조절해 작업 효율을 높이는 도구',
+                    classification: '오프라인 > 가전디지털 > 노트북/PC/주변장치',
+                    painpoint: '효과적인 발열 억제와 편안한 사용 환경을 기대하지만, 소음 문제, 고정력 부족, 각도 조절의 불편함, 성능 문제, 지속적인 충전 관리 등으로 장시간 사용 시 만족도가 저하',
+                    targetUser: '30대 남성, 20대 여성, 20대 남성'
+                },
+                'F010108': {
+                    code: 'F010108',
+                    name: '웹캠',
+                    status: '유지',
+                    improvedName: '웹캠',
+                    engName: 'webcam',
+                    suitableBusiness: '화상회의 장비 전문점, 개인방송 장비 소매점, 재택근무 솔루션 전문점',
+                    description: '웹과 카메라의 합성어로 인터넷상에서 사용하거나 서비스되는 인터넷 캠코더',
+                    classification: '오프라인 > 가전디지털 > 노트북/PC/주변장치',
+                    painpoint: '선명한 영상과 정확한 자동 초점을 기대하지만, 저조도 환경에서의 화질 저하, 내장 마이크 품질 불균형, 호환성 문제로 인해 원활한 영상통화 및 촬영이 어려움',
+                    targetUser: '20대 남성, 30대 여성'
+                }
+            };
+
+            const item = itemData[itemCode];
+            if (!item) return;
+
+            const statusBadge = item.status === '대체' 
+                ? '<span style="background-color: #fef3c7; color: #d97706; padding: 4px 8px; font-size: 12px; border-radius: 4px;">대체</span>'
+                : '<span style="background-color: #d1fae5; color: #16a34a; padding: 4px 8px; font-size: 12px; border-radius: 4px;">유지</span>';
+
+            const improvementSection = item.status === '대체' 
+                ? `<div style="margin-bottom: 16px; padding: 12px; background: #eff6ff; border-radius: 6px;">
+                    <h5 style="font-size: 14px; font-weight: 600; color: #1e40af; margin-bottom: 4px;">개선 아이템</h5>
+                    <p style="font-size: 14px; color: #1e40af; margin: 0;">${item.improvedName} (${item.engName})</p>
+                   </div>`
+                : '';
+
+            detailPanel.innerHTML = `
+                <div style="height: 100%; overflow-y: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap;">
+                                <h3 style="font-size: 20px; font-weight: 600; color: #111827; margin: 0;">${item.name}</h3>
+                                ${statusBadge}
+                            </div>
+                            <p style="color: #6b7280; font-size: 14px; margin: 0;">${item.code}</p>
+                        </div>
+                        <div style="display: flex; gap: 8px;">
+                            <button style="padding: 8px; background: white; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer; color: #6b7280;" onclick="viewItemData('${item.code}')">
+                                <i data-lucide="bar-chart-3" style="width: 16px; height: 16px;"></i>
+                            </button>
+                            <button style="padding: 8px; background: white; border: 1px solid #d1d5db; border-radius: 6px; cursor: pointer; color: #6b7280;">
+                                <i data-lucide="external-link" style="width: 16px; height: 16px;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    ${improvementSection}
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px;">아이템 설명</h4>
+                        <p style="font-size: 14px; color: #374151; line-height: 1.5; margin: 0;">${item.description}</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px;">적합 업종</h4>
+                        <div style="display: flex; flex-wrap: gap: 8px;">
+                            ${item.suitableBusiness.split(',').map(business => 
+                                `<span style="padding: 4px 8px; background: #f3f4f6; color: #374151; border-radius: 4px; font-size: 12px;">${business.trim()}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px;">분류</h4>
+                        <p style="font-size: 14px; color: #6b7280; margin: 0;">${item.classification}</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px;">사용자 Pain Point</h4>
+                        <p style="font-size: 14px; color: #374151; line-height: 1.5; padding: 12px; background: #fef7f7; border-left: 4px solid #ef4444; border-radius: 4px; margin: 0;">${item.painpoint}</p>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <h4 style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px;">주요 타겟</h4>
+                        <div style="display: flex; flex-wrap: gap: 8px;">
+                            ${item.targetUser.split(',').map(target => 
+                                `<span style="padding: 4px 8px; background: #ede9fe; color: #7c3aed; border-radius: 4px; font-size: 12px;">${target.trim()}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+
+                    <div style="padding: 16px; background: #f9fafb; border-radius: 8px;">
+                        <h4 style="font-size: 14px; font-weight: 600; color: #111827; margin-bottom: 8px;">연계 데이터 현황</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; font-size: 13px;">
+                            <div>
+                                <span style="color: #6b7280;">관련 상가수:</span>
+                                <span style="font-weight: 600; color: #111827;">1,234개</span>
+                            </div>
+                            <div>
+                                <span style="color: #6b7280;">지역 분포:</span>
+                                <span style="font-weight: 600; color: #111827;">서울 347개</span>
+                            </div>
+                            <div>
+                                <span style="color: #6b7280;">매출 연동:</span>
+                                <span style="font-weight: 600; color: #16a34a;">가능</span>
+                            </div>
+                            <div>
+                                <span style="color: #6b7280;">인구 데이터:</span>
+                                <span style="font-weight: 600; color: #16a34a;">연결됨</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            lucide.createIcons();
+        }
+
+        // 아이템 데이터 현황 보기
+        function viewItemData(itemCode) {
+            alert(`${itemCode} 아이템의 상세 데이터 분석 화면으로 이동합니다.\n\n- 지역별 상가 분포\n- 매출 트렌드\n- 고객 분석\n- 경쟁 현황`);
+        }
+
+        // 페이지 로드 시 아이콘 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            lucide.createIcons();
+        });
+    </script>
+</body>
+</html>

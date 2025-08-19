@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StartupDNA - 청년창업 AI 지원 서비스</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .landing {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            border-radius: 15px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .question-page {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+        }
+
+        .question-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 5rem;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .question-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            text-align: center;
+        }
+
+        .question-title {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .option-btn {
+            padding: 1rem 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: left;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover {
+            background: rgba(255,255,255,0.2);
+            border-color: #4ecdc4;
+            transform: translateX(5px);
+        }
+
+        .textarea-input {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(255,255,255,0.1);
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 15px;
+            color: white;
+            padding: 1rem;
+            font-size: 1rem;
+            resize: vertical;
+            margin-bottom: 1rem;
+        }
+
+        .textarea-input::placeholder {
+            color: rgba(255,255,255,0.7);
+        }
+
+        .textarea-input:focus {
+            outline: none;
+            border-color: #4ecdc4;
+        }
+
+        .persona-creation {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .fusion-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+            max-width: 1000px;
+        }
+
+        .fusion-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            transition: all 1s ease;
+            opacity: 0.5;
+        }
+
+        .fusion-card.active {
+            opacity: 1;
+            border-color: #4ecdc4;
+            background: rgba(78, 205, 196, 0.2);
+            transform: scale(1.05);
+        }
+
+        .fusion-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        }
+
+        .result-page {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            color: white;
+            padding-top: 3rem;
+        }
+
+        .persona-result {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+
+        .persona-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .persona-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .info-section {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 10px;
+        }
+
+        .info-title {
+            font-weight: 600;
+            color: #4ecdc4;
+            margin-bottom: 0.5rem;
+        }
+
+        .fusion-explanation {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .explanation-card {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+            border-left: 4px solid;
+        }
+
+        .explanation-card.emotion {
+            border-left-color: #ff6b6b;
+        }
+
+        .explanation-card.data {
+            border-left-color: #4ecdc4;
+        }
+
+        .explanation-card.ai {
+            border-left-color: #a8e6cf;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .strategy-section {
+            margin: 3rem 0;
+        }
+
+        .strategy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .strategy-card {
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .government-support {
+            background: linear-gradient(45deg, rgba(78, 205, 196, 0.2), rgba(255, 107, 107, 0.2));
+            border: 2px solid #4ecdc4;
+            margin: 2rem 0;
+            padding: 2rem;
+            border-radius: 20px;
+        }
+
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .support-item {
+            background: rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            border-radius: 15px;
+        }
+
+        .pricing-section {
+            background: rgba(255,255,255,0.05);
+            padding: 3rem;
+            border-radius: 20px;
+            margin: 3rem 0;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .pricing-card {
+            background: rgba(255,255,255,0.1);
+            padding: 2rem;
+            border-radius: 15px;
+            border: 2px solid rgba(255,255,255,0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            border-color: #4ecdc4;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #4ecdc4;
+            margin: 1rem 0;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #4ecdc4;
+        }
+
+        .step-indicator {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            display: flex;
+            gap: 10px;
+        }
+
+        .step-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .step-dot.active {
+            background: #4ecdc4;
+            transform: scale(1.2);
+        }
+
+        .help-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .help-button:hover {
+            transform: scale(1.1);
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .persona-result {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+
+            .question-container {
+                padding-top: 2rem;
+            }
+        }
+
+        .loading-animation {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 2rem 0;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid #4ecdc4;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.6s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- 단계 표시기 -->
+    <div class="step-indicator" id="stepIndicator">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+        <div class="step-dot"></div>
+    </div>
+
+    <!-- 도움말 버튼 -->
+    <button class="help-button" onclick="showHelp()">💬 도움말</button>
+
+    <!-- 1. 랜딩 페이지 -->
+    <div class="page landing active" id="landing">
+        <div class="container">
+            <div class="hero">
+                <div class="logo">🚀</div>
+                <h1>StartupDNA</h1>
+                <p>당신의 직감을 믿되, 시장과 만나는 방법을 알려드립니다</p>
+                <p style="opacity: 0.8; font-size: 1rem;">청년창업자를 위한 AI 기반 개인화 창업 지원 플랫폼</p>
+                <br>
+                <button class="btn" onclick="nextPage('interest-analysis')">
+                    내 창업 DNA 찾기 시작 →
+                </button>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">❤️</div>
+                    <h3>관심사에서 시작</h3>
+                    <p>좋아하는 것, 잘하는 것, 경험한 것에서 창업 아이템을 발견하세요</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>페르소나 융합</h3>
+                    <p>당신의 직감과 시장 데이터를 AI로 융합한 완전히 새로운 타겟 고객</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>실행 전략</h3>
+                    <p>분석에서 끝나지 않는 구체적이고 실행 가능한 창업 로드맵</p>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <p style="opacity: 0.7;">🔥 이미 1,247명의 청년창업자가 자신만의 DNA를 발견했습니다</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 관심사 분석 -->
+    <div class="page question-page" id="interest-analysis">
+        <div class="question-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="interestProgress" style="width: 0%;"></div>
+            </div>
+            
+            <div class="question-card fade-in">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div class="feature-icon" style="margin: 0 auto;">👤</div>
+                    <h2>창업 DNA 분석</h2>
+                    <p>당신만의 창업 동기와 관심사를 파악해보세요</p>
+                </div>
+                
+                <div id="interestQuestion">
+                    <div class="question-title" id="interestQuestionTitle">어떤 일을 할 때 시간 가는 줄 모르나요?</div>
+                    <div class="options" id="interestOptions">
+                        <button class="option-btn" onclick="selectInterestOption(0, '사람들과 대화하고 소통할 때')">사람들과 대화하고 소통할 때</button>
+                        <button class="option-btn" onclick="selectInterestOption(0, '새로운 기술이나 도구를 배울 때')">새로운 기술이나 도구를 배울 때</button>
+                        <button class="option-btn" onclick="selectInterestOption(0, '문제를 해결하고 개선점을 찾을 때')">문제를 해결하고 개선점을 찾을 때</button>
+                        <button class="option-btn" onclick="selectInterestOption(0, '창작하고 만들어낼 때')">창작하고 만들어낼 때</button>
+                        <button class="option-btn" onclick="selectInterestOption(0, '분석하고 데이터를 다룰 때')">분석하고 데이터를 다룰 때</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 고객 직감 분석 -->
+    <div class="page question-page" id="customer-insight">
+        <div class="question-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="customerProgress" style="width: 0%;"></div>
+            </div>
+            
+            <div class="question-card fade-in">
+                <div style="text-align: center; margin-bottom: 2rem;">
+                    <div class="feature-icon" style="margin: 0 auto;">❤️</div>
+                    <h2>고객 직감 분석</h2>
+                    <p>당신이 직감적으로 알고 있는 고객 정보를 알려주세요</p>
+                </div>
+                
+                <div id="customerQuestion">
+                    <div class="question-title" id="customerQuestionTitle">당신이 도와주고 싶은 사람들은 어떤 사람들인가요?</div>
+                    <textarea 
+                        class="textarea-input" 
+                        id="customerAnswer"
+                        placeholder="예: 직장에서 스트레스받는 20-30대 직장인들, 육아로 지친 워킹맘들..."
+                    ></textarea>
+                    <div class="navigation">
+                        <button class="btn-secondary" onclick="previousCustomerQuestion()" id="customerPrevBtn" style="display: none;">이전</button>
+                        <button class="btn" onclick="nextCustomerQuestion()" id="customerNextBtn">다음</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. AI 페르소나 생성 -->
+    <div class="page persona-creation" id="persona-creation">
+        <div class="container">
+            <div style="text-align: center;">
+                <div class="feature-icon" style="margin: 0 auto 2rem;">🧠</div>
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">AI가 당신만의 페르소나를 생성중...</h2>
+                <p style="font-size: 1.2rem; opacity: 0.9;">당신의 직감과 시장 데이터를 융합하고 있습니다</p>
+            </div>
+
+            <div class="fusion-container">
+                <div class="fusion-card" id="emotionCard">
+                    <div class="fusion-icon">❤️</div>
+                    <h3>감정적 페르소나</h3>
+                    <p>당신의 직관과 경험</p>
+                    <div id="emotionCheck" style="margin-top: 1rem; font-size: 1.5rem; display: none;">✅</div>
+                </div>
+                
+                <div class="fusion-card" id="dataCard">
+                    <div class="fusion-icon">📊</div>
+                    <h3>데이터 페르소나</h3>
+                    <p>시장 분석과 트렌드</p>
+                    <div id="dataCheck" style="margin-top: 1rem; font-size: 1.5rem; display: none;">✅</div>
+                </div>
+                
+                <div class="fusion-card" id="aiCard">
+                    <div class="fusion-icon">⚡</div>
+                    <h3>융합 페르소나</h3>
+                    <p>AI 기반 최적화</p>
+                    <div id="aiCheck" style="margin-top: 1rem; font-size: 1.5rem; display: none;">✅</div>
+                </div>
+            </div>
+
+            <div style="text-align: center;">
+                <div class="loading-animation" id="loadingSpinner">
+                    <div class="spinner"></div>
+                </div>
+                <button class="btn" id="showResultBtn" onclick="nextPage('persona-result')" style="display: none;">
+                    결과 확인하기 →
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. 페르소나 결과 -->
+    <div class="page result-page" id="persona-result">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <div class="feature-icon" style="margin: 0 auto 2rem;">🎯</div>
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">당신만의 융합 페르소나</h2>
+                <p style="font-size: 1.2rem; opacity: 0.9;">직감과 데이터가 만나 탄생한 완벽한 타겟 고객</p>
+            </div>
+
+            <div class="persona-result">
+                <div class="persona-card">
+                    <div style="display: flex; align-items: center; margin-bottom: 2rem;">
+                        <div class="feature-icon" style="margin-right: 1rem;">👥</div>
+                        <h3 style="font-size: 1.5rem;">메인 페르소나: 김소영 (28세)</h3>
+                    </div>
+                    
+                    <div class="persona-info">
+                        <div class="info-section">
+                            <div class="info-title">기본 정보</div>
+                            <p>IT회사 마케터, 서울 거주, 연봉 4,200만원</p>
+                        </div>
+                        
+                        <div class="info-section">
+                            <div class="info-title">라이프스타일</div>
+                            <p>업무 스트레스가 높지만 자기계발에 관심 많음. 효율성을 중시하며 새로운 도구나 서비스 수용도가 높음</p>
+                        </div>
+                        
+                        <div class="info-section">
+                            <div class="info-title">핵심 니즈</div>
+                            <p>업무 효율성 증대, 스트레스 관리, 워라밸 개선을 위한 솔루션</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="fusion-explanation">
+                    <div class="explanation-card emotion">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <span style="margin-right: 0.5rem;">❤️</span>
+                            <strong>당신의 직감</strong>
+                        </div>
+                        <p>"직장에서 스트레스받는 20-30대가 내 타겟이다"</p>
+                    </div>
+
+                    <div class="explanation-card data">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <span style="margin-right: 0.5rem;">📊</span>
+                            <strong>시장 데이터</strong>
+                        </div>
+                        <p>IT업계 20-30대 여성의 스트레스 관리 솔루션 구매력 월평균 15만원</p>
+                    </div>
+
+                    <div class="explanation-card ai">
+                        <div style="display: flex; align-items: center; margin-bottom: 1rem;">
+                            <span style="margin-right: 0.5rem;">⚡</span>
+                            <strong>AI 융합 결과</strong>
+                        </div>
+                        <p>구체적이고 접근 가능한 타겟으로 최적화됨</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(45deg, #4ecdc4, #44a08d);">📍</div>
+                    <div class="stat-value" style="color: #4ecdc4;">약 45만명</div>
+                    <div>시장 규모</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(45deg, #f7971e, #ffd200);">💰</div>
+                    <div class="stat-value" style="color: #f7971e;">월 12-18만원</div>
+                    <div>구매력</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(45deg, #667eea, #764ba2);">📈</div>
+                    <div class="stat-value" style="color: #667eea;">연 23%</div>
+                    <div>성장률</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon" style="background: linear-gradient(45deg, #a8e6cf, #88d8a3);">⭐</div>
+                    <div class="stat-value" style="color: #a8e6cf;">높음</div>
+                    <div>접근성</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <button class="btn" onclick="nextPage('strategy')">맞춤 전략 보기 →</button>
+                <div style="margin-top: 1rem; opacity: 0.8;">
+                    <p>🎉 축하합니다! 기본 분석이 완료되었습니다.</p>
+                    <p>더 자세한 분석과 실행 전략을 원하시면 프리미엄 서비스를 이용해보세요.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. 전략 및 가격 -->
+    <div class="page result-page" id="strategy">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <div class="feature-icon" style="margin: 0 auto 2rem;">💡</div>
+                <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">페르소나 기반 창업 전략</h2>
+                <p style="font-size: 1.2rem; opacity: 0.9;">김소영을 위한 맞춤형 사업 계획</p>
+            </div>
+
+            <div class="strategy-section">
+                <div class="strategy-grid">
+                    <div class="strategy-card">
+                        <h3 style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <span style="margin-right: 1rem;">🎯</span>
+                            추천 사업 방향
+                        </h3>
+                        
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: linear-gradient(45deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3)); border-radius: 10px; border-left: 4px solid #667eea;">
+                            <h4 style="color: #667eea; margin-bottom: 0.5rem;">🚀 스타트업형 (추천)</h4>
+                            <p style="margin-bottom: 0.5rem;">직장인 스트레스 관리 앱/플랫폼</p>
+                            <small style="opacity: 0.8;">확장 가능성과 투자 유치 가능성이 높음</small>
+                        </div>
+                        
+                        <div style="padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                            <h4 style="color: #4ecdc4; margin-bottom: 0.5rem;">📍 소상공인형</h4>
+                            <p style="margin-bottom: 0.5rem;">직장인 대상 웰니스 센터</p>
+                            <small style="opacity: 0.8;">안정적이지만 규모 확장에 제약</small>
+                        </div>
+                    </div>
+
+                    <div class="strategy-card">
+                        <h3 style="display: flex; align-items: center; margin-bottom: 1.5rem;">
+                            <span style="margin-right: 1rem;">📈</span>
+                            마케팅 전략
+                        </h3>
+                        
+                        <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                            <h4 style="color: #4ecdc4; margin-bottom: 0.5rem;">주요 채널</h4>
+                            <ul style="margin: 0; padding-left: 1rem;">
+                                <li>인스타그램/틱톡 (직장인 콘텐츠)</li>
+                                <li>카카오톡 오픈채팅</li>
+                                <li>IT업계 커뮤니티</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 10px;">
+                            <h4 style="color: #f7971e; margin-bottom: 0.5rem;">핵심 메시지</h4>
+                            <p>"퇴근 후 나만의 시간을 되찾아보세요"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="government-support">
+                <h3 style="text-align: center; margin-bottom: 1.5rem; font-size: 1.8rem;">🎯 추천 정부지원사업</h3>
+                
+                <div class="support-grid">
+                    <div class="support-item">
+                        <h4 style="color: #4ecdc4; margin-bottom: 0.5rem;">청년창업사관학교</h4>
+                        <p style="margin-bottom: 0.5rem;">최대 1억원 지원, IT/웰니스 분야 우대</p>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">
+                            <p>✅ 김소영 페르소나와 90% 매칭</p>
+                            <p>📅 다음 모집: 2025년 9월</p>
+                        </div>
+                    </div>
+                    
+                    <div class="support-item">
+                        <h4 style="color: #a8e6cf; margin-bottom: 0.5rem;">K-스타트업 그랜드 챌린지</h4>
+                        <p style="margin-bottom: 0.5rem;">해외진출 지원, 헬스케어 특화</p>
+                        <div style="font-size: 0.9rem; opacity: 0.8;">
+                            <p>✅ 글로벌 확장 시 적합</p>
+                            <p>📅 상시 모집</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pricing-section">
+                <h3 style="text-align: center; margin-bottom: 1rem; font-size: 1.8rem;">🔓 더 자세한 분석이 필요하신가요?</h3>
+                <p style="text-align: center; opacity: 0.9; margin-bottom: 2rem;">프리미엄 서비스로 더 깊이 있는 전략과 실행 가이드를 받아보세요</p>
+                
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h4 style="color: #667eea;">페르소나 Pro</h4>
+                        <div class="price">월 29,000원</div>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">다중 페르소나 + 월간 업데이트</p>
+                        <ul style="text-align: left; margin-top: 1rem; padding-left: 1rem;">
+                            <li>최대 3개 페르소나 동시 분석</li>
+                            <li>월 1회 시장 데이터 업데이트</li>
+                            <li>경쟁사 분석 리포트</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="pricing-card" style="border-color: #4ecdc4; background: linear-gradient(45deg, rgba(78, 205, 196, 0.2), rgba(64, 224, 208, 0.2));">
+                        <h4 style="color: #4ecdc4;">전략 Complete</h4>
+                        <div class="price">월 99,000원</div>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">실시간 분석 + 마케팅 가이드</p>
+                        <ul style="text-align: left; margin-top: 1rem; padding-left: 1rem;">
+                            <li>무제한 페르소나 분석</li>
+                            <li>실시간 시장 트렌드 알림</li>
+                            <li>상세 마케팅 전략 가이드</li>
+                            <li>정부지원사업 매칭 알림</li>
+                        </ul>
+                        <div style="margin-top: 1rem; padding: 0.5rem; background: rgba(78, 205, 196, 0.3); border-radius: 5px; font-size: 0.8rem; font-weight: bold;">
+                            🔥 가장 인기
+                        </div>
+                    </div>
+                    
+                    <div class="pricing-card">
+                        <h4 style="color: #a8e6cf;">성장 Partner</h4>
+                        <div class="price">월 299,000원</div>
+                        <p style="font-size: 0.9rem; opacity: 0.8;">1:1 컨설팅 + 네트워킹</p>
+                        <ul style="text-align: left; margin-top: 1rem; padding-left: 1rem;">
+                            <li>월 2회 전문가 1:1 상담</li>
+                            <li>맞춤형 성장 전략 수립</li>
+                            <li>투자자 네트워킹 기회</li>
+                            <li>성공 창업자 멘토링</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                    <button class="btn-secondary" onclick="nextPage('landing')">처음부터 다시</button>
+                    <button class="btn" onclick="alert('프리미엄 서비스 준비중입니다! 곧 만나요 😊')">프리미엄 시작하기</button>
+                </div>
+                
+                <div style="margin-top: 2rem; opacity: 0.8; font-size: 0.9rem;">
+                    <p>💝 7일 무료 체험 | 언제든 취소 가능</p>
+                    <p>🔒 개인정보 보호 | 데이터 암호화</p>
+                    <p>📞 24/7 고객지원 | help@startupdna.co.kr</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 전역 변수
+        let currentStep = 0;
+        let userAnswers = {};
+        let currentInterestQuestion = 0;
+        let currentCustomerQuestion = 0;
+
+        // 관심사 분석 질문들
+        const interestQuestions = [
+            {
+                title: "어떤 일을 할 때 시간 가는 줄 모르나요?",
+                options: [
+                    "사람들과 대화하고 소통할 때",
+                    "새로운 기술이나 도구를 배울 때", 
+                    "문제를 해결하고 개선점을 찾을 때",
+                    "창작하고 만들어낼 때",
+                    "분석하고 데이터를 다룰 때"
+                ]
+            },
+            {
+                title: "주변 사람들이 당신에게 주로 어떤 조언을 구하나요?",
+                options: [
+                    "인간관계나 소통 관련",
+                    "기술이나 IT 관련",
+                    "문제 해결이나 효율성 관련", 
+                    "디자인이나 아이디어 관련",
+                    "계획이나 전략 관련"
+                ]
+            },
+            {
+                title: "최근에 '이런 게 있으면 좋겠다'라고 생각한 경험이 있나요?",
+                options: [
+                    "사람들 간의 소통을 더 원활하게 해주는 서비스",
+                    "복잡한 일을 간단하게 만들어주는 기술",
+                    "일상의 불편함을 해결해주는 제품",
+                    "개성을 표현할 수 있는 플랫폼",
+                    "정보를 더 쉽게 찾고 활용할 수 있는 도구"
+                ]
+            }
+        ];
+
+        // 고객 직감 분석 질문들
+        const customerQuestions = [
+            {
+                title: "당신이 도와주고 싶은 사람들은 어떤 사람들인가요?",
+                placeholder: "예: 직장에서 스트레스받는 20-30대 직장인들, 육아로 지친 워킹맘들..."
+            },
+            {
+                title: "실제로 주변에서 이런 문제를 겪는 사람을 본 적이 있나요?",
+                placeholder: "구체적인 상황이나 스토리를 들려주세요..."
+            },
+            {
+                title: "내가 생각하는 이상적인 첫 고객은 어떤 사람일까요?",
+                placeholder: "나이, 직업, 라이프스타일, 가치관 등을 자유롭게 써주세요..."
+            }
+        ];
+
+        // 페이지 전환 함수
+        function nextPage(pageId) {
+            // 현재 페이지 숨기기
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // 새 페이지 보이기
+            document.getElementById(pageId).classList.add('active');
+            
+            // 단계 업데이트
+            updateStepIndicator(pageId);
+            
+            // 특별한 페이지 액션
+            if (pageId === 'persona-creation') {
+                startPersonaCreation();
+            }
+        }
+
+        // 단계 표시기 업데이트
+        function updateStepIndicator(pageId) {
+            const steps = ['landing', 'interest-analysis', 'customer-insight', 'persona-creation', 'persona-result', 'strategy'];
+            const currentIndex = steps.indexOf(pageId);
+            
+            document.querySelectorAll('.step-dot').forEach((dot, index) => {
+                if (index <= currentIndex) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        // 관심사 질문 선택
+        function selectInterestOption(questionIndex, answer) {
+            userAnswers[`interest_${questionIndex}`] = answer;
+            
+            // 진행률 업데이트
+            const progress = ((questionIndex + 1) / interestQuestions.length) * 100;
+            document.getElementById('interestProgress').style.width = progress + '%';
+            
+            if (questionIndex < interestQuestions.length - 1) {
+                // 다음 질문으로
+                setTimeout(() => {
+                    showNextInterestQuestion(questionIndex + 1);
+                }, 300);
+            } else {
+                // 다음 단계로
+                setTimeout(() => {
+                    nextPage('customer-insight');
+                    initCustomerQuestions();
+                }, 500);
+            }
+        }
+
+        // 다음 관심사 질문 보여주기
+        function showNextInterestQuestion(questionIndex) {
+            const question = interestQuestions[questionIndex];
+            document.getElementById('interestQuestionTitle').textContent = question.title;
+            
+            const optionsHtml = question.options.map(option => 
+                `<button class="option-btn" onclick="selectInterestOption(${questionIndex}, '${option}')">${option}</button>`
+            ).join('');
+            
+            document.getElementById('interestOptions').innerHTML = optionsHtml;
+        }
+
+        // 고객 질문 초기화
+        function initCustomerQuestions() {
+            currentCustomerQuestion = 0;
+            showCustomerQuestion(0);
+        }
+
+        // 고객 질문 보여주기
+        function showCustomerQuestion(questionIndex) {
+            const question = customerQuestions[questionIndex];
+            document.getElementById('customerQuestionTitle').textContent = question.title;
+            document.getElementById('customerAnswer').placeholder = question.placeholder;
+            document.getElementById('customerAnswer').value = userAnswers[`customer_${questionIndex}`] || '';
+            
+            // 진행률 업데이트
+            const progress = ((questionIndex + 1) / customerQuestions.length) * 100;
+            document.getElementById('customerProgress').style.width = progress + '%';
+            
+            // 버튼 상태 업데이트
+            document.getElementById('customerPrevBtn').style.display = questionIndex > 0 ? 'block' : 'none';
+            document.getElementById('customerNextBtn').textContent = 
+                questionIndex === customerQuestions.length - 1 ? 'AI 페르소나 생성하기' : '다음';
+        }
+
+        // 다음 고객 질문
+        function nextCustomerQuestion() {
+            const answer = document.getElementById('customerAnswer').value.trim();
+            if (!answer) {
+                alert('답변을 입력해주세요.');
+                return;
+            }
+            
+            userAnswers[`customer_${currentCustomerQuestion}`] = answer;
+            
+            if (currentCustomerQuestion < customerQuestions.length - 1) {
+                currentCustomerQuestion++;
+                showCustomerQuestion(currentCustomerQuestion);
+            } else {
+                nextPage('persona-creation');
+            }
+        }
+
+        // 이전 고객 질문
+        function previousCustomerQuestion() {
+            if (currentCustomerQuestion > 0) {
+                currentCustomerQuestion--;
+                showCustomerQuestion(currentCustomerQuestion);
+            }
+        }
+
+        // 페르소나 생성 애니메이션
+        function startPersonaCreation() {
+            // 초기 상태
+            document.getElementById('emotionCard').classList.remove('active');
+            document.getElementById('dataCard').classList.remove('active');
+            document.getElementById('aiCard').classList.remove('active');
+            document.getElementById('emotionCheck').style.display = 'none';
+            document.getElementById('dataCheck').style.display = 'none';
+            document.getElementById('aiCheck').style.display = 'none';
+            document.getElementById('showResultBtn').style.display = 'none';
+            document.getElementById('loadingSpinner').style.display = 'flex';
+            
+            // 단계별 애니메이션
+            setTimeout(() => {
+                document.getElementById('emotionCard').classList.add('active');
+                document.getElementById('emotionCheck').style.display = 'block';
+            }, 1500);
+            
+            setTimeout(() => {
+                document.getElementById('dataCard').classList.add('active');
+                document.getElementById('dataCheck').style.display = 'block';
+            }, 3000);
+            
+            setTimeout(() => {
+                document.getElementById('aiCard').classList.add('active');
+                document.getElementById('aiCheck').style.display = 'block';
+            }, 4500);
+            
+            setTimeout(() => {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                document.getElementById('showResultBtn').style.display = 'inline-block';
+            }, 6000);
+        }
+
+        // 도움말 표시
+        function showHelp() {
+            const currentPage = document.querySelector('.page.active').id;
+            let helpMessage = '';
+            
+            switch(currentPage) {
+                case 'landing':
+                    helpMessage = '🚀 StartupDNA에 오신 것을 환영합니다!\n\n이 서비스는 당신의 관심사와 직감을 바탕으로 AI가 맞춤형 창업 전략을 제안해드립니다.\n\n• 전체 과정은 약 5-10분 소요됩니다\n• 솔직하고 구체적으로 답변해주세요\n• 언제든지 이전 단계로 돌아갈 수 있습니다';
+                    break;
+                case 'interest-analysis':
+                    helpMessage = '💡 창업 DNA 분석 단계입니다!\n\n가장 솔직한 답변을 선택해주세요. 정답은 없습니다.\n\n• 당신의 자연스러운 성향을 파악합니다\n• 창업 아이템의 방향성을 결정하는 중요한 단계입니다\n• 직감적으로 선택하시면 됩니다';
+                    break;
+                case 'customer-insight':
+                    helpMessage = '❤️ 고객 직감 분석 단계입니다!\n\n당신이 이미 알고 있는 고객 정보를 자유롭게 써주세요.\n\n• 완벽한 답변이 아니어도 괜찮습니다\n• 구체적인 경험이나 관찰을 바탕으로 써주세요\n• 이 정보가 AI 분석의 핵심 재료가 됩니다';
+                    break;
+                case 'persona-creation':
+                    helpMessage = '🧠 AI가 열심히 분석 중입니다!\n\n당신의 답변을 바탕으로:\n\n• 감정적 페르소나: 당신의 직감과 경험\n• 데이터 페르소나: 시장 분석과 트렌드\n• 융합 페르소나: 두 정보를 AI로 최적화\n\n잠시만 기다려주세요 ⏰';
+                    break;
+                case 'persona-result':
+                    helpMessage = '🎉 당신만의 페르소나가 완성되었습니다!\n\n이 결과는:\n\n• 당신의 직감 + 실제 시장 데이터의 융합\n• 접근 가능하고 구매력 있는 실제 고객\n• 창업 성공 가능성을 높인 최적화된 타겟\n\n이제 구체적인 전략을 확인해보세요!';
+                    break;
+                case 'strategy':
+                    helpMessage = '🎯 맞춤형 창업 전략입니다!\n\n• 페르소나 기반 사업 방향 추천\n• 구체적인 마케팅 전략\n• 정부지원사업 매칭\n• 프리미엄 서비스로 더 자세한 분석 가능\n\n새로운 페르소나를 만들려면 "처음부터 다시"를 클릭하세요!';
+                    break;
+            }
+            
+            alert(helpMessage);
+        }
+
+        // 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            updateStepIndicator('landing');
+        });
+    </script>
+</body>
+</html>
